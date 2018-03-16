@@ -67,11 +67,11 @@ All the actions return two values: result and error. Results can be either`balle
     endpoint<jira:JiraConnector> jiraConnector {
         create jira:JiraConnector();
     }
-    jira:JiraConnectorError e;
+    string projectKey = "RRDEVSPRT";
+    
     jira:Project project;
     jira:JiraConnectorError e;
-    string projectKey = "RRDEVSPRT";
-  
+    
     project, e = jiraConnector.getProject(projectKey);
     
 ```
@@ -179,7 +179,7 @@ use the information in the following sections to perform various operations with
     - [getLeadUserDetials()](#getleaduserdetails-)
     - [getRoleDetails()](#getroledetails-)
     - [addUserToRole()](#addusertorole-)
-    - [addGroupToRole](#addgrouptorole-)
+    - [addGroupToRole()](#addgrouptorole-)
     - [removeUserFromRole()](#removeuserfromrole-)
     - [removeGroupFromRole()](#removegroupfromrole-)
     - [getAllIssueTypeStatuses()](#getallissuetypestatuses-)
@@ -239,19 +239,6 @@ Creates a new project.
 * JiraConnectorError: Error Object
 
 
-***  
-#### createProject (ProjectRequest newProject)
- 
-Creates a new project.
-    
-###### Parameters
-* newProject: struct which contains the mandatory fields for new project creation.
-
-###### Returns
-
-
-* boolean: Returns true if the project was created was successfully,otherwise returns false.
-* JiraConnectorError: Error Object.
 
 ***
 #### updateProject (string projectIdOrKey, ProjectRequest update)

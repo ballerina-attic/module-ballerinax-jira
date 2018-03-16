@@ -16,9 +16,6 @@ public function main (string[] args) {
 
 
 
-
-
-
 function runAllSamples () {
     endpoint<jira:JiraConnector> jiraConnector {
         create jira:JiraConnector();
@@ -50,7 +47,7 @@ function runAllSamples () {
         projectTypeKey:"software",
         projectTemplateKey:"com.pyxis.greenhopper.jira:basic-software-development-template",
         description:"Example Project description",
-        lanaead:"pasan@wso2.com",
+        lead:"pasan@wso2.com",
         url:"http://atlassian.com",
         assigneeType:"PROJECT_LEAD",
         avatarId:10005,
