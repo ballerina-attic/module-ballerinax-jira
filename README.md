@@ -24,7 +24,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 
 
-### Getting started
+## Getting started
 
 
 - Install the ballerina version 0.964.0 distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
@@ -56,6 +56,7 @@ You can easily test the following actions using the `sample.bal` file.
 2. Run the following commands to execute the sample.
 
     ```$ ballerina run sample.bal "Run All Samples"```
+
 
 ## Working with Jira connector actions
 
@@ -164,19 +165,19 @@ use the information in the following sections to perform various operations with
 
 #### Connector Actions
 
-- [getAllProjectSummaries()](#getallprojectsummaries-)
-- [getProject()](#getproject-)
-- [createProject()](#createproject-)
-- [updateProject()](#updateproject-)
-- [deleteProject()](#deleteproject-)
-- [getAllProjectCategories()](#getallprojetcategories-)
-- [createProjectCategory()](#createprojectcategory-)
-- [deleteProjectCategory()](#deleteprojectcategory-)
+- [getAllProjectSummaries()](#getallprojectsummaries--)
+- [getProject()](#getproject-string-projectidorkey)
+- [createProject()](#createproject-projectrequest-newproject)
+- [updateProject()](#updateproject-string-projectidorkey-projectrequest-update)
+- [deleteProject()](#deleteproject-string-projectidorkey)
+- [getAllProjectCategories()](#getallprojectcategories--)
+- [createProjectCategory()](#createprojectcategory-projectcategoryrequest-newcategory)
+- [deleteProjectCategory()](#deleteprojectcategory-string-projectcategoryid)
 
 #### Entity-Based Actions
 
 - Project
-    - [getLeadUserDetials()](#getleaduserdetails-)
+    - [getLeadUserDetails()](#getleaduserdetails-)
     - [getRoleDetails()](#getroledetails-)
     - [addUserToRole()](#addusertorole-)
     - [addGroupToRole()](#addgrouptorole-)
@@ -192,8 +193,8 @@ use the information in the following sections to perform various operations with
     - [getLeadUserDetails()](#getleaduserdetails-)
     - [getAssigneeUserDetails()](#getassigneeuserdetails-)
 
-***  
-#### getAllProjectSummaries ( )
+*** 
+### getAllProjectSummaries ( )
  
   Returns all projects which are visible for the currently logged in user.
     If no user is logged in, it returns the list of projects that are visible when using anonymous access. 
@@ -203,105 +204,105 @@ use the information in the following sections to perform various operations with
 
 ###### Returns
 
-* Project[]: Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
+* **Project[]:** Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
     project permission.
-* JiraConnectorError: Error Object.
+* **JiraConnectorError:** Error Object.
 
+###### Sample Code
 
 ***  
-#### getProject (string projectIdOrKey)
+### getProject (string projectIdOrKey)
  
 Returns a detailed representation for given a project.
       
 ###### Parameters
-* projectIdOrKey: unique string which represents the project id or project key of a jira project
-
+* **projectIdOrKey:** unique string which represents the project id or project key of a jira project
 
 ###### Returns
 
-* Project: Contains a full representation of a project, if the project exists,the user has permission
+* **Project:** Contains a full representation of a project, if the project exists,the user has permission
       to view it and if no any error occured
-* JiraConnectorError: Error Object
+* **JiraConnectorError:** Error Object
 
 
 ***  
-#### createProject (ProjectRequest newProject)
+### createProject (ProjectRequest newProject)
  
 Creates a new project.
     
 ###### Parameters
-* newProject: struct which contains the mandatory fields for new project creation
+* **newProject:** struct which contains the mandatory fields for new project creation
 
 ###### Returns
 
 
-* boolean: Returns true if the project was created was successfully,otherwise returns false"}
-* JiraConnectorError: Error Object
+* **boolean:** Returns true if the project was created was successfully,otherwise returns false"}
+* **JiraConnectorError:** Error Object
 
 
 
 ***
-#### updateProject (string projectIdOrKey, ProjectRequest update)
+### updateProject (string projectIdOrKey, ProjectRequest update)
 
 Updates a project. Only non null values sent in 'ProjectRequest' structure will be updated in the project. 
 Values available for the assigneeType field are: 'PROJECT_LEAD' and 'UNASSIGNED'.
     
 ###### Parameters
-* projectIdOrKey: unique string which represents the project id or project key of a jira project.
-* update: structure containing fields which need to be updated.
+* **projectIdOrKey:** unique string which represents the project id or project key of a jira project.
+* **update:** structure containing fields which need to be updated.
 
 ###### Returns
-* boolean: Returns true if project was updated successfully,otherwise return false.
-* JiraConnectorError: Error Object.
+* **boolean:** Returns true if project was updated successfully,otherwise return false.
+* **JiraConnectorError:** Error Object.
 
 ***
-#### deleteProject (string projectIdOrKey)
+### deleteProject (string projectIdOrKey)
 
 Deletes a project.
      
 ###### Parameters
-*  projectIdOrKey: unique string which represents the project id or project key of a jira project.
+*  **projectIdOrKey**: unique string which represents the project id or project key of a jira project.
 
 ###### Returns
-* boolean: Returns true if project was deleted successfully,otherwise return false.
-* JiraConnectorError: Error Object.
+* **boolean:** Returns true if project was deleted successfully,otherwise return false.
+* **JiraConnectorError:** Error Object.
 
 ***
-#### getAllProjectCategories ( )
+### getAllProjectCategories ( )
 
 Returns all existing project categories.
    
 ###### Parameters
-*  projectIdOrKey: unique string which represents the project id or project key of a jira project.
+*  **projectIdOrKey:** unique string which represents the project id or project key of a jira project.
 
 ###### Returns
-* ProjectCategory[]: Array of structures which contain existing project categories.
-* JiraConnectorError: Error Object.
+* **ProjectCategory[]:** Array of structures which contain existing project categories.
+* **JiraConnectorError:** Error Object.
 
 ***
-#### createProjectCategory (NewProjectCategory newCategory)
+### createProjectCategory (ProjectCategoryRequest newCategory)
 
 Create a new project category.
     
 ###### Parameters
-* newCategory: struct which contains the mandatory fields for new project category creation
+* **ProjectCategoryRequest:** struct which contains the mandatory fields for new project category creation
 
 ###### Returns
-* boolean: Returns true if the project category was created successfully,otherwise returns false.
-* JiraConnectorError: Error Object.
+* **boolean:** Returns true if the project category was created successfully,otherwise returns false.
+* **JiraConnectorError:** Error Object.
 
 
 ***
-#### deleteProjectCategory (string projectCategoryId)
+### deleteProjectCategory (string projectCategoryId)
 
 Deletes a given project category.
     
 ###### Parameters
-* projectCategoryId: Jira id of the project category.
+* **projectCategoryId:** Jira id of the project category.
 
 ###### Returns
-* boolean: Returns true if the project category was deleted successfully, otherwise returns false.
-* JiraConnectorError: Error Object.
+* **boolean:** Returns true if the project category was deleted successfully, otherwise returns false.
+* **JiraConnectorError:** Error Object.
 
 
 

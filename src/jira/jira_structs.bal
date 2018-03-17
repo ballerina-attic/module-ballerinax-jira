@@ -540,7 +540,7 @@ public struct NewActor {
     string name;
 }
 
-public struct NewProjectCategory {
+public struct ProjectCategoryRequest {
     string name;
     string description;
 }

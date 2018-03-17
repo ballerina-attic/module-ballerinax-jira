@@ -228,7 +228,7 @@ public connector JiraConnector () {
     @Param {value:"newCategory: struct which contains the mandatory fields for new project category creation "}
     @Return {value:"Returns true if project category was created successfully,otherwise return false"}
     @Return {value:"JiraConnectorError: Error Object"}
-    action createProjectCategory (NewProjectCategory newCategory) (boolean, JiraConnectorError) {
+    action createProjectCategory (ProjectCategoryRequest newCategory) (boolean, JiraConnectorError) {
 
         http:OutRequest request = {};
         http:InResponse response = {};
@@ -275,127 +275,6 @@ public connector JiraConnector () {
         }
         return true, null;
     }
-
-
-    //This Action is replaced by a struct-bound function
-    //@Description {value: "Get the list of roles assigned to the project"}
-    //@Param {value: "string containing the unique key/id of project"}
-    //@Param {value: "string containing the unique id of the project role"}
-    //action getProjectRole (string projectIdOrKey, string projectRoleId) (ProjectRole, JiraConnectorError) {
-    //    http:OutRequest request = {};
-    //    http:InResponse response = {};
-    //    JiraConnectorError e;
-    //    json jsonResponse;
-    //
-    //    constructAuthHeader(authType,request);
-    //
-    //    response, connectionError = jiraEndpoint.get("/project/" + projectIdOrKey + "/role/" + projectRoleId, request);
-    //    jsonResponse, e = getValidatedResponse(response, connectionError);
-    //
-    //    if (e != null) {
-    //        return null, e;
-    //    }
-    //
-    //    else {
-    //        var role, err = <ProjectRole>jsonResponse;
-    //        if(err!=null){
-    //            e = <JiraConnectorError,toConnectorError()>err;
-    //            return null,e;
-    //        }
-    //        return role, e;
-    //    }
-    //
-    //}
-
-    //This Action is replaced by a struct-bound function
-    //@Description {value:"Get all issue types with valid status values for a project"}
-    //@Param {value: "string containing of the unique key/id of project"}
-    //action getProjectStatuses (string projectIdOrKey) (ProjectStatus[], JiraConnectorError) {
-    //    http:OutRequest request = {};
-    //    http:InResponse response = {};
-    //    JiraConnectorError e;
-    //    error err;
-    //    json jsonResponse;
-    //    json[] jsonResponseArray;
-    //    ProjectStatus[] statusArray = [];
-    //
-    //    constructAuthHeader(authType,request);
-    //
-    //    response, connectionError = jiraEndpoint.get("/project/" + projectIdOrKey+"/statuses", request);
-    //    jsonResponse, e = getValidatedResponse(response, connectionError);
-    //
-    //    if (e != null) {
-    //        return null, e;
-    //    }
-    //
-    //    else {
-    //        jsonResponseArray,err = (json[])jsonResponse;
-    //        if(err!=null){
-    //            e = <JiraConnectorError,toConnectorError()>err;
-    //            return null,e;
-    //        }
-    //        else {
-    //            int x = 0;
-    //            foreach (i in jsonResponseArray) {
-    //                statusArray[x],err = <ProjectStatus>jsonResponseArray[x];
-    //                if(err!=null){
-    //                    e = <JiraConnectorError,toConnectorError()>err;
-    //                    return null,e;
-    //                }
-    //                x=x+1;
-    //            }
-    //
-    //            return statusArray,null;
-    //        }
-    //    }
-    //
-    //
-    //
-    //    }
-
-    //This Action is replaced by a struct-bound function
-    //@Description {value:"Updates a project role to include the specified actors (users or groups)"}
-    //action addActorToProject(string projectIdOrKey,string projectRoleId,SetActor newActor)(boolean, JiraConnectorError){
-    //    http:OutRequest request = {};
-    //    http:InResponse response = {};
-    //    Project project;
-    //    JiraConnectorError e = {message:""};
-    //    json jsonPayload;
-    //    json jsonResponse;
-    //
-    //    constructAuthHeader(authType,request);
-    //
-    //
-    //    jsonPayload = models:addActorToRoleSchema;
-    //
-    //
-    //
-    //    if(newActor.|type|==ActorType.USER) {
-    //        jsonPayload["user"][0]= newActor.name;
-    //    }
-    //
-    //    else if(newActor.|type|==ActorType.GROUP) {
-    //        jsonPayload["group"][0]= newActor.name;
-    //    }
-    //
-    //    else{
-    //        e.message="actor type is not specified correctly";
-    //        return false,e;
-    //    }
-    //
-    //    request.setJsonPayload(jsonPayload);
-    //    response, connectionError = jiraEndpoint.post("/project/" + projectIdOrKey+"/role/"+projectRoleId, request);
-    //    jsonResponse, e = getValidatedResponse(response, connectionError);
-    //
-    //    if (e != null) {
-    //        return false, e;
-    //    }
-    //
-    //    else {
-    //        io:println(jsonResponse);
-    //        return true, null;
-    //    }
-    //}
 }
 
 

@@ -183,7 +183,7 @@ function runAllSamples () {
     //creates new jira project category
     io:println("\n\n");
     io:println("ACTION: createProjectCategory()");
-    jira:NewProjectCategory newCategory = {name:"test-new category", description:"newCategory"};
+    jira:ProjectCategoryRequest newCategory = {name:"test-new category", description:"newCategory"};
     result, e = jiraConnector.createProjectCategory(newCategory);
     printSampleResponse(e);
 
