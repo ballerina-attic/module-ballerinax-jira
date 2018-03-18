@@ -188,7 +188,7 @@ public function <Project project> addGroupToRole (ProjectRoleType projectRoleTyp
 @Param {value:"userName: name of the user required to be removed"}
 @Return {value:"Returns true if process was successfull,otherwise returns false"}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <Project project> removeUserFromRole (ProjectRoleType projectRoleType, string actorName) (boolean, JiraConnectorError) {
+public function <Project project> removeUserFromRole (ProjectRoleType projectRoleType, string userName) (boolean, JiraConnectorError) {
     endpoint<http:HttpClient> jiraClient {
         jiraHttpClient;
     }
@@ -210,7 +210,7 @@ public function <Project project> removeUserFromRole (ProjectRoleType projectRol
     constructAuthHeader(request);
 
     response, connectionError = jiraClient.delete("/project/" + project.key + "/role/" +
-                                                  getProjectRoleIdFromEnum(projectRoleType) + "?user=" + actorName, request);
+                                                  getProjectRoleIdFromEnum(projectRoleType) + "?user=" + userName, request);
     jsonResponse, e = getValidatedResponse(response, connectionError);
 
     if (e != null) {
