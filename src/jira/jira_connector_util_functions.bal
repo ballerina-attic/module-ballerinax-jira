@@ -133,11 +133,11 @@ transformer <ProjectRequest source, json target> createJsonProjectRequest() {
     target.lead = source.lead != "" ? (json)source.lead : null;
     target.url = source.lead != "" ? (json)source.url : null;
     target.assigneeType = source.assigneeType != "" ? (json)source.assigneeType : null;
-    target.avatarId = source.avatarId != 0 ? (json)source.avatarId : null;
-    target.issueSecurityScheme = source.issueSecurityScheme != 0 ? (json)source.issueSecurityScheme : null;
-    target.permissionScheme = source.permissionScheme != 0 ? (json)source.permissionScheme : null;
-    target.notificationScheme = source.notificationScheme != 0 ? (json)source.notificationScheme : null;
-    target.categoryId = source.categoryId != 0 ? (json)source.categoryId : null;
+    target.avatarId = source.avatarId != "" ? (json)source.avatarId : null;
+    target.issueSecurityScheme = source.issueSecurityScheme != "" ? (json)source.issueSecurityScheme : null;
+    target.permissionScheme = source.permissionScheme != "" ? (json)source.permissionScheme : null;
+    target.notificationScheme = source.notificationScheme != "" ? (json)source.notificationScheme : null;
+    target.categoryId = source.categoryId != "" ? (json)source.categoryId : null;
 }
 
 transformer <json source, Project target> createProjectSummary() {
@@ -157,6 +157,7 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
     target.id = source.id != null ? source.id.toString() : "";
     target.description = source.description != null ? source.description.toString() : "";
 }
+
 
 
 

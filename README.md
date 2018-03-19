@@ -187,7 +187,8 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **Project[]:** Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
         project permission.
-
+        
+  
     * **JiraConnectorError:** Error Object.
 
 
@@ -202,7 +203,29 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **Project:** Contains a full representation of a project, if the project exists,the user has permission
           to view it and if no any error occured
+          
+    ```ballerina
+    public struct Project {
+        string self;
+        string id;
+        string key;
+        string name;
+        string description;
+        string leadName;
+        string projectTypeKey;
+        AvatarUrls avatarUrls;
+        ProjectCategory projectCategory;
+        IssueType[] issueTypes;
+        ProjectComponentSummary[] components;
+        ProjectVersion[] versions;
+    }
+    
+        
+    ```
+    
     * **JiraConnectorError:** Error Object
+    
+  
 
 
 ***  

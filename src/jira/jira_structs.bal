@@ -494,6 +494,9 @@ public function <ProjectComponent projectComponent> getAssigneeUserDetails () (U
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+public struct Issue{
+
+}
 
 public struct ProjectCategory {
     string self;
@@ -554,11 +557,11 @@ public struct ProjectRequest {
     string lead;
     string url;
     string assigneeType;
-    int avatarId;
-    int issueSecurityScheme;
-    int permissionScheme;
-    int notificationScheme;
-    int categoryId;
+    string avatarId;
+    string issueSecurityScheme;
+    string permissionScheme;
+    string notificationScheme;
+    string categoryId;
 }
 
 public struct IssueType {
@@ -604,6 +607,8 @@ public struct JiraConnectorError {
     json jiraServerErrorLog;
     error cause;
 }
+
+
 
 
 

@@ -50,11 +50,11 @@ function runAllSamples () {
         lead:"pasan@wso2.com",
         url:"http://atlassian.com",
         assigneeType:"PROJECT_LEAD",
-        avatarId:10005,
-        issueSecurityScheme:10000,
-        permissionScheme:10075,
-        notificationScheme:10086,
-        categoryId:10000
+        avatarId:"10005",
+        issueSecurityScheme:"10000",
+        permissionScheme:"10075",
+        notificationScheme:"10086",
+        categoryId:"10000"
     };
     io:println("\n\n");
     io:println("ACTION: createProject()");
