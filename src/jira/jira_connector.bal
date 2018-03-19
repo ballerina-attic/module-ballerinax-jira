@@ -31,13 +31,13 @@ public connector JiraConnector () {
 
     @Description {value:"Returns all projects which are visible for the currently logged in user.
     If no user is logged in, it returns the list of projects that are visible when using anonymous access"}
-    @Return {value:"Project[]: Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
+    @Return {value:"ProjectSumary[]: Array of projects summaries for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
     project permission."}
     @Return {value:"JiraConnectorError: Error Object"}
-    action getAllProjectSummaries () (Project[], JiraConnectorError) {
+    action getAllProjectSummaries () (ProjectSummary[], JiraConnectorError) {
         http:OutRequest request = {};
         http:InResponse response = {};
-        Project[] projects = [];
+        ProjectSummary[] projects = [];
         JiraConnectorError e;
         error err;
         json jsonResponse;
@@ -45,7 +45,7 @@ public connector JiraConnector () {
 
         //Adds Authorization Header
         constructAuthHeader(request);
-        response, connectionError = jiraEndpoint.get("/project", request);
+        response, connectionError = jiraEndpoint.get("/project?expand=description", request);
         //Evaluate http response for connection error and server errors
         jsonResponse, e = getValidatedResponse(response, connectionError);
 
@@ -65,7 +65,7 @@ public connector JiraConnector () {
 
         int i = 0;
         foreach (jsonProject in jsonResponseArray) {
-            projects[i] = <Project, createProjectSummary()>jsonProject;
+            projects[i] = <ProjectSummary, createProjectSummary()>jsonProject;
             i = i + 1;
         }
         return projects, e;

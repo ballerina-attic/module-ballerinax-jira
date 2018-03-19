@@ -38,6 +38,14 @@ function runAllSamples () {
 
 
     //**************************************************************************************************************
+    //Gets detailed representation using a project summary object.
+    io:println("\n\n");
+    io:println("BIND FUNCTION: projectSummary.getAllDetails()");
+    var project, e = projects[0].getAllDetails();
+    printSampleResponse(e);
+
+
+    //**************************************************************************************************************
     //Creates new a project named "Test Project - Production Support"
 
     jira:ProjectRequest newProject =
@@ -88,7 +96,7 @@ function runAllSamples () {
     //Fetches jira Project details using project id (or project key)
     io:println("\n\n");
     io:println("ACTION: getProject()");
-    var project, e = jiraConnector.getProject("10314");
+    project, e = jiraConnector.getProject("10314");
     io:println(project);
     printSampleResponse(e);
 
@@ -203,6 +211,5 @@ function printSampleResponse (jira:JiraConnectorError e) {
         io:println("Error:");
         io:println(e);
     }
-
-
 }
+

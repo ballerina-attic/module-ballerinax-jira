@@ -140,15 +140,14 @@ transformer <ProjectRequest source, json target> createJsonProjectRequest() {
     target.categoryId = source.categoryId != "" ? (json)source.categoryId : null;
 }
 
-transformer <json source, Project target> createProjectSummary() {
+transformer <json source, ProjectSummary target> createProjectSummary() {
     target.self = source.self.toString();
     target.id = source.id.toString();
     target.key = source.key.toString();
     target.name = source.name.toString();
     target.description = source.description != null ? source.description.toString() : "";
-    target.leadName = source.lead != null ? source.lead.name != null ? source.lead.name.toString() : "" : "";
     target.projectTypeKey = source.projectTypeKey.toString();
-    target.projectCategory = source.projectCategory != null ? <ProjectCategory, createProjectCategory()>source.projectCategory : null;
+    target.category = source.projectCategory != null ? source.projectCategory.name.toString() : null;
 }
 
 transformer <json source, ProjectCategory target> createProjectCategory() {

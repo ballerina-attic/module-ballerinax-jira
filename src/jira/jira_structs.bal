@@ -24,6 +24,55 @@ http:HttpClient jiraHttpClient = create http:HttpClient(JIRA_REST_API_ENDPOINT, 
 //                                               Jira Project                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+public struct ProjectSummary {
+    string self;
+    string id;
+    string key;
+    string name;
+    string description;
+    string category;
+    string projectTypeKey;
+}
+
+@Description {value:"Returns detailed representation of of the summarized project."}
+@Return {value:"Project: Contains a full representation of a project, if the project exists,the user has permission
+    to view it and if no any error occured"}
+@Return {value:"JiraConnectorError: Error Object"}
+public function <ProjectSummary projectSummary> getAllDetails () (Project, JiraConnectorError) {
+    endpoint<http:HttpClient> jiraClient {
+        jiraHttpClient;
+    }
+    http:HttpConnectorError connectionError;
+    http:OutRequest request = {};
+    http:InResponse response = {};
+    Project project;
+    JiraConnectorError e;
+    error err;
+    json jsonResponse;
+
+    if (projectSummary == null) {
+        e = {message:"Unable to proceed with a null structure: ProjectSummary", cause:null};
+        return null, e;
+    }
+
+    constructAuthHeader(request);
+
+    response,connectionError = jiraClient.get("/project/" + projectSummary.key, request);
+    jsonResponse, e = getValidatedResponse(response, connectionError);
+
+    if (e != null) {
+        return null, e;
+    }
+
+    jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ? jsonResponse.lead.name : "" : "";
+    project, err = <Project>jsonResponse;
+    e = <JiraConnectorError, toConnectorError()>err;
+    return project, e;
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 public struct Project {
     string self;
     string id;
@@ -55,7 +104,7 @@ public function <Project project> getProjectLeadUserDetails () (User, JiraConnec
     User lead;
 
     if (project == null) {
-        e = {message:"Unable to proceed with a null structure", cause:null};
+        e = {message:"Unable to proceed with a null structure: Project", cause:null};
         return null, e;
     }
 
@@ -492,11 +541,9 @@ public function <ProjectComponent projectComponent> getAssigneeUserDetails () (U
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public struct Issue{
+////////////////////////////////////////////////////////////////
 
-}
 
 public struct ProjectCategory {
     string self;
@@ -607,6 +654,7 @@ public struct JiraConnectorError {
     json jiraServerErrorLog;
     error cause;
 }
+
 
 
 
