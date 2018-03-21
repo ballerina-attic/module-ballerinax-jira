@@ -23,7 +23,6 @@ The following sections provide information on how to use Ballerina Jira connecto
 - [Working with Jira Connector](#working-with-jira-connector-actions)
 
 
-
 ## Getting started
 
 
@@ -203,26 +202,6 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **Project:** Contains a full representation of a project, if the project exists,the user has permission
           to view it and if no any error occured
-          
-    ```ballerina
-    public struct Project {
-        string self;
-        string id;
-        string key;
-        string name;
-        string description;
-        string leadName;
-        string projectTypeKey;
-        AvatarUrls avatarUrls;
-        ProjectCategory projectCategory;
-        IssueType[] issueTypes;
-        ProjectComponentSummary[] components;
-        ProjectVersion[] versions;
-    }
-    
-        
-    ```
-    
     * **JiraConnectorError:** Error Object
     
   
