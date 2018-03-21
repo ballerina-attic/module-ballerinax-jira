@@ -19,8 +19,10 @@ standards, you can use any web development language to access the API.
 The following sections provide information on how to use Ballerina Jira connector.
 
 - [Getting started](#getting-started)
+- [Authentication](#authentication)
 - [Running Samples](#running-samples)
 - [Working with Jira Connector](#working-with-jira-connector-actions)
+
 
 
 ## Getting started
@@ -35,16 +37,39 @@ The following sections provide information on how to use Ballerina Jira connecto
  
 - Import the package as a ballerina project.
 
+- Provide the Ballerina directory as project SDK
 
+## Authentication
 
-- Provide your Jira user account credentials using the following steps.(If you currently dont have a Jira account, 
-    you can create a new Jira account from [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).)
-    1. Build a string of the form "username:password"
-    2. Base64 encode the string
-    3. Navigate to the "Package_Jira/ballerina.conf" configuration file and place the encoded string under the "base64_encoded_string" field
-        
-        i.e: `base64_encoded_string=YXNoYW5Ad3NvMi5jb206YXNoYW`
+**Note -** 
+*JIRA’s REST API is protected by the same restrictions which are provided via JIRAs standard web interface.
+This means that if you do not have valid jira credentials, you are accessing JIRA anonymously. Furthermore, 
+if you log in and do not have permission to view something in JIRA, you will not be able to view it using the 
+Ballerina JIRA Connector as well.*
 
+Ballerina Jira connector currently provides basic authentication as the authentication method.  
+Please follow the following steps to authenticate your connector.
+     
+- Obtain your Jira user account credentials(username and password).
+  If you currently dont have a Jira account, you can create a new Jira account from 
+  [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
+
+- Provide the credentials which are obtained in the above step to your connector as shown 
+in the following sample code.(Connector will check for an existing jira user account with the given credentials and 
+will return an error if the credentials are invalid.)
+```Ballerina
+
+    jira:JiraConnectorError e;
+    boolean isValid;
+    
+    //Creating the jira Connector instace
+    jira:JiraConnector jiraConnector = {};
+
+    //this is the in-buit connctor action to get the user credentials and check the validity of the provided details.
+    isValid, e = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    printSampleResponse(e);
+
+```
 
 
 ## Running Samples
@@ -202,6 +227,26 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **Project:** Contains a full representation of a project, if the project exists,the user has permission
           to view it and if no any error occured
+          
+    ```ballerina
+    public struct Project {
+        string self;
+        string id;
+        string key;
+        string name;
+        string description;
+        string leadName;
+        string projectTypeKey;
+        AvatarUrls avatarUrls;
+        ProjectCategory projectCategory;
+        IssueType[] issueTypes;
+        ProjectComponentSummary[] components;
+        ProjectVersion[] versions;
+    }
+    
+        
+    ```
+    
     * **JiraConnectorError:** Error Object
     
   

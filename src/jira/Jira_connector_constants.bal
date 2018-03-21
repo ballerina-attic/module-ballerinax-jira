@@ -5,7 +5,8 @@ package src.jira;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const string JIRA_REST_API_URL = "https://support-staging.wso2.com/jira/rest/api/";
+public const string JIRA_BASE_URL = "https://support-staging.wso2.com/";
+public const string JIRA_REST_API_URL = "https://support-staging.wso2.com/jira/rest/api/";
 const string JIRA_REST_API_VERSION = "2";
 public const string JIRA_REST_API_ENDPOINT = JIRA_REST_API_URL + JIRA_REST_API_VERSION;
 
@@ -34,6 +35,7 @@ public const int STATUS_CODE_NO_CONTENT = 204;
 public const int STATUS_CODE_NOTFOUND = 404;
 public const int STATUS_CODE_INTERNAL_ERROR = 500;
 public const int STATUS_CODE_BAD_REQUEST = 400;
+public const int STATUS_CODE_UNAUTHORIZED = 401;
 public const int Status_CODE_CONFLICT = 409;
 
 public const string STATUS_CREATED = "CREATED";

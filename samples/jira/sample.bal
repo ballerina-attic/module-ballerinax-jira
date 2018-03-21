@@ -1,9 +1,11 @@
 import ballerina.io;
 import src.jira;
-
+import ballerina.net.http;
+import ballerina.mime;
+import ballerina.config;
+import ballerina.log;
 
 public function main (string[] args) {
-
     if (lengthof (args) == 0) {
         io:println("Error: No argument found");
     } else if (args[0] == "Run All Samples") {
@@ -13,26 +15,30 @@ public function main (string[] args) {
     }
 }
 
-
-
-
 function runAllSamples () {
-    endpoint<jira:JiraConnector> jiraConnector {
-        create jira:JiraConnector();
-    }
 
     jira:JiraConnectorError e;
     boolean result;
+    boolean isValid;
+    jira:JiraConnector jiraConnector = {};
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                         Samples - Jira Project                                                 //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    io:println("started running samples..\n");
 
+    //**************************************************************************************************************
+    //Validates provided user credentials
+    io:println("\n\n");
+    io:println("validating user credentials..");
+    isValid, e = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    printSampleResponse(e);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////                                          Samples - Jira Project                                                  //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //**************************************************************************************************************
     //Gets descriptions of all the existing jira projects
     io:println("\n\n");
-    io:println("ACTION: getAllProjectSummaries()");
+    io:println("BIND FUNCTION: getAllProjectSummaries()");
     var projects, e = jiraConnector.getAllProjectSummaries();
     printSampleResponse(e);
 
@@ -41,8 +47,15 @@ function runAllSamples () {
     //Gets detailed representation using a project summary object.
     io:println("\n\n");
     io:println("BIND FUNCTION: projectSummary.getAllDetails()");
-    var project, e = projects[0].getAllDetails();
-    printSampleResponse(e);
+    jira:Project project;
+    try {
+        project, e = projects[0].getAllDetails();
+        printSampleResponse(e);
+    }
+    catch (error err) {
+
+    }
+
 
 
     //**************************************************************************************************************
@@ -65,7 +78,7 @@ function runAllSamples () {
         categoryId:"10000"
     };
     io:println("\n\n");
-    io:println("ACTION: createProject()");
+    io:println("BIND FUNCTION: createProject()");
     result, e = jiraConnector.createProject(newProject);
     printSampleResponse(e);
 
@@ -79,7 +92,7 @@ function runAllSamples () {
 
     };
     io:println("\n\n");
-    io:println("ACTION: updateProject()");
+    io:println("BIND FUNCTION: updateProject()");
     result, e = jiraConnector.updateProject("TESTPROJECT", projectUpdate);
     printSampleResponse(e);
 
@@ -87,7 +100,7 @@ function runAllSamples () {
     //**************************************************************************************************************
     //Deletes an existing project from jira
     io:println("\n\n");
-    io:println("ACTION: deleteProject()");
+    io:println("BIND FUNCTION: deleteProject()");
     result, e = jiraConnector.deleteProject("TESTPROJECT");
     printSampleResponse(e);
 
@@ -95,7 +108,7 @@ function runAllSamples () {
     //**************************************************************************************************************
     //Fetches jira Project details using project id (or project key)
     io:println("\n\n");
-    io:println("ACTION: getProject()");
+    io:println("BIND FUNCTION: getProject()");
     project, e = jiraConnector.getProject("10314");
     io:println(project);
     printSampleResponse(e);
@@ -177,20 +190,20 @@ function runAllSamples () {
 
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                        Samples - Jira Project Category                                         //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////                                          Samples - Jira Project Category                                         //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //gets information of all existing project categories
     io:println("\n\n");
-    io:println("ACTION: getAllProjectCategories()");
+    io:println("BIND FUNCTION: getAllProjectCategories()");
     var categories, e = jiraConnector.getAllProjectCategories();
     printSampleResponse(e);
 
 
     //creates new jira project category
     io:println("\n\n");
-    io:println("ACTION: createProjectCategory()");
+    io:println("BIND FUNCTION: createProjectCategory()");
     jira:ProjectCategoryRequest newCategory = {name:"test-new category", description:"newCategory"};
     result, e = jiraConnector.createProjectCategory(newCategory);
     printSampleResponse(e);
@@ -208,7 +221,6 @@ function printSampleResponse (jira:JiraConnectorError e) {
         io:println("Successfull");
     } else {
         io:println("Failed");
-        io:println("Error:");
         io:println(e);
     }
 }
