@@ -1,63 +1,90 @@
 import ballerina.io;
 import src.jira;
-import ballerina.net.http;
-import ballerina.mime;
-import ballerina.config;
-import ballerina.log;
+
+jira:JiraConnectorError e = {};
+boolean result;
+boolean isValid;
+jira:JiraConnector jiraConnector = {};
+
 
 public function main (string[] args) {
-    if (lengthof (args) == 0) {
-        io:println("Error: No argument found");
-    } else if (args[0] == "Run All Samples") {
-        runAllSamples();
-    } else {
-        io:println("Invalid Argument: " + args[0]);
-    }
-}
 
-function runAllSamples () {
-
-    jira:JiraConnectorError e;
-    boolean result;
-    boolean isValid;
-    jira:JiraConnector jiraConnector = {};
 
     io:println("started running samples..\n");
 
+    sample_authenticate();
+
+    sample_getAllProjectSummaries();
+    sample_ProjectSummary_getAllDetails();
+
+    sample_createProject();
+    sample_updateProject();
+    sample_deleteProject();
+
+    sample_getProject();
+
+    sample_Project_getLeadUserDetails();
+    sample_Project_getRoleDetails();
+    sample_Project_addUserToRole();
+    sample_Project_addGroupToRole();
+    sample_Project_removeUserFromRole();
+    sample_Project_removeGroupFromRole();
+    sample_Project_getAllIssueTypeStatuses();
+    sample_Project_changeProjectType();
+
+    sample_getAllProjectCategories();
+    sample_createProjectCategory();
+    sample_deleteProjectCategory();
+
+}
+
+function sample_authenticate () {
     //**************************************************************************************************************
     //Validates provided user credentials
     io:println("\n\n");
     io:println("validating user credentials..");
-    isValid, e = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
-    printSampleResponse(e);
+    var output = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    match output {
+        boolean => io:println("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                          Samples - Jira Project                                                  //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+}
+
+function sample_getAllProjectSummaries () {
     //**************************************************************************************************************
     //Gets descriptions of all the existing jira projects
     io:println("\n\n");
     io:println("BIND FUNCTION: getAllProjectSummaries()");
-    var projects, e = jiraConnector.getAllProjectSummaries();
-    printSampleResponse(e);
+    var output = jiraConnector.getAllProjectSummaries();
+    match output {
+        jira:ProjectSummary[] => io:println("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 
+}
 
-    //**************************************************************************************************************
+function sample_ProjectSummary_getAllDetails () {
+
     //Gets detailed representation using a project summary object.
     io:println("\n\n");
     io:println("BIND FUNCTION: projectSummary.getAllDetails()");
-    jira:Project project;
-    try {
-        project, e = projects[0].getAllDetails();
-        printSampleResponse(e);
+    var output = jiraConnector.getAllProjectSummaries();
+    match output {
+        jira:ProjectSummary[] ps => {
+            var out = ps[0].getAllDetails();
+            match out {
+                jira:Project => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
     }
-    catch (error err) {
-
-    }
+}
 
 
-
+function sample_createProject () {
     //**************************************************************************************************************
     //Creates new a project named "Test Project - Production Support"
 
@@ -79,10 +106,15 @@ function runAllSamples () {
     };
     io:println("\n\n");
     io:println("BIND FUNCTION: createProject()");
-    result, e = jiraConnector.createProject(newProject);
-    printSampleResponse(e);
+    var output = jiraConnector.createProject(newProject);
+    match output {
+        boolean => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 
+}
 
+function sample_updateProject () {
     //**************************************************************************************************************
     //Partially updates details of an existing project
     jira:ProjectRequest projectUpdate =
@@ -93,134 +125,223 @@ function runAllSamples () {
     };
     io:println("\n\n");
     io:println("BIND FUNCTION: updateProject()");
-    result, e = jiraConnector.updateProject("TESTPROJECT", projectUpdate);
-    printSampleResponse(e);
+    var output = jiraConnector.updateProject("TESTPROJECT", projectUpdate);
+    match output {
+        boolean => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 
+}
 
+function sample_deleteProject () {
     //**************************************************************************************************************
     //Deletes an existing project from jira
     io:println("\n\n");
     io:println("BIND FUNCTION: deleteProject()");
-    result, e = jiraConnector.deleteProject("TESTPROJECT");
-    printSampleResponse(e);
+    var output = jiraConnector.deleteProject("TESTPROJECT");
+    match output {
+        boolean => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 
+}
 
+function sample_getProject () {
     //**************************************************************************************************************
     //Fetches jira Project details using project id (or project key)
     io:println("\n\n");
     io:println("BIND FUNCTION: getProject()");
-    project, e = jiraConnector.getProject("10314");
-    io:println(project);
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-
+function sample_Project_getLeadUserDetails () {
     //**************************************************************************************************************
     //Get jira user details of project lead
     io:println("\n\n");
-    io:println("BIND FUNCTION: project.getProjectLeadUserDetails()");
-    var lead, e = project.getProjectLeadUserDetails();
-    printSampleResponse(e);
+    io:println("BIND FUNCTION: project.getLeadUserDetails()");
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.getLeadUserDetails();
+            match out {
+                jira:User => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-
-    //**************************************************************************************************************
-    //View Current Developers assigned to the project.
+function sample_Project_getRoleDetails () {
+    //View Current Developers assigned to a project.
     io:println("\n\n");
     io:println("BIND FUNCTION: project.getRoleDetails()");
-    var developers, e = project.getRoleDetails(jira:ProjectRoleType.DEVELOPERS);
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.getRoleDetails(jira:ProjectRoleType.DEVELOPERS);
+            match out {
+                jira:ProjectRole => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-    //**************************************************************************************************************
-    //Add user "pasan@wso2.com" to "developers" role.
+function sample_Project_addUserToRole () {
     io:println("\n\n");
     io:println("BIND FUNCTION: project.addUserToRole()");
-    result, e = project.addUserToRole(jira:ProjectRoleType.EXTERNAL_CONSULTANT, "pasan@wso2.com");
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.addUserToRole(jira:ProjectRoleType.DEVELOPERS, "pasan@wso2.com");
+            match out {
+                boolean => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-    //**************************************************************************************************************
-    //Add group "support.client.AAALIFEDEV.user" to "developers" role.
+function sample_Project_addGroupToRole () {
     io:println("\n\n");
     io:println("BIND FUNCTION: project.addGroupToRole()");
-    result, e = project.addGroupToRole(jira:ProjectRoleType.EXTERNAL_CONSULTANT, "support.client.AAALIFEDEV.user");
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.addGroupToRole(jira:ProjectRoleType.DEVELOPERS, "support.client.AAALIFEDEV.user");
+            match out {
+                boolean => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-    //**************************************************************************************************************
-    //Remove user "pasan@wso2.com" from "developers" role.
+function sample_Project_removeUserFromRole () {
     io:println("\n\n");
     io:println("BIND FUNCTION: project.removeUserFromRole()");
-    result, e = project.removeUserFromRole(jira:ProjectRoleType.DEVELOPERS, "pasan@wso2.com");
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.removeUserFromRole(jira:ProjectRoleType.DEVELOPERS, "pasan@wso2.com");
+            match out {
+                boolean => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-    //**************************************************************************************************************
-    //Remove group "support.client.AAALIFEDEV.user" from "developers" role.
+function sample_Project_removeGroupFromRole () {
     io:println("\n\n");
     io:println("BIND FUNCTION: project.removeGroupFromRole()");
-    result, e = project.removeGroupFromRole(jira:ProjectRoleType.DEVELOPERS, "support.client.AAALIFEDEV.user");
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.removeGroupFromRole(jira:ProjectRoleType.DEVELOPERS, "support.client.AAALIFEDEV.user");
+            match out {
+                boolean => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-
-    //**************************************************************************************************************
-    //Gets all issue types with valid status values for a project
+function sample_Project_getAllIssueTypeStatuses(){
     io:println("\n\n");
     io:println("BIND FUNCTION: project.getAllIssueTypeStatuses()");
-    var statuses, e = project.getAllIssueTypeStatuses();
-    printSampleResponse(e);
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.getAllIssueTypeStatuses();
+            match out {
+                jira:ProjectStatus[] => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-    //**************************************************************************************************************
-    //Updates the type of the project ("business" or "software")
+function sample_Project_changeProjectType(){
     io:println("\n\n");
-    io:println("BIND FUNCTION: project.changeProjectType()");
-    result, e = project.changeProjectType(jira:ProjectType.SOFTWARE);
-    printSampleResponse(e);
+    io:println("BIND FUNCTION: project.getAllIssueTypeStatuses()");
+    var output = jiraConnector.getProject("10314");
+    match output {
+        jira:Project project => {
+            var out = project.changeProjectType(jira:ProjectType.SOFTWARE);
+            match out {
+                boolean => io:print("success");
+                jira:JiraConnectorError e => printSampleResponse(e);
+            }
+        }
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
+function sample_ProjectCategorySummary_getAllDetails(){
+
+}
+
+function sample_ProjectCategory_getLeadUserDetails(){
+
+}
+
+function sample_ProjectCategory_getassigneeUserDetails(){
+
+}
+
+function sample_getAllProjectCategories () {
     //**************************************************************************************************************
-    //get full details of a selected project component
-    io:println("\n\n");
-    io:println("BIND FUNCTION: componentSummary.getDetails()");
-    var component, e = project.components[0].getAllDetails();
-    printSampleResponse(e);
-
-
-    //**************************************************************************************************************
-    //expand jira user details of the lead
-    io:println("\n\n");
-    io:println("BIND FUNCTION: component.getLeadUserDetails()");
-    var user, e = component.getLeadUserDetails();
-    printSampleResponse(e);
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////                                          Samples - Jira Project Category                                         //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     //gets information of all existing project categories
     io:println("\n\n");
     io:println("BIND FUNCTION: getAllProjectCategories()");
-    var categories, e = jiraConnector.getAllProjectCategories();
-    printSampleResponse(e);
+    var output = jiraConnector.getAllProjectCategories();
+    match output {
+        jira:ProjectCategory[] => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
-
+function sample_createProjectCategory () {
     //creates new jira project category
     io:println("\n\n");
     io:println("BIND FUNCTION: createProjectCategory()");
     jira:ProjectCategoryRequest newCategory = {name:"test-new category", description:"newCategory"};
-    result, e = jiraConnector.createProjectCategory(newCategory);
-    printSampleResponse(e);
-
-
-    //var pointer, e =  jiraConnector.deleteProjectCategory("10571");
-    //io:println(pointer);
-    //io:println(e);
-
+    var output = jiraConnector.createProjectCategory(newCategory);
+    match output {
+        boolean => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
 }
 
+function sample_deleteProjectCategory () {
+    //deletes jira project category
+    io:println("\n\n");
+    io:println("BIND FUNCTION: deleteProjectCategory()");
+    var output = jiraConnector.deleteProjectCategory("10571");
+    match output {
+        boolean => io:print("success");
+        jira:JiraConnectorError e => printSampleResponse(e);
+    }
+}
 
 function printSampleResponse (jira:JiraConnectorError e) {
-    if (e == null) {
-        io:println("Successfull");
-    } else {
-        io:println("Failed");
+    if (jira:isEmpty(e)) {
+        io:println("Success");
+    }
+    else {
+        io:println("failed");
         io:println(e);
     }
 }
