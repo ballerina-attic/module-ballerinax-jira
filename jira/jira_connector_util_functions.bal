@@ -16,11 +16,11 @@
 // under the License.
 //
 
-package src.jira;
-import ballerina.net.http;
-import ballerina.config;
-import ballerina.mime;
-import ballerina.io;
+package jira;
+import ballerina/net.http;
+import ballerina/config;
+import ballerina/mime;
+import ballerina/io;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Functions                                                        //
@@ -79,7 +79,7 @@ public function getValidatedResponse (http:Response|http:HttpConnectorError http
 }
 
 function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
-    endpoint http:ClientEndpoint jiraLoginHttpClientEP {targets:[ {uri:JIRA_BASE_URL}], chunking:http:Chunking. NEVER,
+    endpoint http:ClientEndpoint jiraLoginHttpClientEP {targets:[ {uri:jira_authentication_ep}], chunking:http:Chunking. NEVER,
                                                         followRedirects: { enabled:true,maxCount:5}};
 
     JiraConnectorError e = {};
@@ -92,7 +92,7 @@ function validateAuthentication (string username, string password) returns boole
     jsonPayload = {"username": username,"password":password};
     request.setJsonPayload(jsonPayload);
 
-    var output = jiraLoginHttpClientEP-> post("/jira/rest/auth/1/session", request);
+    var output = jiraLoginHttpClientEP-> post("/", request);
     match output{
         http:HttpConnectorError errorOut => {
             e = {^"type":"HTTP Error", message:errorOut.message, cause:errorOut.cause};
@@ -151,19 +151,19 @@ transformer <error source, JiraConnectorError target> toConnectorError() {
 }
 
 transformer <ProjectRequest source, json target> createJsonProjectRequest() {
-    target.key = source.key != "" ? (json)source.key : null;
-    target.name = source.name != "" ? (json)source.name : null;
-    target.projectTypeKey = source.projectTypeKey != "" ? (json)source.projectTypeKey : null;
-    target.projectTemplateKey = source.projectTemplateKey != "" ? (json)source.projectTemplateKey : null;
-    target.description = source.description != "" ? (json)source.description : null;
-    target.lead = source.lead != "" ? (json)source.lead : null;
-    target.url = source.url != "" ? (json)source.url : null;
-    target.assigneeType = source.assigneeType != "" ? (json)source.assigneeType : null;
-    target.avatarId = source.avatarId != "" ? (json)source.avatarId : null;
-    target.issueSecurityScheme = source.issueSecurityScheme != "" ? (json)source.issueSecurityScheme : null;
-    target.permissionScheme = source.permissionScheme != "" ? (json)source.permissionScheme : null;
-    target.notificationScheme = source.notificationScheme != "" ? (json)source.notificationScheme : null;
-    target.categoryId = source.categoryId != "" ? (json)source.categoryId : null;
+    target.key = source.key != "" ? source.key : null;
+    target.name = source.name != "" ? source.name : null;
+    target.projectTypeKey = source.projectTypeKey != "" ? source.projectTypeKey : null;
+    target.projectTemplateKey = source.projectTemplateKey != "" ? source.projectTemplateKey : null;
+    target.description = source.description != "" ? source.description : null;
+    target.lead = source.lead != "" ? source.lead : null;
+    target.url = source.url != "" ? source.url : null;
+    target.assigneeType = source.assigneeType != "" ? source.assigneeType : null;
+    target.avatarId = source.avatarId != "" ? source.avatarId : null;
+    target.issueSecurityScheme = source.issueSecurityScheme != "" ? source.issueSecurityScheme : null;
+    target.permissionScheme = source.permissionScheme != "" ? source.permissionScheme : null;
+    target.notificationScheme = source.notificationScheme != "" ? source.notificationScheme : null;
+    target.categoryId = source.categoryId != "" ? source.categoryId : null;
 }
 
 transformer <json source, ProjectSummary target> createProjectSummary() {
@@ -182,8 +182,6 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
     target.id = source.id != null ? source.id.toString() : "";
     target.description = source.description != null ? source.description.toString() : "";
 }
-
-
 
 public function isEmpty(error|JiraConnectorError e) returns boolean{
     match e{

@@ -59,15 +59,18 @@ in the following sample code.(Connector will check for an existing jira user acc
 will return an error if the credentials are invalid.)
 ```Ballerina
 
-    jira:JiraConnectorError e;
+    jira:JiraConnectorError jiraConnectorError;
     boolean isValid;
     
     //Creating the jira Connector instace
     jira:JiraConnector jiraConnector = {};
 
     //this is the in-buit connctor action to get the user credentials and check the validity of the provided details.
-    isValid, e = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
-    printSampleResponse(e);
+    var response = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    match response{
+        boolean success => io:println(success);
+        jira:JiraConnectorError error => io:println(e);
+    }
 
 ```
 
@@ -76,10 +79,10 @@ will return an error if the credentials are invalid.)
 
 You can easily test the following actions using the `sample.bal` file.
 
-1. Navigate to the folder `Package_Jira/samples/jira/ ` .
+1. Navigate to the folder `tests`.
 2. Run the following commands to execute the sample.
 
-    ```$ ballerina run sample.bal "Run All Samples"```
+    ```$ ballerina run test.bal "Run All Tests```
 
 
 ## Working with Jira connector actions
@@ -89,15 +92,16 @@ All the actions return two values: result and error. Results can be either`balle
 ##### Example
 * Request 
 ```ballerina
-    endpoint<jira:JiraConnector> jiraConnector {
-        create jira:JiraConnector();
-    }
+    jira:JiraConnector jiraConnector = {};
+    jira:JiraConnectorError jiraError = {};
+    jira:Project project = {};
     string projectKey = "RRDEVSPRT";
     
-    jira:Project project;
-    jira:JiraConnectorError e;
-    
-    project, e = jiraConnector.getProject(projectKey);
+    var result = jiraConnector.getProject(projectKey);
+    match result{
+        jira:Project p => project = p;
+        jira:JoraConnectorError e => jiraError = err;
+    }
     
 ```
 
@@ -486,7 +490,4 @@ use the information in the following sections to perform various operations with
 
 ## Working with Users in JIRA
 **[ To be Implemented ]**
-
-
-
 

@@ -16,8 +16,8 @@
 // under the License.
 //
 
-package src.jira;
-import ballerina.net.http;
+package jira;
+import ballerina/net.http;
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,6 @@ public struct ProjectSummary {
 public function <ProjectSummary projectSummary> getAllDetails () returns Project|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
-    Project project = {};
     JiraConnectorError e = {};
     error err = {};
 
@@ -57,12 +56,16 @@ public function <ProjectSummary projectSummary> getAllDetails () returns Project
         }
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ? jsonResponse.lead.name : null : null;
-            project, err = <Project>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var projectOut = <Project>jsonResponse;
+            match projectOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>err;
+                    return e;
+                }
+                Project project => {
+                    return project;
+                }
             }
-            return project;
         }
     }
 }
@@ -92,7 +95,6 @@ public function <Project project> getLeadUserDetails () returns User|JiraConnect
     http:Response response = {};
     JiraConnectorError e = {};
     error err = {};
-    User lead = {};
 
     constructAuthHeader(request);
     var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + project.leadName, request);
@@ -104,12 +106,16 @@ public function <Project project> getLeadUserDetails () returns User|JiraConnect
             return errorOut;
         }
         json jsonResponse => {
-            lead, err = <User>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var userOut = <User>jsonResponse;
+            match userOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>err;
+                    return e;
+                }
+                User lead => {
+                    return lead;
+                }
             }
-            return lead;
         }
     }
 }
@@ -134,12 +140,16 @@ public function <Project project> getRoleDetails (ProjectRoleType projectRoleTyp
             return errorOut;
         }
         json jsonResponse => {
-            var role, err = <ProjectRole>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var projectRoleOut = <ProjectRole>jsonResponse;
+            match projectRoleOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>er;
+                    return e;
+                }
+                ProjectRole projectRole => {
+                    return projectRole;
+                }
             }
-            return role;
         }
     }
 }
@@ -250,7 +260,7 @@ public function <Project project> removeGroupFromRole (ProjectRoleType projectRo
 
     constructAuthHeader(request);
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
-                                                     getProjectRoleIdFromEnum(projectRoleType) + "?user=" + groupName, request);
+                                                     getProjectRoleIdFromEnum(projectRoleType) + "?group=" + groupName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -274,8 +284,8 @@ public function <Project project> getAllIssueTypeStatuses () returns ProjectStat
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
-    error err = {};
-    json[] jsonResponseArray;
+
+
     ProjectStatus[] statusArray = [];
 
     constructAuthHeader(request);
@@ -288,21 +298,30 @@ public function <Project project> getAllIssueTypeStatuses () returns ProjectStat
             return errorOut;
         }
         json jsonResponse => {
-            jsonResponseArray, err = (json[])jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
-            }
-            int i = 0;
-            foreach (status in jsonResponseArray) {
-                statusArray[i], err = <ProjectStatus>status;
-                if (err != null) {
-                    e = <JiraConnectorError, toConnectorError()>err;
+            var jsonResponseArrayOut = <json[]>jsonResponse;
+            match jsonResponseArrayOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>er;
                     return e;
                 }
-                i = i + 1;
+                json[] jsonResponseArray => {
+                    int i = 0;
+                    foreach (status in jsonResponseArray) {
+                        var statusOut = <ProjectStatus>status;
+                        match statusOut {
+                            error err => {
+                                e = <JiraConnectorError, toConnectorError()>err;
+                                return e;
+                            }
+                            ProjectStatus projectStatus => {
+                                statusArray[i] = projectStatus;
+                                i = i + 1;
+                            }
+                        }
+                    }
+                    return statusArray;
+                }
             }
-            return statusArray;
         }
     }
 }
@@ -352,7 +371,6 @@ public function <ProjectComponentSummary projectComponentSummary> getAllDetails 
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
-    error err = {};
 
     constructAuthHeader(request);
     var httpResponseOut = jiraHttpClientEP -> get("/component/" + projectComponentSummary.id, request);
@@ -367,12 +385,16 @@ public function <ProjectComponentSummary projectComponentSummary> getAllDetails 
             jsonResponse["leadName"] = jsonResponse["lead"]["name"];
             jsonResponse["assigneeName"] = jsonResponse["assignee"]["name"];
             jsonResponse["realAssigneeName"] = jsonResponse["realAssignee"]["name"];
-            var projectComponent, err = <ProjectComponent>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var projectComponentOut = <ProjectComponent>jsonResponse;
+            match projectComponentOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>er;
+                    return e;
+                }
+                ProjectComponent projectComponent => {
+                    return projectComponent;
+                }
             }
-            return projectComponent;
         }
     }
 }
@@ -412,12 +434,16 @@ public function <ProjectComponent projectComponent> getLeadUserDetails () return
             return errorOut;
         }
         json jsonResponse => {
-            var lead, err = <User>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var userOut = <User>jsonResponse;
+            match userOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>err;
+                    return e;
+                }
+                User lead => {
+                    return lead;
+                }
             }
-            return lead;
         }
     }
 }
@@ -425,7 +451,7 @@ public function <ProjectComponent projectComponent> getLeadUserDetails () return
 @Description {value:"returns jira user details of the project component assignee"}
 @Return {value:"User: structure containing user details of the lead "}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <ProjectComponent projectComponent> getAssigneeUserDetails() returns User|JiraConnectorError {
+public function <ProjectComponent projectComponent> getAssigneeUserDetails () returns User|JiraConnectorError {
 
     http:Request request = {};
     http:Response response = {};
@@ -442,12 +468,16 @@ public function <ProjectComponent projectComponent> getAssigneeUserDetails() ret
             return errorOut;
         }
         json jsonResponse => {
-            var lead, err = <User>jsonResponse;
-            if (err != null) {
-                e = <JiraConnectorError, toConnectorError()>err;
-                return e;
+            var userOut = <User>jsonResponse;
+            match userOut {
+                error er => {
+                    e = <JiraConnectorError, toConnectorError()>err;
+                    return e;
+                }
+                User assignee => {
+                    return assignee;
+                }
             }
-            return lead;
         }
     }
 
@@ -566,11 +596,3 @@ public struct JiraConnectorError {
     json jiraServerErrorLog;
     error[] cause;
 }
-
-
-
-
-
-
-
-
