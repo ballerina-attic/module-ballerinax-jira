@@ -8,13 +8,17 @@ boolean result;
 boolean isValid;
 jira:JiraConnector jiraConnector = {};
 
-//public function main (string[] args) {
-//    if (args[0]=="Run All Tests"){
-//        runAllTests();
-//    }
-//}
+public function main (string[] args) {
+    if (args[0]=="Run All Tests"){
+        runAllTests();
+    }
+    else{
+        io:println("Invalid Argument");
+    }
+}
 
 function runAllTests(){
+    io:println("\n\n");
     io:println("started running tests..\n");
 
     test_authenticate();
