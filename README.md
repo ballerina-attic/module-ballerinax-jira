@@ -6,9 +6,10 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|Ballerina Version | Connector Version | 
-|------------------|-------------------|
-|0.964.0 | 0.1 |
+|Connector Version |Ballerina Version | 
+|:------------------:|-------------------|
+| 0.1 |0.964.0|
+|0.2|0.970.0-alpha0|
 ### Why do you need the REST API for Jira
 
 The Jira REST API is an ideal solution for the developers who want to integrate JIRA with other standalone or web applications, 
