@@ -7,9 +7,10 @@ view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
 |Connector Version |Ballerina Version | 
-|:------------------:|-------------------|
-| 0.1 |0.964.0|
+|:------------------:|:-------------------:|
+|0.1|0.964.0|
 |0.2|0.970.0-alpha0|
+
 ### Why do you need the REST API for Jira
 
 The Jira REST API is an ideal solution for the developers who want to integrate JIRA with other standalone or web applications, 
@@ -29,7 +30,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 ## Getting started
 
 
-- Install the ballerina version 0.964.0 distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
+- Install the ballerina distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
 
 - Clone the repository by running the following command
  ```
@@ -78,12 +79,12 @@ will return an error if the credentials are invalid.)
 
 ## Running Samples
 
-You can easily test the following actions using the `sample.bal` file.
+You can easily test all the connector actions using the `test.bal` file, using the following steps.
 
-1. Navigate to the folder `tests`.
+1. Navigate to the folder `package-jira`.
 2. Run the following commands to execute the sample.
 
-    ```$ ballerina run test.bal "Run All Tests```
+    ```$ ballerina run tests "Run All Tests"```
 
 
 ## Working with Jira connector actions
@@ -98,6 +99,10 @@ All the actions return two values: result and error. Results can be either`balle
     jira:Project project = {};
     string projectKey = "RRDEVSPRT";
     
+    //Authentication 
+    var response = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    
+    //Connector Action
     var result = jiraConnector.getProject(projectKey);
     match result{
         jira:Project p => project = p;
