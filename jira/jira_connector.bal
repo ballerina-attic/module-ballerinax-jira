@@ -23,9 +23,9 @@ import ballerina/util;
 import ballerina/log;
 import ballerina/io;
 
-
 //Creates package-global Http client endpoint for jira REST API
-endpoint http:ClientEndpoint jiraHttpClientEP {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
+endpoint http:ClientEndpoint jiraHttpClientEP {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}],
+    chunking:http:Chunking.NEVER};
 http:HttpConnectorError connectionError;
 
 //package-global to store encoded user credentials
@@ -40,13 +40,14 @@ public struct JiraConnector {
     string base_url;
 }
 
-public function <JiraConnector jiraConnector> JiraConnector() {
+public function <JiraConnector jiraConnector> JiraConnector () {
 
-    jira_base_url = jiraConnector.base_url==""?WSO2_STAGING_JIRA_BASE_URL:jiraConnector.base_url;
-    jira_authentication_ep = jira_base_url+"/jira/rest/auth/1/session/";
+    jira_base_url = jiraConnector.base_url == "" ? WSO2_STAGING_JIRA_BASE_URL : jiraConnector.base_url;
+    jira_authentication_ep = jira_base_url + "/jira/rest/auth/1/session/";
     jira_rest_api_uri = jira_base_url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
 
-    http:ClientEndpointConfiguration jiraHttpClientConfig = {targets:[{uri:jira_rest_api_uri}], chunking:http:Chunking.NEVER};
+    http:ClientEndpointConfiguration jiraHttpClientConfig = {targets:[{uri:jira_rest_api_uri}],
+                                                                chunking:http:Chunking.NEVER};
     jiraHttpClientEP.init(jiraHttpClientConfig);
 
 }
@@ -54,10 +55,13 @@ public function <JiraConnector jiraConnector> JiraConnector() {
 @Description {value:"stores and validates jira account credentials given by the by the user"}
 @Param {value:"username: jira account username"}
 @Param {value:"password:jira account password"}
-@Return {value:"Returns false if the login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting, or any other reason.Otherwise returns true"}
+@Return {value:"Returns false if the login fails due to invalid credentials or if the login is denied due to a CAPTCHA
+requirement, throtting, or any other reason.Otherwise returns true"}
 @Return {value:"JiraConnectorError: Error Object"}
 
-public function <JiraConnector jiraConnector> authenticate (string username, string password) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> authenticate (string username, string password)
+                                                                              returns boolean|JiraConnectorError {
+
     JiraConnectorError e = {};
 
     boolean|JiraConnectorError response = validateAuthentication(username, password);
@@ -70,8 +74,8 @@ public function <JiraConnector jiraConnector> authenticate (string username, str
 
 @Description {value:"Returns all projects which are visible for the currently logged in user.
     If no user is logged in, it returns the list of projects that are visible when using anonymous access"}
-@Return {value:"ProjectSumary[]: Array of projects summaries for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
-    project permission."}
+@Return {value:"ProjectSumary[]: Array of projects summaries for which the user has the BROWSE, ADMINISTER or
+PROJECT_ADMIN project permission."}
 @Return {value:"JiraConnectorError: Error Object"}
 public function <JiraConnector jiraConnector> getAllProjectSummaries () returns ProjectSummary[]|JiraConnectorError {
     http:Request request = {};
@@ -136,7 +140,8 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
             return errorOut;
         }
         json jsonResponse => {
-            jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ? jsonResponse.lead.name : null : null;
+            jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
+                                    jsonResponse.lead.name : null : null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => {
@@ -157,7 +162,8 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
 @Param {value:"newProject: struct which contains the mandatory fields for new project creation"}
 @Return {value:"Returns true if the project was created was successfully,otherwise returns false"}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject)
+                                                                                returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -197,7 +203,8 @@ public function <JiraConnector jiraConnector> createProject (ProjectRequest newP
 @Param {value:"update: structure containing fields which need to be updated"}
 @Return {value:"Returns true if project was updated successfully,otherwise return false"}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update)
+                                                                                returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -306,7 +313,8 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
 @Param {value:"newCategory: struct which contains the mandatory fields for new project category creation "}
 @Return {value:"Returns true if project category was created successfully,otherwise return false"}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
+                                                                                returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -345,7 +353,8 @@ public function <JiraConnector jiraConnector> createProjectCategory (ProjectCate
 @Param {value:"projectCategoryId: Jira id of the project category"}
 @Return {value:"Returns true if the project category was deleted successfully, otherwise returns false"}
 @Return {value:"JiraConnectorError: Error Object"}
-public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
+                                                                                returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};

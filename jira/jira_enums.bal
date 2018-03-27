@@ -37,5 +37,3 @@ public enum ProjectRoleType {
 public enum ProjectType {
     SOFTWARE, BUSINESS
 }
-
-//

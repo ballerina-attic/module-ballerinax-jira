@@ -22,9 +22,9 @@ import ballerina/config;
 import ballerina/mime;
 import ballerina/io;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                  Functions                                                        //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                  Functions                                                         //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Description {value:"Add authoriaztion header to the request"}
 @Param {value:"authType: Authentication type preferred by the user"}
@@ -32,7 +32,7 @@ import ballerina/io;
 public function constructAuthHeader (http:Request request) {
 
     //read "authentication_type" field from ballerina.conf
-    if(base64EncodedString!="") {
+    if (base64EncodedString != "") {
         request.addHeader("Authorization", "Basic " + base64EncodedString);
     }
 }
@@ -40,47 +40,45 @@ public function constructAuthHeader (http:Request request) {
 @Description {value:"Checks whether the http response contains any errors "}
 @Param {value:"request: The http response object"}
 @Param {value:"connectionError: http response error object"}
-public function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse) returns json|JiraConnectorError {
+public function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
+                                                                                returns json|JiraConnectorError {
 
-   JiraConnectorError e = {};
-   mime:EntityError err = {};
-   json jsonResponse;
-   //checks for any http errors
-   match httpConnectorResponse{
-       http:HttpConnectorError errorOut => {
-            e = { ^"type":"HTTP Error", message:errorOut. message, cause:connectionError. cause};
+    JiraConnectorError e = {};
+    mime:EntityError err = {};
+    json jsonResponse;
+    //checks for any http errors
+    match httpConnectorResponse {
+        http:HttpConnectorError errorOut => {
+            e = {^"type":"HTTP Error", message:errorOut.message, cause:connectionError.cause};
             return e;
-       }
-       http:Response response => {
+        }
+        http:Response response => {
             if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
-                                                                              && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
-                e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " + response.reasonPhrase};
+                && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
+                e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " +
+                                                                                            response.reasonPhrase};
                 var payloadOutput = response.getJsonPayload();
-                match payloadOutput{
+                match payloadOutput {
                     json jsonOutput => e.jiraServerErrorLog = jsonOutput;
-                    mime:EntityError errorOut => err =errorOut;
+                    mime:EntityError errorOut => err = errorOut;
                 }
                 return e;
 
             } else {//if there is no any http or server error
                 var payloadOutput = response.getJsonPayload();
-                match payloadOutput{
+                match payloadOutput {
                     json jsonOutput => jsonResponse = jsonOutput;
-                    mime:EntityError errorOut => err =errorOut;
+                    mime:EntityError errorOut => err = errorOut;
                 }
                 return jsonResponse;
             }
-
         }
-
-
     }
-
 }
 
 function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
-    endpoint http:ClientEndpoint jiraLoginHttpClientEP {targets:[ {uri:jira_authentication_ep}], chunking:http:Chunking. NEVER,
-                                                        followRedirects: { enabled:true,maxCount:5}};
+    endpoint http:ClientEndpoint jiraLoginHttpClientEP {targets:[{uri:jira_authentication_ep}],
+        chunking:http:Chunking.NEVER, followRedirects:{enabled:true, maxCount:5}};
 
     JiraConnectorError e = {};
     error err = {};
@@ -89,31 +87,31 @@ function validateAuthentication (string username, string password) returns boole
     json jsonPayload;
     http:Request request = {};
 
-    jsonPayload = {"username": username,"password":password};
+    jsonPayload = {"username":username, "password":password};
     request.setJsonPayload(jsonPayload);
 
-    var output = jiraLoginHttpClientEP-> post("/", request);
-    match output{
+    var output = jiraLoginHttpClientEP -> post("/", request);
+    match output {
         http:HttpConnectorError errorOut => {
             e = {^"type":"HTTP Error", message:errorOut.message, cause:errorOut.cause};
             return e;
         }
 
-        http:Response response =>{
-            if ( response.statusCode != STATUS_CODE_OK ) {
-                e = { ^"type":"Server Error", message:"status " + <string>response.statusCode + ": " + response.reasonPhrase};
+        http:Response response => {
+            if (response.statusCode != STATUS_CODE_OK) {
+                e = {^"type":"Server Error", message:"status " + <string>response.statusCode +
+                                                                                    ": " + response.reasonPhrase};
                 var payloadOutput = response.getJsonPayload();
-                match payloadOutput{
+                match payloadOutput {
                     json jsonOutput => e.jiraServerErrorLog = jsonOutput;
                     mime:EntityError errorOut => errr = {};
                 }
                 return e;
-            } else{
+            } else {
                 return true;
             }
         }
     }
-
 }
 
 
@@ -137,14 +135,15 @@ function getProjectRoleIdFromEnum (ProjectRoleType ^"type") returns string {
     }
 }
 
+
 function getProjectTypeFromEnum (ProjectType projectType) returns string {
     return (projectType == ProjectType.SOFTWARE ? "software" : "business");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                  Transformers                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                  Transformers                                                      //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 transformer <error source, JiraConnectorError target> toConnectorError() {
     target = source.message != "" ? {message:source.message, cause:source.cause} : {};
@@ -171,7 +170,7 @@ transformer <json source, ProjectSummary target> createProjectSummary() {
     target.id = source.id.toString();
     target.key = source.key.toString();
     target.name = source.name.toString();
-    target.description = source.description != null ? source.description.toString() :"";
+    target.description = source.description != null ? source.description.toString() : "";
     target.projectTypeKey = source.projectTypeKey.toString();
     target.category = source.projectCategory != null ? source.projectCategory.name.toString() : "";
 }
@@ -183,10 +182,10 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
     target.description = source.description != null ? source.description.toString() : "";
 }
 
-public function isEmpty(error|JiraConnectorError e) returns boolean{
-    match e{
-        error err => return err.message=="";
-        JiraConnectorError err => return err.message=="";
+public function isEmpty (error|JiraConnectorError e) returns boolean {
+    match e {
+        error err => return err.message == "";
+        JiraConnectorError err => return err.message == "";
     }
 
 }

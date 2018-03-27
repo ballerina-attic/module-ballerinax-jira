@@ -21,13 +21,12 @@ package jira;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                      Configuration Constants                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string WSO2_STAGING_JIRA_BASE_URL = "https://support-staging.wso2.com";
 string JIRA_REST_API_RESOURCE = "/jira/rest/api/";
 string WSO2_STAGING_JIRA_REST_API_URL =  WSO2_STAGING_JIRA_BASE_URL + JIRA_REST_API_RESOURCE;
 string JIRA_REST_API_VERSION = "2";
 string WSO2_STAGING_JIRA_REST_API_ENDPOINT = WSO2_STAGING_JIRA_REST_API_URL + JIRA_REST_API_VERSION;
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +42,8 @@ public const string ROLE_ID_OBSERVER = "10020";
 public const string ROLE_ID_USERS = "10000";
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          HTTP Status Codes                                                          //
+//                                          HTTP Status Codes                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public const int STATUS_CODE_OK = 200;
