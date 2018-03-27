@@ -6,7 +6,7 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|Connector Version |Ballerina Version | 
+|connector version | Ballerina Version | 
 |:------------------:|:-------------------:|
 |0.1|0.964.0|
 |0.2|0.970.0-alpha0|
@@ -34,7 +34,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 - Clone the repository by running the following command
  ```
-    git clone https://github.com/NipunaRanasinghe/connector-jira
+    git clone https://github.com/wso2-ballerina/package-jira
  ```
  
 - Import the package as a ballerina project.
@@ -140,17 +140,18 @@ public struct JiraConnectorError {
 ```
 
 
-Ballerina Jira connector API basically provides two types of functionalities which are, Connector-based
-and entity-based actions
+Ballerina Jira connector API basically provides two types of functionalities, which are
+- **Connector-based actions**
+- **Entity-based actions**
 
-##### Connector-Based Actions
+#### Connector-Based Actions
 
    Connector-based actions provide generic functionalities related to jira, with the following format.
 
    syntax: `connectorName.actionName(arguments)`
 
 
- ##### Entity-Based Actions
+#### Entity-Based Actions
  
    Entity-based actions are special set of actions which are defined on a Jira Entity (Eg: Jira Project,Jira Issue etc.),
    which are also called struct-bound functions. Ballerina Jira connector API design allows users to retrieve the jira 
@@ -158,11 +159,6 @@ and entity-based actions
 
    syntax: `entityName.actionName(arguments)`
  
-
- 
-##### Example - Connector based actions and Entity based Actions
-
-
 Now that you have basic knowledge about to how Ballerina Jira connector works, 
 use the information in the following sections to perform various operations with the connector.
 
@@ -178,7 +174,7 @@ use the information in the following sections to perform various operations with
 
 ### API Reference
 
-#### Connector Actions
+#### Connector-Based Actions
 
 - [getAllProjectSummaries()](#getallprojectsummaries--)
 - [getProject()](#getproject-string-projectidorkey)
@@ -219,10 +215,8 @@ use the information in the following sections to perform various operations with
     `None`
     
     ###### Returns
-    * **Project[]:** Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
+    * **ProjectSummary[]:** Array of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN
         project permission.
-        
-  
     * **JiraConnectorError:** Error Object.
 
 
@@ -237,31 +231,9 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **Project:** Contains a full representation of a project, if the project exists,the user has permission
           to view it and if no any error occured
-          
-    ```ballerina
-    public struct Project {
-        string self;
-        string id;
-        string key;
-        string name;
-        string description;
-        string leadName;
-        string projectTypeKey;
-        AvatarUrls avatarUrls;
-        ProjectCategory projectCategory;
-        IssueType[] issueTypes;
-        ProjectComponentSummary[] components;
-        ProjectVersion[] versions;
-    }
-    
-        
-    ```
-    
     * **JiraConnectorError:** Error Object
     
   
-
-
 ***  
 - ### createProject (ProjectRequest newProject)
  
@@ -273,7 +245,6 @@ use the information in the following sections to perform various operations with
     ###### Returns
     * **boolean:** Returns true if the project was created was successfully,otherwise returns false"}
     * **JiraConnectorError:** Error Object
-
 
 
 ***
@@ -400,11 +371,9 @@ use the information in the following sections to perform various operations with
     
     Removes a given user from a given project role.
    
-    public function <Project project> 
-    
     ###### Parameters
     * **projectRoleType:** Enum which provides the possible project roles for a jira project.
-    * **UserName:**  name of the user required to be removed.
+    * **userName:**  name of the user required to be removed.
     
     ###### Returns
     * **boolean:** Returns true if process was successfull,otherwise returns false
