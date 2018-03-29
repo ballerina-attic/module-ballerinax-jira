@@ -6,7 +6,7 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|connector version | Ballerina Version | 
+|Connector Version | Ballerina Version | 
 |:------------------:|:-------------------:|
 |0.1|0.964.0|
 |0.2|0.970.0-alpha0|
@@ -64,18 +64,19 @@ will return an error if the credentials are invalid.)
     jira:JiraConnectorError jiraConnectorError;
     boolean isValid;
     
-    //Creating the jira Connector instace
-    jira:JiraConnector jiraConnector = {};
-
+    //Creating the jira Connector as an endpoint
+    endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
+        base_url:"https://support-staging.wso2.com"
+    };
+    
     //this is the in-buit connctor action to get the user credentials and check the validity of the provided details.
-    var response = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    var response = jiraConnector -> authenticate("ashan@wso2.com", "ashan123");
     match response{
         boolean success => io:println(success);
         jira:JiraConnectorError error => io:println(e);
     }
 
 ```
-
 
 ## Running Samples
 
@@ -94,16 +95,21 @@ All the actions return two values: result and error. Results can be either`balle
 ##### Example
 * Request 
 ```ballerina
-    jira:JiraConnector jiraConnector = {};
+    
     jira:JiraConnectorError jiraError = {};
     jira:Project project = {};
     string projectKey = "RRDEVSPRT";
     
+    //Creating the jira Connector as an endpoint
+    endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
+        base_url:"https://support-staging.wso2.com"
+    };
+    
     //Authentication 
-    var response = jiraConnector.authenticate("ashan@wso2.com", "ashan123");
+    var response = jiraConnector -> authenticate("ashan@wso2.com", "ashan123");
     
     //Connector Action
-    var result = jiraConnector.getProject(projectKey);
+    var result = jiraConnector -> getProject(projectKey);
     match result{
         jira:Project p => project = p;
         jira:JoraConnectorError e => jiraError = err;
@@ -132,7 +138,7 @@ public struct Project {
 * Error Struct
 ```ballerina
 public struct JiraConnectorError {
-    string |type|;
+    string ^"type";
     string message;
     json jiraServerErrorLog;
     error cause;
