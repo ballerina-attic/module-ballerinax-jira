@@ -18,11 +18,9 @@ public function main (string[] args) {
     else {
         io:println("Invalid Argument");
     }
-
 }
 
 function runAllTests () {
-
 
     io:println("\n\n");
     io:println("started running tests..\n");
@@ -54,7 +52,6 @@ function runAllTests () {
     test_getAllProjectCategories();
     test_createProjectCategory();
     test_deleteProjectCategory();
-
 }
 
 function test_authenticate () {
@@ -66,8 +63,6 @@ function test_authenticate () {
         boolean => io:println("success");
         jira:JiraConnectorError e => printTestResponse(e);
     }
-
-
 }
 
 function test_getAllProjectSummaries () {
@@ -79,7 +74,6 @@ function test_getAllProjectSummaries () {
         jira:ProjectSummary[] => io:println("success");
         jira:JiraConnectorError e => printTestResponse(e);
     }
-
 }
 
 function test_ProjectSummary_getAllDetails () {
@@ -126,7 +120,6 @@ function test_createProject () {
         boolean => io:print("success");
         jira:JiraConnectorError e => printTestResponse(e);
     }
-
 }
 
 function test_updateProject () {
@@ -144,7 +137,6 @@ function test_updateProject () {
         boolean => io:print("success");
         jira:JiraConnectorError e => printTestResponse(e);
     }
-
 }
 
 function test_deleteProject () {
@@ -156,7 +148,6 @@ function test_deleteProject () {
         boolean => io:print("success");
         jira:JiraConnectorError e => printTestResponse(e);
     }
-
 }
 
 function test_getProject () {

@@ -23,9 +23,9 @@ import ballerina/util;
 import ballerina/log;
 import ballerina/io;
 
-
 //Creates package-global Http client endpoint for jira REST API
-endpoint http:ClientEndpoint jiraHttpClientEP {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
+endpoint http:ClientEndpoint jiraHttpClientEP
+    {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
 http:HttpConnectorError connectionError;
 
 //package-global to store encoded user credentials
@@ -50,7 +50,6 @@ requirement, throtting, or any other reason.Otherwise returns true"}
 
 public function <JiraConnector jiraConnector> authenticate (string username, string password)
                                                                               returns boolean|JiraConnectorError {
-
     JiraConnectorError e = {};
 
     boolean|JiraConnectorError response = validateAuthentication(username, password);
