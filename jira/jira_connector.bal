@@ -23,9 +23,9 @@ import ballerina/util;
 import ballerina/log;
 import ballerina/io;
 
+
 //Creates package-global Http client endpoint for jira REST API
-endpoint http:ClientEndpoint jiraHttpClientEP {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}],
-    chunking:http:Chunking.NEVER};
+endpoint http:ClientEndpoint jiraHttpClientEP {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
 http:HttpConnectorError connectionError;
 
 //package-global to store encoded user credentials
@@ -37,19 +37,8 @@ string jira_authentication_ep;
 //Jira Connector Struct
 public struct JiraConnector {
     boolean hasVaildCredentials = false;
+    http:ClientEndpointConfiguration jiraHttpClientEPConfig;
     string base_url;
-}
-
-public function <JiraConnector jiraConnector> JiraConnector () {
-
-    jira_base_url = jiraConnector.base_url == "" ? WSO2_STAGING_JIRA_BASE_URL : jiraConnector.base_url;
-    jira_authentication_ep = jira_base_url + "/jira/rest/auth/1/session/";
-    jira_rest_api_uri = jira_base_url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
-
-    http:ClientEndpointConfiguration jiraHttpClientConfig = {targets:[{uri:jira_rest_api_uri}],
-                                                                chunking:http:Chunking.NEVER};
-    jiraHttpClientEP.init(jiraHttpClientConfig);
-
 }
 
 @Description {value:"stores and validates jira account credentials given by the by the user"}
@@ -82,7 +71,6 @@ public function <JiraConnector jiraConnector> getAllProjectSummaries () returns 
     http:Response response = {};
     ProjectSummary[] projects = [];
     JiraConnectorError e = {};
-
 
     //Adds Authorization Header
     constructAuthHeader(request);
@@ -152,8 +140,6 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
                     return project;
                 }
             }
-
-
         }
     }
 }
@@ -344,9 +330,7 @@ public function <JiraConnector jiraConnector> createProjectCategory (ProjectCate
                 }
             }
         }
-
     }
-
 }
 
 @Description {value:"Delete a project category."}

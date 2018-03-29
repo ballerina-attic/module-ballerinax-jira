@@ -139,7 +139,6 @@ public struct JiraConnectorError {
 }
 ```
 
-
 Ballerina Jira connector API basically provides two types of functionalities, which are
 - **Connector-based actions**
 - **Entity-based actions**

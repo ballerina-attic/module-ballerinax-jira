@@ -24,6 +24,7 @@ package jira;
 
 string WSO2_STAGING_JIRA_BASE_URL = "https://support-staging.wso2.com";
 string JIRA_REST_API_RESOURCE = "/jira/rest/api/";
+string JIRA_AUTH_RESOURCE = "/jira/rest/auth/1/session/";
 string WSO2_STAGING_JIRA_REST_API_URL =  WSO2_STAGING_JIRA_BASE_URL + JIRA_REST_API_RESOURCE;
 string JIRA_REST_API_VERSION = "2";
 string WSO2_STAGING_JIRA_REST_API_ENDPOINT = WSO2_STAGING_JIRA_REST_API_URL + JIRA_REST_API_VERSION;
