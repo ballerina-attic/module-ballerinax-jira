@@ -128,7 +128,6 @@ function test_updateProject () {
     {
         lead:"inshaf@wso2.com",
         projectTypeKey:"business"
-
     };
     io:println("\n\n");
     io:println("BIND FUNCTION: updateProject()");

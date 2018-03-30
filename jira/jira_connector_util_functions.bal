@@ -41,7 +41,7 @@ public function constructAuthHeader (http:Request request) {
 @Param {value:"request: The http response object"}
 @Param {value:"connectionError: http response error object"}
 public function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
-                                                                                returns json|JiraConnectorError {
+                                                                                    returns json|JiraConnectorError {
 
     JiraConnectorError e = {};
     mime:EntityError err = {};

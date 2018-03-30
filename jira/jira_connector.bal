@@ -25,7 +25,7 @@ import ballerina/io;
 
 //Creates package-global Http client endpoint for jira REST API
 endpoint http:ClientEndpoint jiraHttpClientEP
-    {targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
+{targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
 http:HttpConnectorError connectionError;
 
 //package-global to store encoded user credentials
@@ -49,7 +49,7 @@ requirement, throtting, or any other reason.Otherwise returns true"}
 @Return {value:"JiraConnectorError: Error Object"}
 
 public function <JiraConnector jiraConnector> authenticate (string username, string password)
-                                                                              returns boolean|JiraConnectorError {
+returns boolean|JiraConnectorError {
     JiraConnectorError e = {};
 
     boolean|JiraConnectorError response = validateAuthentication(username, password);
@@ -128,7 +128,7 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
         }
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
-                                    jsonResponse.lead.name : null : null;
+                                                                jsonResponse.lead.name : null : null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => {
@@ -148,7 +148,7 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
 @Return {value:"Returns true if the project was created was successfully,otherwise returns false"}
 @Return {value:"JiraConnectorError: Error Object"}
 public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject)
-                                                                                returns boolean|JiraConnectorError {
+returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -189,7 +189,7 @@ public function <JiraConnector jiraConnector> createProject (ProjectRequest newP
 @Return {value:"Returns true if project was updated successfully,otherwise return false"}
 @Return {value:"JiraConnectorError: Error Object"}
 public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update)
-                                                                                returns boolean|JiraConnectorError {
+returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -251,8 +251,6 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
     ProjectCategory[] projectCategories = [];
     JiraConnectorError e = {};
 
-
-
     //Adds Authorization Header
     constructAuthHeader(request);
     var httpResponseOut = jiraHttpClientEP -> get("/projectCategory", request);
@@ -299,7 +297,7 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
 @Return {value:"Returns true if project category was created successfully,otherwise return false"}
 @Return {value:"JiraConnectorError: Error Object"}
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
-                                                                                returns boolean|JiraConnectorError {
+returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
@@ -337,7 +335,7 @@ public function <JiraConnector jiraConnector> createProjectCategory (ProjectCate
 @Return {value:"Returns true if the project category was deleted successfully, otherwise returns false"}
 @Return {value:"JiraConnectorError: Error Object"}
 public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
-                                                                                returns boolean|JiraConnectorError {
+returns boolean|JiraConnectorError {
     http:Request request = {};
     http:Response response = {};
     JiraConnectorError e = {};
