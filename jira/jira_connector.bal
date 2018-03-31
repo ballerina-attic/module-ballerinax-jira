@@ -24,9 +24,10 @@ import ballerina/log;
 import ballerina/io;
 
 //Creates package-global Http client endpoint for jira REST API
-endpoint http:ClientEndpoint jiraHttpClientEP
-{targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}], chunking:http:Chunking.NEVER};
-http:HttpConnectorError connectionError;
+endpoint http:ClientEndpoint jiraHttpClientEP {
+    targets:[{uri:WSO2_STAGING_JIRA_REST_API_ENDPOINT}],
+    chunking:http:Chunking.NEVER
+};
 
 //package-global instances to store encoded user credentials and endpoints
 string base64EncodedString = "";

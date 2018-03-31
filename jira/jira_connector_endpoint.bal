@@ -51,7 +51,7 @@ public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration 
     jira_authentication_ep = jira_base_url + JIRA_AUTH_RESOURCE;
     jira_rest_api_uri = jira_base_url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
 
-    jiraHttpClientEP.init(jiraConnectorEP.jiraConnector.jiraHttpClientEPConfig);
+    jiraHttpClientEP.init(jiraConnectorEP.jiraConfig.httpClientConfig);
 }
 
 @Description {value:"Returns the connector that client code uses"}

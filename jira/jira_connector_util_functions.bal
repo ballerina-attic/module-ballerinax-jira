@@ -31,7 +31,6 @@ import ballerina/io;
 @Param {value:"request: The http out request object"}
 public function constructAuthHeader (http:Request request) {
 
-    //read "authentication_type" field from ballerina.conf
     if (base64EncodedString != "") {
         request.addHeader("Authorization", "Basic " + base64EncodedString);
     }
@@ -49,8 +48,8 @@ public function getValidatedResponse (http:Response|http:HttpConnectorError http
     json jsonResponse;
     //checks for any http errors
     match httpConnectorResponse {
-        http:HttpConnectorError errorOut => {
-            e = {^"type":"HTTP Error", message:errorOut.message, cause:connectionError.cause};
+        http:HttpConnectorError connectionError => {
+            e = {^"type":"Connection Error", message:connectionError.message, cause:connectionError.cause};
             return e;
         }
         http:Response response => {
@@ -78,8 +77,12 @@ public function getValidatedResponse (http:Response|http:HttpConnectorError http
 }
 
 function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
-    endpoint http:ClientEndpoint jiraLoginHttpClientEP {targets:[{uri:jira_authentication_ep}],
-        chunking:http:Chunking.NEVER, followRedirects:{enabled:true, maxCount:5}};
+    //Initializes jira authentication endpoint
+    endpoint http:ClientEndpoint jiraLoginHttpClientEP {
+        targets:[{uri:WSO2_STAGING_JIRA_BASE_URL+JIRA_AUTH_RESOURCE}],
+        chunking:http:Chunking.NEVER,
+        followRedirects:{enabled:true, maxCount:5}
+    };
 
     JiraConnectorError e = {};
     error err = {};
@@ -93,8 +96,8 @@ function validateAuthentication (string username, string password) returns boole
 
     var output = jiraLoginHttpClientEP -> post("/", request);
     match output {
-        http:HttpConnectorError errorOut => {
-            e = {^"type":"HTTP Error", message:errorOut.message, cause:errorOut.cause};
+        http:HttpConnectorError connectionError => {
+            e = {^"type":"Connection Error", message:connectionError.message, cause:connectionError.cause};
             return e;
         }
 
@@ -141,6 +144,12 @@ function getProjectTypeFromEnum (ProjectType projectType) returns string {
     return (projectType == ProjectType.SOFTWARE ? "software" : "business");
 }
 
+public function isEmpty (error|JiraConnectorError e) returns boolean {
+    match e {
+        error err => return err.message == "";
+        JiraConnectorError err => return err.message == "";
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Transformers                                                      //
@@ -183,10 +192,3 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
     target.description = source.description != null ? source.description.toString() : "";
 }
 
-public function isEmpty (error|JiraConnectorError e) returns boolean {
-    match e {
-        error err => return err.message == "";
-        JiraConnectorError err => return err.message == "";
-    }
-
-}
