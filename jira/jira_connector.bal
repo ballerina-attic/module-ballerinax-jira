@@ -321,10 +321,3 @@ public function <JiraConnector jiraConnector> deleteProjectCategory (string proj
         }
     }
 }
-
-
-
-
-
-
-

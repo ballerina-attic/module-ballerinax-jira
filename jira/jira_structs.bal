@@ -34,9 +34,8 @@ public struct ProjectSummary {
 }
 
 @Description {value:"Returns detailed representation of of the summarized project."}
-@Return {value:"Project: Contains a full representation of a project, if the project exists,the user has permission
-    to view it and if no any error occured"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a full representation of a project, if the project exists,the user has permission
+    to view it and if no any error occured.Otherwise returns a 'JiraConnectorError'."}
 public function <ProjectSummary projectSummary> getAllDetails () returns Project|JiraConnectorError {
 
     http:Request request = {};
@@ -85,8 +84,8 @@ public struct Project {
 }
 
 @Description {value:"Returns jira user details of the project lead"}
-@Return {value:"User: structure containing user details of the project lead "}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a 'User' structure containing user details of the project lead if no any error occured.
+Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> getLeadUserDetails () returns User|JiraConnectorError {
 
     http:Request request = {};
@@ -117,8 +116,8 @@ public function <Project project> getLeadUserDetails () returns User|JiraConnect
 
 @Description {value:"Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.)"}
 @Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
-@Return {value:"ProjectRole: structure containing the details of the requested role"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a 'ProjectRole' structure containing the details of the requested role, if no any error occured.
+Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> getRoleDetails (ProjectRoleType projectRoleType)
                                                                             returns ProjectRole|JiraConnectorError {
     http:Request request = {};
@@ -151,8 +150,7 @@ public function <Project project> getRoleDetails (ProjectRoleType projectRoleTyp
 @Description {value:"assign an user to a project role."}
 @Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
 @Param {value:"userName: name of the user to be added"}
-@Return {value:"Returns true if process was successfull,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> addUserToRole (ProjectRoleType projectRoleType, string userName)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -180,8 +178,7 @@ public function <Project project> addUserToRole (ProjectRoleType projectRoleType
 @Description {value:"assign a group to a project role."}
 @Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
 @Param {value:"groupName: name of the group to be added"}
-@Return {value:"Returns true if process was successfull,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> addGroupToRole (ProjectRoleType projectRoleType,
                                                   string groupName) returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -209,8 +206,7 @@ public function <Project project> addGroupToRole (ProjectRoleType projectRoleTyp
 @Description {value:"removes a given user from a given project role."}
 @Param {value:"projectRoleype: Enum which provides the possible project roles for a jira project"}
 @Param {value:"userName: name of the user required to be removed"}
-@Return {value:"Returns true if process was successfull,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> removeUserFromRole (ProjectRoleType projectRoleType, string userName)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -236,7 +232,7 @@ public function <Project project> removeUserFromRole (ProjectRoleType projectRol
 @Param {value:"projectRoleype: Enum which provides the possible project roles for a jira project"}
 @Param {value:"groupName: name of the user required to be removed"}
 @Return {value:"Returns true if process was successfull,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> removeGroupFromRole (ProjectRoleType projectRoleType, string groupName)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -262,7 +258,7 @@ public function <Project project> removeGroupFromRole (ProjectRoleType projectRo
 
 @Description {value:"Gets all issue types with valid status values for a project."}
 @Return {value:"ProjectStatus[]: array of project status structures"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> getAllIssueTypeStatuses () returns ProjectStatus[]|JiraConnectorError {
 
     http:Request request = {};
@@ -308,7 +304,7 @@ public function <Project project> getAllIssueTypeStatuses () returns ProjectStat
 @Description {value:"Updates the type of a jira project."}
 @Param {value:"newProjectType: Enum which provides the possible project types for a jira project"}
 @Return {value:"Returns true if update was successfull,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if process was successfull. Otherwise returns a 'JiraConnectorError'."}
 public function <Project project> changeProjectType (ProjectType newProjectType) returns boolean|JiraConnectorError {
 
     http:Request request = {};
@@ -343,8 +339,8 @@ public struct ProjectComponentSummary {
 }
 
 @Description {value:"fetches detailed entity using a given project component summary"}
-@Return {value:"ProjectComponent: structure which contains a full representation of the project component"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a 'ProjectComponent' structure which contains a full representation of the project component,
+if no any error occured.Otherwise returns a 'JiraConnectorError'."}
 public function <ProjectComponentSummary projectComponentSummary> getAllDetails ()
                                                                         returns ProjectComponent|JiraConnectorError {
     http:Request request = {};
@@ -392,8 +388,8 @@ public struct ProjectComponent {
 }
 
 @Description {value:"returns jira user details of the project component lead"}
-@Return {value:"User: structure containing user details of the lead "}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a 'User' structure containing user details of the lead, if no any error occured.
+Otherwise returns a 'JiraConnectorError'. "}
 public function <ProjectComponent projectComponent> getLeadUserDetails () returns User|JiraConnectorError {
 
     http:Request request = {};
@@ -423,8 +419,8 @@ public function <ProjectComponent projectComponent> getLeadUserDetails () return
 }
 
 @Description {value:"returns jira user details of the project component assignee"}
-@Return {value:"User: structure containing user details of the lead "}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a 'User' structure containing user details of the assignee,if no any error occured.
+Otherwise returns a 'JiraConnectorError'."}
 public function <ProjectComponent projectComponent> getAssigneeUserDetails () returns User|JiraConnectorError {
 
     http:Request request = {};
