@@ -44,10 +44,8 @@ public struct JiraConnector {
 @Description {value:"stores and validates jira account credentials given by the by the user"}
 @Param {value:"username: jira account username"}
 @Param {value:"password:jira account password"}
-@Return {value:"Returns false if the login fails due to invalid credentials or if the login is denied due to a CAPTCHA
-requirement, throtting, or any other reason.Otherwise returns true"}
-@Return {value:"JiraConnectorError: Error Object"}
-
+@Return {value:"Returns a 'JiraConnectorError' if the login fails due to invalid credentials or if the login is denied due to a CAPTCHA
+requirement, throtting, or any other reasons.Otherwise returns boolean 'true'"}
 public function <JiraConnector jiraConnector> authenticate (string username, string password)
                                                                                 returns boolean|JiraConnectorError {
 
@@ -60,10 +58,9 @@ public function <JiraConnector jiraConnector> authenticate (string username, str
 }
 
 @Description {value:"Returns all projects which are visible for the currently logged in user.
-    If no user is logged in, it returns the list of projects that are visible when using anonymous access"}
-@Return {value:"ProjectSumary[]: Array of projects summaries for which the user has the BROWSE, ADMINISTER or
-PROJECT_ADMIN project permission."}
-@Return {value:"JiraConnectorError: Error Object"}
+If no user is logged in, it returns the list of projects that are visible when using anonymous access"}
+@Return {value:"Returns an array of projects summaries for which the user has the BROWSE, ADMINISTER or
+PROJECT_ADMIN project permission and if no any error occured. Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> getAllProjectSummaries () returns ProjectSummary[]|JiraConnectorError {
 
     ProjectSummary[] projects = [];
@@ -104,9 +101,8 @@ public function <JiraConnector jiraConnector> getAllProjectSummaries () returns 
 
 @Description {value:"Returns detailed representation of a project."}
 @Param {value:"projectIdOrKey: unique string which represents the project id or project key of a jira project"}
-@Return {value:"Project: Contains a full representation of a project, if the project exists,the user has permission
-    to view it and if no any error occured"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns a full representation of a project, if the project exists,the user has permission
+    to view it and if no any error occured. Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> getProject (string projectIdOrKey) returns Project|JiraConnectorError {
 
     http:Request request = {};
@@ -139,8 +135,8 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
 
 @Description {value:"Creates a new project."}
 @Param {value:"newProject: struct which contains the mandatory fields for new project creation"}
-@Return {value:"Returns true if the project was created was successfully,otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns bollean 'true' if the project was created was successfully.
+Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -176,8 +172,7 @@ public function <JiraConnector jiraConnector> createProject (ProjectRequest newP
     be updated in the project. Values available for the assigneeType field are: 'PROJECT_LEAD' and 'UNASSIGNED'."}
 @Param {value:"projectIdOrKey: unique string which represents the project id or project key of a jira project"}
 @Param {value:"update: structure containing fields which need to be updated"}
-@Return {value:"Returns true if project was updated successfully,otherwise return false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if project was updated successfully.Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update)
 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -204,8 +199,7 @@ returns boolean|JiraConnectorError {
 
 @Description {value:"Deletes a project."}
 @Param {value:"projectIdOrKey: unique string which represents the project id or project key of a jira project"}
-@Return {value:"Returns true if project was deleted successfully,otherwise return false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if project was deleted successfully.Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> deleteProject (string projectIdOrKey) returns boolean|JiraConnectorError {
 
     http:Request request = {};
@@ -226,8 +220,8 @@ public function <JiraConnector jiraConnector> deleteProject (string projectIdOrK
 }
 
 @Description {value:"Returns all existing project categories"}
-@Return {value:"ProjectCategory[]: Array of structures which contain existing categories"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns an array of 'ProjectCategory' structures which contain existing categories.
+Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> getAllProjectCategories () returns ProjectCategory[]|JiraConnectorError {
 
     http:Request request = {};
@@ -272,8 +266,8 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
 
 @Description {value:"Create a new project category"}
 @Param {value:"newCategory: struct which contains the mandatory fields for new project category creation "}
-@Return {value:"Returns true if project category was created successfully,otherwise return false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if project category was created successfully.
+Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
@@ -306,8 +300,8 @@ public function <JiraConnector jiraConnector> createProjectCategory (ProjectCate
 
 @Description {value:"Delete a project category."}
 @Param {value:"projectCategoryId: Jira id of the project category"}
-@Return {value:"Returns true if the project category was deleted successfully, otherwise returns false"}
-@Return {value:"JiraConnectorError: Error Object"}
+@Return {value:"Returns boolean 'true' if the project category was deleted successfully.
+Otherwise returns a 'JiraConnectorError'."}
 public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
