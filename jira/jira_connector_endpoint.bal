@@ -23,7 +23,7 @@ import ballerina/net.http;
 
 public struct JiraConfiguration {
     http:ClientEndpointConfiguration httpClientConfig;
-    string base_url;
+    string uri;
 }
 
 public function <JiraConfiguration jiraConfig> JiraConfiguration () {
@@ -38,13 +38,13 @@ public struct JiraConnectorEndpoint {
 public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration jiraConfig) {
 
     http:ClientEndpointConfiguration httpConfig =
-        {targets:[{uri:jiraConfig.base_url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION}],
+        {targets:[{uri:jiraConfig.uri + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION}],
             chunking:http:Chunking.NEVER};
     jiraConfig.httpClientConfig = httpConfig;
 
     jiraConnectorEP.jiraConfig = jiraConfig;
     jiraConnectorEP.jiraConnector = {jiraHttpClientEPConfig:jiraConnectorEP.jiraConfig.httpClientConfig,
-                                        base_url:jiraConnectorEP.jiraConfig.base_url};
+                                        base_url:jiraConnectorEP.jiraConfig.uri};
 
     jira_base_url = jiraConnectorEP.jiraConnector.base_url == "" ?
                     WSO2_STAGING_JIRA_BASE_URL : jiraConnectorEP.jiraConnector.base_url;

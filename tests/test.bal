@@ -8,7 +8,9 @@ jira:JiraConnectorError e = {};
 boolean result;
 boolean isValid;
 
-endpoint jira:JiraConnectorEndpoint jiraConnectorEP {base_url:"https://support-staging.wso2.com"};
+endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
+    uri:"https://support-staging.wso2.com"
+};
 
 public function main (string[] args) {
 
@@ -393,4 +395,5 @@ function printTestResponse (jira:JiraConnectorError e) {
         io:println(e);
     }
 }
+
 
