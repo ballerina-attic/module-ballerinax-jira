@@ -2,25 +2,64 @@ package tests;
 
 import ballerina/log;
 import ballerina/test;
+import ballerina/io;
+import jira;
+
+jira:Project project_test = {};
+jira:ProjectSummary[] projectSummaryArray_test = [];
+
+@test:BeforeSuite
+function connector_init () {
+    log:printInfo("Init");
+    var output = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
+}
 
 @test:Config
-function test_authenticate(){
+function test_authenticate () {
     log:printInfo("CONNECTOR_ACTION - Authenticate()");
     var output = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
-    test:assertEquals(output,true,msg="Failed");
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
 }
 
-@test:Config
+@test:Config {
+    dependsOn:["test_authenticate"]
+}
 function test_getAllProjectSummaries () {
     log:printInfo("CONNECTOR_ACTION - getAllProjectSummaries()");
-    var output = jiraConnectorEP -> getAllProjectSummaries();
-    test:assertEquals(typeof output,typeof jira:ProjectSummary[],msg="Failed");
 
+    var output = jiraConnectorEP -> getAllProjectSummaries();
+    match output {
+        jira:ProjectSummary[] projectSummaryArray => {
+            projectSummaryArray_test = projectSummaryArray;
+            test:assertTrue(true);
+        }
+
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
 }
 
-@test:Config
+@test:Config {
+    dependsOn:["test_getAllProjectSummaries"]
+}
+function test_getAllDetailsFromProjectSummary () {
+    log:printInfo("CONNECTOR_ACTION - getAllDetailsFromProjectSummary()");
+
+    var output = jiraConnectorEP -> getAllDetailsFromProjectSummary(projectSummaryArray_test[0]);
+    match output {
+        jira:Project => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_authenticate"]
+}
 function test_createProject () {
     log:printInfo("CONNECTOR_ACTION - createProject()");
+
     jira:ProjectRequest newProject =
     {
         key:"TESTPROJECT",
@@ -37,43 +76,185 @@ function test_createProject () {
         notificationScheme:"10086",
         categoryId:"10000"
     };
+
     var output = jiraConnectorEP -> createProject(newProject);
-    test:assertEquals(output,true,msg="Failed");
+    match output {
+        jira:Project => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
 }
 
+@test:Config {
+    dependsOn:["test_createProject"]
+}
 function test_updateProject () {
+    log:printInfo("CONNECTOR_ACTION - updateProject()");
+
     jira:ProjectRequest projectUpdate =
     {
         lead:"inshaf@wso2.com",
         projectTypeKey:"business"
     };
-    io:println("\n\n");
-    io:println("BIND FUNCTION: updateProject()");
+
     var output = jiraConnectorEP -> updateProject("TESTPROJECT", projectUpdate);
     match output {
-        boolean => io:print("success");
-        jira:JiraConnectorError e => printTestResponse(e);
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
+
+}
+
+@test:Config {
+    dependsOn:["test_createProject",
+               "test_updateProject",
+               "test_getLeadUserDetailsOfProject",
+               "test_getRoleDetailsOfProject",
+               "test_addUserToRoleOfProject",
+               "test_addGroupToRoleOfProject",
+               "test_removeUserFromRoleOfProject",
+               "test_removeGroupFromRoleOfProject",
+               "test_getAllIssueTypeStatusesOfProject",
+               "test_changeTypeOfProject"
+              ]
 }
 
 function test_deleteProject () {
-    //Deletes an existing project from jira
-    io:println("\n\n");
-    io:println("BIND FUNCTION: deleteProject()");
+    log:printInfo("CONNECTOR_ACTION - deleteProject()");
+
+
     var output = jiraConnectorEP -> deleteProject("TESTPROJECT");
     match output {
-        boolean => io:print("success");
-        jira:JiraConnectorError e => printTestResponse(e);
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
 
+
+@test:Config {
+    dependsOn:["test_createProject"]
+}
+
 function test_getProject () {
-    //Fetches jira Project details using project id (or project key)
-    io:println("\n\n");
-    io:println("BIND FUNCTION: getProject()");
-    var output = jiraConnectorEP -> getProject("10314");
+    log:printInfo("CONNECTOR_ACTION - getProject()");
+
+    var output = jiraConnectorEP -> getProject("TESTPROJECT");
     match output {
-        jira:Project => io:print("success");
-        jira:JiraConnectorError e => printTestResponse(e);
+        jira:Project p => {
+            project_test = p;
+            test:assertTrue(true);
+        }
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+
+function test_getLeadUserDetailsOfProject () {
+    log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProject()");
+
+    var output = jiraConnectorEP -> getLeadUserDetailsOfProject(project_test);
+    match output {
+        jira:User => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+function test_getRoleDetailsOfProject () {
+    log:printInfo("CONNECTOR_ACTION - getRoleDetailsOfProject()");
+
+    var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, jira:ProjectRoleType.DEVELOPERS);
+    match output {
+        jira:ProjectRole => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+function test_addUserToRoleOfProject () {
+    log:printInfo("CONNECTOR_ACTION - addUserToRoleOfProject()");
+
+    var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, jira:ProjectRoleType.DEVELOPERS,
+                                                           "pasan@wso2.com");
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+function test_addGroupToRoleOfProject () {
+    log:printInfo("CONNECTOR_ACTION - addGroupToRoleOfProject()");
+
+    var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, jira:ProjectRoleType.DEVELOPERS,
+                                                            "support.client.AAALIFEDEV.user");
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProject", "test_addUserToRoleOfProject"]
+}
+function test_removeUserFromRoleOfProject () {
+    log:printInfo("CONNECTOR_ACTION - removeUserFromRoleOfProject()");
+
+    var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, jira:ProjectRoleType.DEVELOPERS,
+                                                                "pasan@wso2.com");
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+
+@test:Config {
+    dependsOn:["test_getProject", "test_addGroupToRoleOfProject"]
+}
+function test_removeGroupFromRoleOfProject () {
+    log:printInfo("CONNECTOR_ACTION - removeGroupFromRoleOfProject()");
+
+    var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, jira:ProjectRoleType.DEVELOPERS,
+                                                                 "support.client.AAALIFEDEV.user");
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+function test_getAllIssueTypeStatusesOfProject () {
+    log:printInfo("CONNECTOR_ACTION - getAllIssueTypeStatusesOfProject()");
+
+    var output = jiraConnectorEP -> getAllIssueTypeStatusesOfProject(project_test);
+    match output {
+        jira:ProjectStatus[] => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProject"]
+}
+function test_changeTypeOfProject () {
+    log:printInfo("CONNECTOR_ACTION - changeTypeOfProject()");
+
+    var output = jiraConnectorEP -> changeTypeOfProject(project_test, jira:ProjectType.SOFTWARE);
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
