@@ -51,6 +51,7 @@ or any other reasons."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> authenticate (string username, string password)
 returns boolean|JiraConnectorError {
+
     boolean|JiraConnectorError response = validateAuthentication(username, password);
     match response {
         boolean => base64EncodedString = util:base64Encode(username + ":" + password);
@@ -109,6 +110,7 @@ permission to view it and if no any error occured."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAllDetailsFromProjectSummary (ProjectSummary projectSummary)
 returns Project|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -143,6 +145,7 @@ returns Project|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject)
 returns Project|JiraConnectorError {
+
     http:Request request = {};
 
     var jsonPayloadOut = <json>newProject;
@@ -184,6 +187,7 @@ returns Project|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update)
 returns boolean|JiraConnectorError {
+
     http:Request request = {};
 
     json jsonPayload;
@@ -270,6 +274,7 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getLeadUserDetailsOfProject (Project project)
 returns User|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -303,6 +308,7 @@ returns User|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getRoleDetailsOfProject (Project project, ProjectRoleType projectRoleType)
 returns ProjectRole|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -337,7 +343,7 @@ returns ProjectRole|JiraConnectorError {
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> addUserToRoleOfProject (Project project, ProjectRoleType projectRoleType,
-                                                                      string userName) returns boolean|JiraConnectorError {
+                                                                string userName) returns boolean|JiraConnectorError {
     http:Request request = {};
 
     json jsonPayload = {"user":[userName]};
@@ -367,7 +373,7 @@ public function <JiraConnector jiraConnector> addUserToRoleOfProject (Project pr
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> addGroupToRoleOfProject (Project project, ProjectRoleType projectRoleType,
-                                                                       string groupName) returns boolean|JiraConnectorError {
+                                                               string groupName) returns boolean|JiraConnectorError {
     http:Request request = {};
 
     json jsonPayload = {"group":[groupName]};
@@ -398,7 +404,8 @@ public function <JiraConnector jiraConnector> addGroupToRoleOfProject (Project p
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (Project project,
-                                                                           ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
+                               ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -425,7 +432,7 @@ public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (Proje
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> removeGroupFromRoleOfProject (Project project,
-                                                                            ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+                                ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
     http:Request request = {};
 
     //Adds Authorization Header
@@ -451,6 +458,7 @@ public function <JiraConnector jiraConnector> removeGroupFromRoleOfProject (Proj
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAllIssueTypeStatusesOfProject (Project project)
 returns ProjectStatus[]|JiraConnectorError {
+
     http:Request request = {};
     ProjectStatus[] statusArray = [];
 
@@ -498,6 +506,7 @@ returns ProjectStatus[]|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> changeTypeOfProject (Project project, ProjectType newProjectType)
 returns boolean|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -562,6 +571,7 @@ returns ProjectComponent|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getProjectComponent (string componentId)
 returns ProjectComponent|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -646,6 +656,7 @@ public function <JiraConnector jiraConnector> getAssigneeUserDetailsOfProjectCom
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getLeadUserDetailsOfProjectComponent (ProjectComponent projectComponent)
 returns User|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
@@ -751,6 +762,7 @@ returns ProjectCategory|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
 returns ProjectCategory|JiraConnectorError {
+
     http:Request request = {};
 
     var jsonPayloadOut = <json>newCategory;

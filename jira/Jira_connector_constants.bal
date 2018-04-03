@@ -61,3 +61,16 @@ public const string STATUS_NOT_FOUND = "NOT-FOUND";
 public const string STATUS_BAD_REQUEST = "BAD-REQUEST";
 public const string STATUS_CONFLICT = "CONFLICT";
 public const string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                  Enums                                                             //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public enum ProjectRoleType {
+    DEVELOPERS, EXTERNAL_CONSULTANT, OBSERVER, ADMINISTRATORS, USERS, CSAT_ADMINISTRATORS, NOTIFICATIONS
+}
+
+public enum ProjectType {
+    SOFTWARE, BUSINESS
+}
