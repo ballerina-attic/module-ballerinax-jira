@@ -1,5 +1,6 @@
 package tests;
 
+import ballerina/net.http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/io;
@@ -9,11 +10,17 @@ jira:Project project_test = {};
 jira:ProjectSummary[] projectSummaryArray_test = [];
 jira:ProjectComponent projectComponent_test = {};
 jira:ProjectCategory projectCategory_test = {};
+
+endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
+    uri:"https://support-staging.wso2.com"
+};
+
 @test:BeforeSuite
 function connector_init () {
     log:printInfo("Init");
-    _ = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
-    var output = jiraConnectorEP -> deleteProject("TESTPROJECT");
+
+    //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
+    _ = jiraConnectorEP -> deleteProject("TESTPROJECT");
 }
 
 @test:Config
@@ -115,7 +122,12 @@ function test_updateProject () {
                "test_removeUserFromRoleOfProject",
                "test_removeGroupFromRoleOfProject",
                "test_getAllIssueTypeStatusesOfProject",
-               "test_changeTypeOfProject"
+               "test_changeTypeOfProject",
+               "test_getProjectComponent",
+               "test_createProjectComponent",
+               "test_deleteProjectComponent",
+               "test_getLeadUserDetailsOfProjectComponent",
+               "test_getAssigneeUserDetailsOfProjectComponent"
               ]
 }
 
@@ -262,16 +274,24 @@ function test_changeTypeOfProject () {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_getProjectComponent () {
-    log:printInfo("CONNECTOR_ACTION - getProjectComponent()");
+function test_createProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - createProjectComponent()");
 
-    jira:ProjectComponentSummary sampleComponentSummary = {id:"10001"};
+    jira:ProjectComponentRequest newProjectComponent =
+    {
+        name:"Test-ProjectComponent",
+        description:"Test component created by ballerina jira connector.",
+        leadUserName:"pasan@wso2.com",
+        assigneeType:"PROJECT_LEAD",
+        project:project_test.key,
+        projectId:project_test.id
+    };
 
-    project_test.components[0] = sampleComponentSummary;
-    var output = jiraConnectorEP -> getProjectComponent(project_test.components[0].id);
+    var output = jiraConnectorEP -> createProjectComponent(newProjectComponent);
     match output {
         jira:ProjectComponent component => {
             projectComponent_test = component;
@@ -282,7 +302,25 @@ function test_getProjectComponent () {
 }
 
 @test:Config {
-    dependsOn:["test_getProjectComponent"]
+    dependsOn:["test_createProjectComponent"]
+}
+function test_getProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - getProjectComponent()");
+
+    jira:ProjectComponentSummary sampleComponentSummary = {id:"10001"};
+
+    project_test.components[0] = sampleComponentSummary;
+    var output = jiraConnectorEP -> getProjectComponent(projectComponent_test.id);
+    match output {
+        jira:ProjectComponent component => {
+            test:assertTrue(true);
+        }
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_createProjectComponent"]
 }
 function test_getAssigneeUserDetailsOfProjectComponent () {
     log:printInfo("CONNECTOR_ACTION - getAssigneeUserDetailsOfProjectComponent()");
@@ -295,7 +333,7 @@ function test_getAssigneeUserDetailsOfProjectComponent () {
 }
 
 @test:Config {
-    dependsOn:["test_getProjectComponent"]
+    dependsOn:["test_createProjectComponent"]
 }
 function test_getLeadUserDetailsOfProjectComponent () {
     log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProjectComponent()");
@@ -303,6 +341,23 @@ function test_getLeadUserDetailsOfProjectComponent () {
     var output = jiraConnectorEP -> getLeadUserDetailsOfProjectComponent(projectComponent_test);
     match output {
         jira:User => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_createProjectComponent",
+               "test_getProjectComponent",
+               "test_getAssigneeUserDetailsOfProjectComponent",
+               "test_getLeadUserDetailsOfProjectComponent"
+              ]
+}
+function test_deleteProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - deleteProjectComponent()");
+
+    var output = jiraConnectorEP -> deleteProjectComponent(projectComponent_test.id);
+    match output {
+        boolean => test:assertTrue(true);
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
@@ -353,7 +408,7 @@ function test_getProjectCategory () {
 }
 
 @test:Config {
-    dependsOn:["test_createProjectCategory","test_getProjectCategory"]
+    dependsOn:["test_createProjectCategory", "test_getProjectCategory"]
 }
 function test_deleteProjectCategory () {
     log:printInfo("CONNECTOR_ACTION - deleteProjectCategory()");
