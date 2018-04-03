@@ -367,7 +367,7 @@ public function main (string[] args) {
 //    //creates new jira project category
 //    io:println("\n\n");
 //    io:println("BIND FUNCTION: createProjectCategory()");
-//    jira:ProjectCategoryRequest newCategory = {name:"test-new category", description:"newCategory"};
+//
 //    var output = jiraConnectorEP -> createProjectCategory(newCategory);
 //    match output {
 //        boolean => io:print("success");

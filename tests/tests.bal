@@ -7,11 +7,13 @@ import jira;
 
 jira:Project project_test = {};
 jira:ProjectSummary[] projectSummaryArray_test = [];
-
+jira:ProjectComponent projectComponent_test = {};
+jira:ProjectCategory projectCategory_test = {};
 @test:BeforeSuite
 function connector_init () {
     log:printInfo("Init");
-    var output = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
+    _ = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
+    var output = jiraConnectorEP -> deleteProject("TESTPROJECT");
 }
 
 @test:Config
@@ -91,9 +93,9 @@ function test_updateProject () {
     log:printInfo("CONNECTOR_ACTION - updateProject()");
 
     jira:ProjectRequest projectUpdate = {
-        lead:"inshaf@wso2.com",
-        projectTypeKey:"business"
-    };
+                                            lead:"inshaf@wso2.com",
+                                            projectTypeKey:"business"
+                                        };
 
     var output = jiraConnectorEP -> updateProject("TESTPROJECT", projectUpdate);
     match output {
@@ -119,7 +121,6 @@ function test_updateProject () {
 
 function test_deleteProject () {
     log:printInfo("CONNECTOR_ACTION - deleteProject()");
-
 
     var output = jiraConnectorEP -> deleteProject("TESTPROJECT");
     match output {
@@ -262,29 +263,104 @@ function test_changeTypeOfProject () {
 
 
 @test:Config {
-    dependsOn:["authenticate"]
+    dependsOn:["test_getProject"]
 }
-function test_() {
-    log:printInfo("CONNECTOR_ACTION - changeTypeOfProject()");
+function test_getProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - getProjectComponent()");
 
-    jira:Project project = {
-        key:"TESTPROJECT",
-        lead:"portal-admin@wso2.com",
-        projectTypeKey:"software",
-        components:[{"self":"https://support-staging.wso2.com/jira/rest/api/2/component/10126",
-                        "id":"10126",
-                        "assignee":{"key":"portal-admin@wso2.com", "name":"portal-admin@wso2.com"},
-                        "realAssigneeType":"PROJECT_DEFAULT",
-                        "realAssignee":{"key":"portal-admin@wso2.com", "name":"portal-admin@wso2.com"},
-                        "isAssigneeTypeValid":true,
-                        "project":"TESTPROJECT"
-                    }]
-    };
+    jira:ProjectComponentSummary sampleComponentSummary = {id:"10001"};
 
-    var output = jiraConnectorEP -> changeTypeOfProject(project_test, jira:ProjectType.SOFTWARE);
+    project_test.components[0] = sampleComponentSummary;
+    var output = jiraConnectorEP -> getProjectComponent(project_test.components[0].id);
+    match output {
+        jira:ProjectComponent component => {
+            projectComponent_test = component;
+            test:assertTrue(true);
+        }
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProjectComponent"]
+}
+function test_getAssigneeUserDetailsOfProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - getAssigneeUserDetailsOfProjectComponent()");
+
+    var output = jiraConnectorEP -> getAssigneeUserDetailsOfProjectComponent(projectComponent_test);
+    match output {
+        jira:User => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getProjectComponent"]
+}
+function test_getLeadUserDetailsOfProjectComponent () {
+    log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProjectComponent()");
+
+    var output = jiraConnectorEP -> getLeadUserDetailsOfProjectComponent(projectComponent_test);
+    match output {
+        jira:User => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_authenticate"]
+}
+function test_getAllProjectCategories () {
+    log:printInfo("CONNECTOR_ACTION - getAllProjectCategories()");
+
+    var output = jiraConnectorEP -> getAllProjectCategories();
+    match output {
+        jira:ProjectCategory[] => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_authenticate"]
+}
+function test_createProjectCategory () {
+    log:printInfo("CONNECTOR_ACTION - createProjectCategory()");
+
+    jira:ProjectCategoryRequest newCategory = {name:"Test-Porject Category",
+                                                  description:"new category created from balleirna jira connector"};
+
+    var output = jiraConnectorEP -> createProjectCategory(newCategory);
+    match output {
+        jira:ProjectCategory category => {
+            projectCategory_test = category;
+            test:assertTrue(true);
+        }
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_createProjectCategory"]
+}
+function test_getProjectCategory () {
+    log:printInfo("CONNECTOR_ACTION - getProjectCategory()");
+
+    var output = jiraConnectorEP -> getProjectCategory(projectCategory_test.id);
+    match output {
+        jira:ProjectCategory => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_createProjectCategory","test_getProjectCategory"]
+}
+function test_deleteProjectCategory () {
+    log:printInfo("CONNECTOR_ACTION - deleteProjectCategory()");
+
+    var output = jiraConnectorEP -> deleteProjectCategory(projectCategory_test.id);
     match output {
         boolean => test:assertTrue(true);
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
-
