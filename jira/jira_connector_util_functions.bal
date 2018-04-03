@@ -76,12 +76,18 @@ returns json|JiraConnectorError {
     }
 }
 
+@Description {value:" validates jira account credentials given by the by the user and returns an error if the
+login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting,
+or any other reasons."}
+@Param {value:"username: jira account username."}
+@Param {value:"password:jira account password."}
+@Return {value:"boolean: returns true if the process is successful."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
     //Initializes jira authentication endpoint
     endpoint http:ClientEndpoint jiraLoginHttpClientEP {
         targets:[{uri:WSO2_STAGING_JIRA_BASE_URL + JIRA_AUTH_RESOURCE}],
-        chunking:http:Chunking.NEVER,
-        followRedirects:{enabled:true, maxCount:5}
+        chunking:http:Chunking.NEVER
     };
 
     JiraConnectorError e = {};
@@ -118,42 +124,41 @@ function validateAuthentication (string username, string password) returns boole
     }
 }
 
-
-function getProjectRoleIdFromEnum (ProjectRoleType ^"type") returns string {
-    if (^"type" == ProjectRoleType.ADMINISTRATORS) {
+@Description {value:"Returns id of a given project role."}
+@Param {value:"roleType: Project role type defined by the enum 'ProjectRoleType'."}
+@Param{value: "Id of the project role."}
+function getProjectRoleIdFromEnum (ProjectRoleType roleType) returns string {
+    if (roleType == ProjectRoleType.ADMINISTRATORS) {
         return ROLE_ID_ADMINISTRATORS;
-    } else if (^"type" == ProjectRoleType.CSAT_ADMINISTRATORS) {
+    } else if (roleType == ProjectRoleType.CSAT_ADMINISTRATORS) {
         return ROLE_ID_CSAT_DEVELOPERS;
-    } else if (^"type" == ProjectRoleType.DEVELOPERS) {
+    } else if (roleType == ProjectRoleType.DEVELOPERS) {
         return ROLE_ID_DEVELOPERS;
-    } else if (^"type" == ProjectRoleType.EXTERNAL_CONSULTANT) {
+    } else if (roleType == ProjectRoleType.EXTERNAL_CONSULTANT) {
         return ROLE_ID_EXTERNAL_CONSULTANTS;
-    } else if (^"type" == ProjectRoleType.NOTIFICATIONS) {
+    } else if (roleType == ProjectRoleType.NOTIFICATIONS) {
         return ROLE_ID_NOTIFICATIONS;
-    } else if (^"type" == ProjectRoleType.OBSERVER) {
+    } else if (roleType == ProjectRoleType.OBSERVER) {
         return ROLE_ID_OBSERVER;
-    } else if (^"type" == ProjectRoleType.USERS) {
+    } else if (roleType == ProjectRoleType.USERS) {
         return ROLE_ID_USERS;
     } else {
         return "";
     }
 }
 
-
+@Description {value:"Returns project type as string using the 'ProjectType' enum."}
 function getProjectTypeFromEnum (ProjectType projectType) returns string {
     return (projectType == ProjectType.SOFTWARE ? "software" : "business");
 }
 
+@Description {value:"Returns whether a given error object is empty."}
 public function isEmpty (error|JiraConnectorError e) returns boolean {
     match e {
         error err => return err.message == "";
         JiraConnectorError err => return err.message == "";
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                  Transformers                                                      //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 transformer <error source, JiraConnectorError target> toConnectorError() {
     target = source.message != "" ? {message:source.message, cause:source.cause} : {};
@@ -195,14 +200,14 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
 function jsonToProjectComponent (json source) returns ProjectComponent {
 
     ProjectComponent target = {};
-    target.self = source.self!= null ? source.self.toString():"";
-    target.id = source.id!= null? source.id.toString():"";
-    target.name = source.name!= null? source.name.toString():"";
-    target.description = source.description!=null? source.description.toString():"";
+    target.self = source.self != null ? source.self.toString() : "";
+    target.id = source.id != null ? source.id.toString() : "";
+    target.name = source.name != null ? source.name.toString() : "";
+    target.description = source.description != null ? source.description.toString() : "";
     target.assigneeType = source.assigneeType != null ? source.assigneeType.toString() : "";
     target.realAssigneeType = source.realAssigneeType != null ? source.realAssigneeType.toString() : "";
-    target.project = source.project != null ? source.project.toString():"";
-    target.projectId = source.projectId != null ? source.projectId.toString():"";
+    target.project = source.project != null ? source.project.toString() : "";
+    target.projectId = source.projectId != null ? source.projectId.toString() : "";
 
     target.leadName = source.lead != null ?
                       source.lead.name != null ?
@@ -216,9 +221,5 @@ function jsonToProjectComponent (json source) returns ProjectComponent {
                               source.realAssignee.name != null ?
                               source.realAssignee.name.toString() : "" : "";
 
-
-
     return target;
 }
-
-

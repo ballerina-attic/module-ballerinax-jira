@@ -19,10 +19,7 @@
 package jira;
 import ballerina/net.http;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               Jira Project                                                         //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+@Description {value:"Represents a summary of a jira project."}
 public struct ProjectSummary {
     string self;
     string id;
@@ -33,6 +30,7 @@ public struct ProjectSummary {
     string projectTypeKey;
 }
 
+@Description {value:"Represents a detailed jira project."}
 public struct Project {
     string self;
     string id;
@@ -48,90 +46,7 @@ public struct Project {
     ProjectVersion[] versions;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             Project Components                                                     //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-public struct ProjectComponentSummary {
-    string self;
-    string id;
-    string name;
-    string description;
-}
-
-public struct ProjectComponent {
-    string self;
-    string id;
-    string name;
-    string description;
-    string leadName;
-    string assigneeName;
-    string assigneeType;
-    string realAssigneeName;
-    string realAssigneeType;
-    string project;
-    string projectId;
-}
-
-public struct ProjectComponentRequest {
-    string name;
-    string description;
-    string leadUserName;
-    string assigneeType;
-    string project;
-    string projectId;
-}
-
-public struct ProjectCategory {
-    string self;
-    string id;
-    string name;
-    string description;
-}
-
-public struct ProjectRole {
-    string self;
-    string name;
-    string description;
-    Actor[] actors;
-}
-
-public struct Actor {
-    string id;
-    string name;
-    string displayName;
-    string ^"type";
-}
-
-public struct ProjectStatus {
-    string self;
-    string name;
-    string id;
-    json statuses;
-}
-
-public struct User {
-    string self;
-    string key;
-    string name;
-    string displayName;
-    string emailAddress;
-    json avatarUrls;
-    boolean active;
-    string timeZone;
-    string locale;
-}
-
-public struct NewActor {
-    ActorType ^"type";
-    string name;
-}
-
-public struct ProjectCategoryRequest {
-    string name;
-    string description;
-}
-
+@Description {value:"Represents a detailed jira project."}
 public struct ProjectRequest {
     string key;
     string name;
@@ -148,6 +63,91 @@ public struct ProjectRequest {
     string categoryId;
 }
 
+@Description {value:"Represents a summary of a jira project component."}
+public struct ProjectComponentSummary {
+    string self;
+    string id;
+    string name;
+    string description;
+}
+
+@Description {value:"Represents a detailed jira project component."}
+public struct ProjectComponent {
+    string self;
+    string id;
+    string name;
+    string description;
+    string leadName;
+    string assigneeName;
+    string assigneeType;
+    string realAssigneeName;
+    string realAssigneeType;
+    string project;
+    string projectId;
+}
+
+@Description {value:"Represents jira project component creation template object."}
+public struct ProjectComponentRequest {
+    string name;
+    string description;
+    string leadUserName;
+    string assigneeType;
+    string project;
+    string projectId;
+}
+
+@Description {value:"Represents a detailed jira project category."}
+public struct ProjectCategory {
+    string self;
+    string id;
+    string name;
+    string description;
+}
+
+@Description {value:"Represents jira project category creation template object."}
+public struct ProjectCategoryRequest {
+    string name;
+    string description;
+}
+
+@Description {value:"Represents a jira project role (i.e. Developers,Users etc.)."}
+public struct ProjectRole {
+    string self;
+    string name;
+    string description;
+    Actor[] actors;
+}
+
+@Description {value:"Represent an assignee for a given project role (An actor can be either a jira user or a group)"}
+public struct Actor {
+    string id;
+    string name;
+    string displayName;
+    string ^"type";
+}
+
+@Description {value:"Represents a jira issue type status related to a jira project."}
+public struct ProjectStatus {
+    string self;
+    string name;
+    string id;
+    json statuses;
+}
+
+@Description {value:"Represents a jira user"}
+public struct User {
+    string self;
+    string key;
+    string name;
+    string displayName;
+    string emailAddress;
+    json avatarUrls;
+    boolean active;
+    string timeZone;
+    string locale;
+}
+
+@Description {value:"Represents a jira issue type."}
 public struct IssueType {
     string self;
     string id;
@@ -157,6 +157,7 @@ public struct IssueType {
     boolean subtask;
 }
 
+@Description {value:"Represents a jira project version."}
 public struct ProjectVersion {
     string self;
     string id;
@@ -169,6 +170,7 @@ public struct ProjectVersion {
     string projectId;
 }
 
+@Description {value:"Represents a set of avatar Urls related to a jira entity."}
 public struct AvatarUrls {
     string ^"16x16";
     string ^"24x24";
@@ -176,19 +178,10 @@ public struct AvatarUrls {
     string ^"48x48";
 }
 
-public struct Avatar {
-    string id;
-    boolean isSystemAvatar;
-    boolean isSelected;
-    boolean isDeletable;
-    AvatarUrls urls;
-    boolean selected;
-}
-
+@Description {value:"Represent Jira Connector based errors."}
 public struct JiraConnectorError {
     string ^"type";
     string message;
     json jiraServerErrorLog;
     error[] cause;
 }
-
