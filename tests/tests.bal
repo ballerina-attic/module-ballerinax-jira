@@ -90,8 +90,7 @@ function test_createProject () {
 function test_updateProject () {
     log:printInfo("CONNECTOR_ACTION - updateProject()");
 
-    jira:ProjectRequest projectUpdate =
-    {
+    jira:ProjectRequest projectUpdate = {
         lead:"inshaf@wso2.com",
         projectTypeKey:"business"
     };
@@ -258,3 +257,34 @@ function test_changeTypeOfProject () {
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+@test:Config {
+    dependsOn:["authenticate"]
+}
+function test_() {
+    log:printInfo("CONNECTOR_ACTION - changeTypeOfProject()");
+
+    jira:Project project = {
+        key:"TESTPROJECT",
+        lead:"portal-admin@wso2.com",
+        projectTypeKey:"software",
+        components:[{"self":"https://support-staging.wso2.com/jira/rest/api/2/component/10126",
+                        "id":"10126",
+                        "assignee":{"key":"portal-admin@wso2.com", "name":"portal-admin@wso2.com"},
+                        "realAssigneeType":"PROJECT_DEFAULT",
+                        "realAssignee":{"key":"portal-admin@wso2.com", "name":"portal-admin@wso2.com"},
+                        "isAssigneeTypeValid":true,
+                        "project":"TESTPROJECT"
+                    }]
+    };
+
+    var output = jiraConnectorEP -> changeTypeOfProject(project_test, jira:ProjectType.SOFTWARE);
+    match output {
+        boolean => test:assertTrue(true);
+        jira:JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+

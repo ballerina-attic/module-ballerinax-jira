@@ -138,6 +138,7 @@ public struct ProjectRequest {
     string permissionScheme;
     string notificationScheme;
     string categoryId;
+    json[] components;
 }
 
 public struct IssueType {

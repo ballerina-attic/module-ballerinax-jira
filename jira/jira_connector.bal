@@ -393,7 +393,7 @@ public function <JiraConnector jiraConnector> addGroupToRoleOfProject (Project p
 
 @Description {value:"removes a given user from a given project role."}
 @Param {value:"project: 'Project' object."}
-@Param {value:"projectRoleype: Enum which provides the possible project roles for a jira project"}
+@Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
 @Param {value:"userName: name of the user required to be removed"}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
@@ -420,7 +420,7 @@ public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (Proje
 
 @Description {value:"removes a given group from a given project role."}
 @Param {value:"project: 'Project' object."}
-@Param {value:"projectRoleype: Enum which provides the possible project roles for a jira project"}
+@Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
 @Param {value:"groupName: name of the user required to be removed"}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
@@ -496,7 +496,7 @@ public function <JiraConnector jiraConnector> getAllIssueTypeStatusesOfProject (
 @Param {value:"newProjectType: Enum which provides the possible project types for a jira project"}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> changeProjectType (Project project, ProjectType newProjectType)
+public function <JiraConnector jiraConnector> changeTypeOfProject (Project project, ProjectType newProjectType)
                                                                                 returns boolean|JiraConnectorError {
     http:Request request = {};
 
@@ -517,18 +517,17 @@ public function <JiraConnector jiraConnector> changeProjectType (Project project
     }
 }
 
-@Description {value:"Returns detatiled project component using a given project component summary"}
-@Param {value:"projectComponentSummary: 'ProjectComponenentSummary' object."}
+@Description {value:"Returns detailed representation of project component."}
+@Param {value:"componentId: string which contains a unique id for a given component."}
 @Return {value:"ProjectComponent: 'ProjectComponent' object containing a full representation of the project component."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> getAllDetailsFromProjectComponentSummary
-                        (ProjectComponentSummary projectComponentSummary) returns ProjectComponent|JiraConnectorError {
-
+public function <JiraConnector jiraConnector> getProjectComponent (string componentId)
+                                                                        returns ProjectComponent|JiraConnectorError {
     http:Request request = {};
 
     //Adds Authorization Header
     constructAuthHeader(request);
-    var httpResponseOut = jiraHttpClientEP -> get("/component/" + projectComponentSummary.id, request);
+    var httpResponseOut = jiraHttpClientEP -> get("/component/" + componentId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -557,7 +556,7 @@ public function <JiraConnector jiraConnector> getAllDetailsFromProjectComponentS
 @Return {value:"ProjectComponent: 'ProjectComponent' object."}
 @Return {value:"User: 'User' object containing user details of the lead."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <ProjectComponent projectComponent> getAssigneeUserDetails () returns User|JiraConnectorError {
+public function <ProjectComponent projectComponent> getLeadUserDetailsOfProjectComponent () returns User|JiraConnectorError {
 
     http:Request request = {};
 
@@ -589,7 +588,7 @@ public function <ProjectComponent projectComponent> getAssigneeUserDetails () re
 @Return {value:"ProjectComponent: 'ProjectComponent' object."}
 @Return {value:"User: 'User' object containing user details of the lead."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> getLeadUserDetailsofProjectComponent (ProjectComponent projectComponent)
+public function <JiraConnector jiraConnector> getLeadUserDetailsOfProjectComponent (ProjectComponent projectComponent)
                                                                                       returns User|JiraConnectorError {
     http:Request request = {};
 

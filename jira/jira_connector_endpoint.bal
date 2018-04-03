@@ -37,9 +37,11 @@ public struct JiraConnectorEndpoint {
 
 public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration jiraConfig) {
 
-    http:ClientEndpointConfiguration httpConfig =
-        {targets:[{uri:jiraConfig.uri + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION}],
-            chunking:http:Chunking.NEVER};
+    http:ClientEndpointConfiguration httpConfig = {targets:[{uri:jiraConfig.uri + JIRA_REST_API_RESOURCE +
+                                                                 JIRA_REST_API_VERSION}],
+                                                      chunking:http:Chunking.NEVER
+                                                  };
+
     jiraConfig.httpClientConfig = httpConfig;
 
     jiraConnectorEP.jiraConfig = jiraConfig;
