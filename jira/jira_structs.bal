@@ -73,6 +73,15 @@ public struct ProjectComponent {
     string projectId;
 }
 
+public struct ProjectComponentRequest {
+    string name;
+    string description;
+    string leadUserName;
+    string assigneeType;
+    string project;
+    string projectId;
+}
+
 public struct ProjectCategory {
     string self;
     string id;

@@ -517,6 +517,45 @@ returns boolean|JiraConnectorError {
     }
 }
 
+@Description {value:"Creates a new project component."}
+@Param {value:"newProjectComponent: struct which contains the mandatory fields for new project component creation"}
+@Return {value:"ProjectComponent: 'ProjectComponent' object which contains the created project component."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
+public function <JiraConnector jiraConnector> createProjectComponent (ProjectComponentRequest newProjectComponent)
+returns ProjectComponent|JiraConnectorError {
+
+    http:Request request = {};
+
+    var jsonPayloadOut = <json>newProjectComponent;
+    match jsonPayloadOut {
+        error err => {
+            return <JiraConnectorError, toConnectorError()>err;
+        }
+
+        json jsonPayload => {
+            request.setJsonPayload(jsonPayload);
+
+            //Adds Authorization Header
+            constructAuthHeader(request);
+            var httpResponseOut = jiraHttpClientEP -> post("/component/", request);
+            //Evaluate http response for connection and server errors
+            var jsonResponseOut = getValidatedResponse(httpResponseOut);
+            match jsonResponseOut {
+                JiraConnectorError e => {
+                    return e;
+                }
+                json jsonResponse => {
+                    var projectComponentOut = jiraConnector.getProjectComponent(jsonResponse.id.toString());
+                    match projectComponentOut {
+                        ProjectComponent projectComponent => return projectComponent;
+                        JiraConnectorError e => return e;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Description {value:"Returns detailed representation of project component."}
 @Param {value:"componentId: string which contains a unique id for a given component."}
 @Return {value:"ProjectComponent: 'ProjectComponent' object containing a full representation of the project component."}
@@ -541,6 +580,33 @@ returns ProjectComponent|JiraConnectorError {
         }
     }
 }
+
+
+@Description {value:"Deletes a project component."}
+@Param {value:"projectComponentId: String which contains unique id of the project component"}
+@Return {value:"boolean: returns true if the process is successful."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
+public function <JiraConnector jiraConnector> deleteProjectComponent (string projectComponentId)
+returns boolean|JiraConnectorError {
+
+    http:Request request = {};
+
+    //Adds Authorization Header
+    constructAuthHeader(request);
+    var httpResponseOut = jiraHttpClientEP -> delete("/component/" + projectComponentId, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            return true;
+        }
+    }
+}
+
 
 @Description {value:"Returns jira user details of the assignee of the project component."}
 @Return {value:"ProjectComponent: 'ProjectComponent' object."}
@@ -684,7 +750,7 @@ returns ProjectCategory|JiraConnectorError {
 @Return {value:"ProjectCategory: 'ProjectCategory' object."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
-returns ProjectCategory |JiraConnectorError {
+returns ProjectCategory|JiraConnectorError {
     http:Request request = {};
 
     var jsonPayloadOut = <json>newCategory;
@@ -723,6 +789,7 @@ returns ProjectCategory |JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
 returns boolean|JiraConnectorError {
+
     http:Request request = {};
 
     //Adds Authorization Header
