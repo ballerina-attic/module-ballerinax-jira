@@ -607,8 +607,8 @@ returns User|JiraConnectorError {
 }
 
 @Description {value:"Returns all existing project categories"}
-@Return {value:"Returns an array of 'ProjectCategory' structures which contain existing categories.
-Otherwise returns a 'JiraConnectorError'."}
+@Return {value:"Array of 'ProjectCategory' objects."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAllProjectCategories () returns ProjectCategory[]|JiraConnectorError {
 
     http:Request request = {};
@@ -635,9 +635,8 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
                     foreach (jsonProjectCategory in jsonResponseArray) {
                         var projectCategoryOut = <ProjectCategory>jsonProjectCategory;
                         match projectCategoryOut {
-                            error err => {
-                                return <JiraConnectorError, toConnectorError()>err;
-                            }
+                            error err => return <JiraConnectorError, toConnectorError()>err;
+
                             ProjectCategory projectCategory => {
                                 projectCategories[i] = projectCategory;
                                 i = i + 1;
@@ -651,12 +650,41 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
     }
 }
 
+@Description {value:"Returns a detailed representation of a project category."}
+@Param {value:"projectCategoryId: Jira id of the project category"}
+@Return {value:"ProjectCategory: 'ProjectCategory' object."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
+public function <JiraConnector jiraConnector> getProjectCategory (string projectCategoryId)
+returns ProjectCategory|JiraConnectorError {
+
+    http:Request request = {};
+
+    //Adds Authorization Header
+    constructAuthHeader(request);
+    var httpResponseOut = jiraHttpClientEP -> get("/projectCategory/" + projectCategoryId, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            var projectCategoryOut = <ProjectCategory>jsonResponse;
+            match projectCategoryOut {
+                error err => return <JiraConnectorError, toConnectorError()>err;
+                ProjectCategory category => return category;
+            }
+        }
+    }
+}
+
 @Description {value:"Create a new project category"}
 @Param {value:"newCategory: struct which contains the mandatory fields for new project category creation "}
-@Return {value:"Returns boolean 'true' if project category was created successfully.
-Otherwise returns a 'JiraConnectorError'."}
+@Return {value:"ProjectCategory: 'ProjectCategory' object."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
-returns boolean|JiraConnectorError {
+returns ProjectCategory |JiraConnectorError {
     http:Request request = {};
 
     var jsonPayloadOut = <json>newCategory;
@@ -678,7 +706,11 @@ returns boolean|JiraConnectorError {
                     return e;
                 }
                 json jsonResponse => {
-                    return true;
+                    var ProjectCategoryOut = jiraConnector.getProjectCategory(jsonResponse.id.toString());
+                    match ProjectCategoryOut {
+                        ProjectCategory category => return category;
+                        JiraConnectorError e => return e;
+                    }
                 }
             }
         }
@@ -686,9 +718,9 @@ returns boolean|JiraConnectorError {
 }
 
 @Description {value:"Delete a project category."}
-@Param {value:"projectCategoryId: Jira id of the project category"}
-@Return {value:"Returns boolean 'true' if the project category was deleted successfully.
-Otherwise returns a 'JiraConnectorError'."}
+@Param {value:"projectCategoryId: Jira id of the project category."}
+@Return {value:"boolean: returns true if the process is successful."}
+@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
 returns boolean|JiraConnectorError {
     http:Request request = {};
