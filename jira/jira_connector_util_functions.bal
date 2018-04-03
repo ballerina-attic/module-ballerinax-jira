@@ -39,10 +39,10 @@ public function constructAuthHeader (http:Request request) {
 @Description {value:"Checks whether the http response contains any errors "}
 @Param {value:"httpConnectorResponse: The http response object"}
 @Param {value:"connectionError: http response error object"}
-@Return{value:"Returns the json Payload of the server response if there is no any http or server error.
+@Return {value:"Returns the json Payload of the server response if there is no any http or server error.
 Otherwise returns a 'JiraConnecorError'."}
 public function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
-                                                                                    returns json|JiraConnectorError {
+returns json|JiraConnectorError {
     JiraConnectorError e = {};
     mime:EntityError err = {};
     json jsonResponse;
@@ -56,7 +56,7 @@ public function getValidatedResponse (http:Response|http:HttpConnectorError http
             if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
                 && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
                 e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " +
-                                                                                            response.reasonPhrase};
+                                                                         response.reasonPhrase};
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
                     json jsonOutput => e.jiraServerErrorLog = jsonOutput;
@@ -79,7 +79,7 @@ public function getValidatedResponse (http:Response|http:HttpConnectorError http
 function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
     //Initializes jira authentication endpoint
     endpoint http:ClientEndpoint jiraLoginHttpClientEP {
-        targets:[{uri:WSO2_STAGING_JIRA_BASE_URL+JIRA_AUTH_RESOURCE}],
+        targets:[{uri:WSO2_STAGING_JIRA_BASE_URL + JIRA_AUTH_RESOURCE}],
         chunking:http:Chunking.NEVER,
         followRedirects:{enabled:true, maxCount:5}
     };
@@ -104,7 +104,7 @@ function validateAuthentication (string username, string password) returns boole
         http:Response response => {
             if (response.statusCode != STATUS_CODE_OK) {
                 e = {^"type":"Server Error", message:"status " + <string>response.statusCode +
-                                                                                    ": " + response.reasonPhrase};
+                                                                         ": " + response.reasonPhrase};
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
                     json jsonOutput => e.jiraServerErrorLog = jsonOutput;
@@ -191,4 +191,34 @@ transformer <json source, ProjectCategory target> createProjectCategory() {
     target.id = source.id != null ? source.id.toString() : "";
     target.description = source.description != null ? source.description.toString() : "";
 }
+
+function jsonToProjectComponent (json source) returns ProjectComponent {
+
+    ProjectComponent target = {};
+    target.self = source.self!= null ? source.self.toString():"";
+    target.id = source.id!= null? source.id.toString():"";
+    target.name = source.name!= null? source.name.toString():"";
+    target.description = source.description!=null? source.description.toString():"";
+    target.assigneeType = source.assigneeType != null ? source.assigneeType.toString() : "";
+    target.realAssigneeType = source.realAssigneeType != null ? source.realAssigneeType.toString() : "";
+    target.project = source.project != null ? source.project.toString():"";
+    target.projectId = source.projectId != null ? source.projectId.toString():"";
+
+    target.leadName = source.lead != null ?
+                      source.lead.name != null ?
+                      source.lead.name.toString() : "" : "";
+
+    target.assigneeName = source.assignee != null ?
+                          source.assignee.name != null ?
+                          source.assignee.name.toString() : "" : "";
+
+    target.realAssigneeName = source.realAssignee != null ?
+                              source.realAssignee.name != null ?
+                              source.realAssignee.name.toString() : "" : "";
+
+
+
+    return target;
+}
+
 

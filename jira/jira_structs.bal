@@ -69,7 +69,6 @@ public struct ProjectComponent {
     string assigneeType;
     string realAssigneeName;
     string realAssigneeType;
-    boolean isAssigneeTypeValid;
     string project;
     string projectId;
 }
@@ -138,7 +137,6 @@ public struct ProjectRequest {
     string permissionScheme;
     string notificationScheme;
     string categoryId;
-    json[] components;
 }
 
 public struct IssueType {
@@ -184,3 +182,4 @@ public struct JiraConnectorError {
     json jiraServerErrorLog;
     error[] cause;
 }
+
