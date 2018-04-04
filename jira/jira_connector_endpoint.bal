@@ -30,12 +30,12 @@ public function <JiraConfiguration jiraConfig> JiraConfiguration () {
     jiraConfig.httpClientConfig = {};
 }
 
-public struct JiraConnectorEndpoint {
+public struct JiraEndpoint {
     JiraConfiguration jiraConfig;
     JiraConnector jiraConnector;
 }
 
-public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration userConfig) {
+public function <JiraEndpoint jiraEP> init (JiraConfiguration userConfig) {
 
     http:ClientEndpointConfiguration httpConfig = {targets:[{uri:userConfig.uri + JIRA_REST_API_RESOURCE +
                                                                  JIRA_REST_API_VERSION}],
@@ -43,20 +43,20 @@ public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration 
                                                   };
     userConfig.httpClientConfig = httpConfig;
 
-    jiraConnectorEP.jiraConfig = userConfig;
-    jiraConnectorEP.jiraConnector = {
-        jiraHttpClientEPConfig:jiraConnectorEP.jiraConfig.httpClientConfig,
+    jiraEP.jiraConfig = userConfig;
+    jiraEP.jiraConnector = {
+        jiraHttpClientEPConfig:jiraEP.jiraConfig.httpClientConfig,
         jira_base_url:userConfig.uri,
         jira_authentication_ep:userConfig.uri + JIRA_AUTH_RESOURCE,
         jira_rest_api_uri:userConfig.uri + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION
     };
 
-    jiraConnectorEP.jiraConnector.jiraHttpClientEP.init(jiraConnectorEP.jiraConfig.httpClientConfig);
+    jiraEP.jiraConnector.jiraHttpClientEP.init(jiraEP.jiraConfig.httpClientConfig);
 }
 
 @Description {value:"Returns the connector that client code uses"}
 @Return {value:"The connector that client code uses"}
-public function <JiraConnectorEndpoint jiraConnectorEP> getClient () returns JiraConnector {
+public function <JiraEndpoint jiraConnectorEP> getClient () returns JiraConnector {
     return jiraConnectorEP.jiraConnector;
 }
 

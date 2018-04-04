@@ -11,7 +11,7 @@ jira:ProjectSummary[] projectSummaryArray_test = [];
 jira:ProjectComponent projectComponent_test = {};
 jira:ProjectCategory projectCategory_test = {};
 
-endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
+endpoint jira:JiraEndpoint jiraConnectorEP {
     uri:"https://support-staging.wso2.com"
 };
 
