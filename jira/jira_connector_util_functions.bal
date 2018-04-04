@@ -17,7 +17,7 @@
 //
 
 package jira;
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
 import ballerina/io;
@@ -29,10 +29,10 @@ import ballerina/io;
 @Description {value:"Add authoriaztion header to the request"}
 @Param {value:"authType: Authentication type preferred by the user"}
 @Param {value:"request: The http out request object"}
-public function constructAuthHeader (http:Request request,string encodedCredentials) {
+function constructAuthHeader (http:Request request, string encodedCredentials) {
 
     if (encodedCredentials != "") {
-        request.addHeader("Authorization", "Basic " +encodedCredentials);
+        request.addHeader("Authorization", "Basic " + encodedCredentials);
     }
 }
 
@@ -41,7 +41,7 @@ public function constructAuthHeader (http:Request request,string encodedCredenti
 @Param {value:"connectionError: http response error object"}
 @Return {value:"Returns the json Payload of the server response if there is no any http or server error.
 Otherwise returns a 'JiraConnecorError'."}
-public function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
+function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
 returns json|JiraConnectorError {
     JiraConnectorError e = {};
     mime:EntityError err = {};
@@ -126,7 +126,7 @@ function validateAuthentication (string username, string password) returns boole
 
 @Description {value:"Returns id of a given project role."}
 @Param {value:"roleType: Project role type defined by the enum 'ProjectRoleType'."}
-@Param{value: "Id of the project role."}
+@Param {value:"Id of the project role."}
 function getProjectRoleIdFromEnum (ProjectRoleType roleType) returns string {
     if (roleType == ProjectRoleType.ADMINISTRATORS) {
         return ROLE_ID_ADMINISTRATORS;
@@ -160,11 +160,15 @@ public function isEmpty (error|JiraConnectorError e) returns boolean {
     }
 }
 
-transformer <error source, JiraConnectorError target> toConnectorError() {
-    target = source.message != "" ? {message:source.message, cause:source.cause} : {};
+function errorToJiraConnectorError (error source) returns JiraConnectorError {
+    JiraConnectorError target = source.message != "" ? {message:source.message, cause:source.cause} : {};
+    return target;
 }
 
-transformer <ProjectRequest source, json target> createJsonProjectRequest() {
+function projectRequestToJson (ProjectRequest source) returns json {
+
+    json target = {};
+
     target.key = source.key != "" ? source.key : null;
     target.name = source.name != "" ? source.name : null;
     target.projectTypeKey = source.projectTypeKey != "" ? source.projectTypeKey : null;
@@ -178,9 +182,14 @@ transformer <ProjectRequest source, json target> createJsonProjectRequest() {
     target.permissionScheme = source.permissionScheme != "" ? source.permissionScheme : null;
     target.notificationScheme = source.notificationScheme != "" ? source.notificationScheme : null;
     target.categoryId = source.categoryId != "" ? source.categoryId : null;
+
+    return target;
 }
 
-transformer <json source, ProjectSummary target> createProjectSummary() {
+function jsonToProjectSummary (json source) returns ProjectSummary {
+
+    ProjectSummary target = {};
+
     target.self = source.self.toString();
     target.id = source.id.toString();
     target.key = source.key.toString();
@@ -188,13 +197,20 @@ transformer <json source, ProjectSummary target> createProjectSummary() {
     target.description = source.description != null ? source.description.toString() : "";
     target.projectTypeKey = source.projectTypeKey.toString();
     target.category = source.projectCategory != null ? source.projectCategory.name.toString() : "";
+
+    return target;
 }
 
-transformer <json source, ProjectCategory target> createProjectCategory() {
+function jsonToProjectCategory(json source) returns ProjectCategory{
+
+    ProjectCategory target = {};
+
     target.self = source.self != null ? source.self.toString() : "";
     target.name = source.name != null ? source.name.toString() : "";
     target.id = source.id != null ? source.id.toString() : "";
     target.description = source.description != null ? source.description.toString() : "";
+
+    return target;
 }
 
 function jsonToProjectComponent (json source) returns ProjectComponent {

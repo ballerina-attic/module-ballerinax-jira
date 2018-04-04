@@ -18,7 +18,7 @@
 
 package jira;
 
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/util;
 import ballerina/log;
 import ballerina/io;
@@ -35,8 +35,6 @@ public struct JiraConnector {
         string base64EncodedString = "";
         http:ClientEndpoint jiraHttpClientEP;
 }
-
-
 
 @Description {value:"Stores and validates jira account credentials given by the by the user and returns an error if the
 login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting,
@@ -81,17 +79,17 @@ public function <JiraConnector jiraConnector> getAllProjectSummaries () returns 
             var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 json[] jsonResponseArray => {
                     if (jsonResponseArray == null) {
                         error err = {message:"Error: server response doesn't contain any projects."};
-                        return <JiraConnectorError, toConnectorError()>err;
+                        return errorToJiraConnectorError(err);
                     }
 
                     int i = 0;
                     foreach (jsonProject in jsonResponseArray) {
-                        projects[i] = <ProjectSummary, createProjectSummary()>jsonProject;
+                        projects[i] = jsonToProjectSummary(jsonProject);
                         i = i + 1;
                     }
                     return projects;
@@ -128,7 +126,7 @@ returns Project|JiraConnectorError {
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 Project project => {
                     return project;
@@ -151,7 +149,7 @@ returns Project|JiraConnectorError {
     var jsonPayloadOut = <json>newProject;
     match jsonPayloadOut {
         error err => {
-            return <JiraConnectorError, toConnectorError()>err;
+            return errorToJiraConnectorError(err);
         }
 
         json jsonPayload => {
@@ -192,7 +190,7 @@ returns boolean|JiraConnectorError {
     http:Request request = {};
 
     json jsonPayload;
-    jsonPayload = <json, createJsonProjectRequest()>update;
+    jsonPayload = projectRequestToJson(update);
     request.setJsonPayload(jsonPayload);
 
     //Adds Authorization Header
@@ -261,7 +259,7 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 Project project => {
                     return project;
@@ -295,7 +293,7 @@ returns User|JiraConnectorError {
             var userOut = <User>jsonResponse;
             match userOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 User lead => {
                     return lead;
@@ -331,7 +329,7 @@ returns ProjectRole|JiraConnectorError {
             var projectRoleOut = <ProjectRole>jsonResponse;
             match projectRoleOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 ProjectRole projectRole => {
                     return projectRole;
@@ -489,7 +487,7 @@ returns ProjectStatus[]|JiraConnectorError {
             var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 json[] jsonResponseArray => {
                     int i = 0;
@@ -497,7 +495,7 @@ returns ProjectStatus[]|JiraConnectorError {
                         var statusOut = <ProjectStatus>status;
                         match statusOut {
                             error err => {
-                                return <JiraConnectorError, toConnectorError()>err;
+                                return errorToJiraConnectorError(err);
                             }
                             ProjectStatus projectStatus => {
                                 statusArray[i] = projectStatus;
@@ -553,7 +551,7 @@ returns ProjectComponent|JiraConnectorError {
     var jsonPayloadOut = <json>newProjectComponent;
     match jsonPayloadOut {
         error err => {
-            return <JiraConnectorError, toConnectorError()>err;
+            return errorToJiraConnectorError(err);
         }
 
         json jsonPayload => {
@@ -658,7 +656,7 @@ public function <JiraConnector jiraConnector> getAssigneeUserDetailsOfProjectCom
             var userOut = <User>jsonResponse;
             match userOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 User assignee => {
                     return assignee;
@@ -692,7 +690,7 @@ returns User|JiraConnectorError {
             var userOut = <User>jsonResponse;
             match userOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
                 User lead => {
                     return lead;
@@ -724,7 +722,7 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
             var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => {
-                    return <JiraConnectorError, toConnectorError()>err;
+                    return errorToJiraConnectorError(err);
                 }
 
                 json[] jsonResponseArray => {
@@ -732,7 +730,7 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
                     foreach (jsonProjectCategory in jsonResponseArray) {
                         var projectCategoryOut = <ProjectCategory>jsonProjectCategory;
                         match projectCategoryOut {
-                            error err => return <JiraConnectorError, toConnectorError()>err;
+                            error err => return errorToJiraConnectorError(err);
 
                             ProjectCategory projectCategory => {
                                 projectCategories[i] = projectCategory;
@@ -770,7 +768,7 @@ returns ProjectCategory|JiraConnectorError {
         json jsonResponse => {
             var projectCategoryOut = <ProjectCategory>jsonResponse;
             match projectCategoryOut {
-                error err => return <JiraConnectorError, toConnectorError()>err;
+                error err => return errorToJiraConnectorError(err);
                 ProjectCategory category => return category;
             }
         }
@@ -790,7 +788,7 @@ returns ProjectCategory|JiraConnectorError {
     var jsonPayloadOut = <json>newCategory;
     match jsonPayloadOut {
         error err => {
-            return <JiraConnectorError, toConnectorError()>err;
+            return errorToJiraConnectorError(err);
         }
         json jsonPayload => {
             request.setJsonPayload(jsonPayload);
