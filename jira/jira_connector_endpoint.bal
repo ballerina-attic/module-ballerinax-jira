@@ -35,25 +35,23 @@ public struct JiraConnectorEndpoint {
     JiraConnector jiraConnector;
 }
 
-public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration jiraConfig) {
+public function <JiraConnectorEndpoint jiraConnectorEP> init (JiraConfiguration userConfig) {
 
-    http:ClientEndpointConfiguration httpConfig = {targets:[{uri:jiraConfig.uri + JIRA_REST_API_RESOURCE +
+    http:ClientEndpointConfiguration httpConfig = {targets:[{uri:userConfig.uri + JIRA_REST_API_RESOURCE +
                                                                  JIRA_REST_API_VERSION}],
                                                       chunking:http:Chunking.NEVER
                                                   };
+    userConfig.httpClientConfig = httpConfig;
 
-    jiraConfig.httpClientConfig = httpConfig;
+    jiraConnectorEP.jiraConfig = userConfig;
+    jiraConnectorEP.jiraConnector = {
+        jiraHttpClientEPConfig:jiraConnectorEP.jiraConfig.httpClientConfig,
+        jira_base_url:userConfig.uri,
+        jira_authentication_ep:userConfig.uri + JIRA_AUTH_RESOURCE,
+        jira_rest_api_uri:userConfig.uri + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION
+    };
 
-    jiraConnectorEP.jiraConfig = jiraConfig;
-    jiraConnectorEP.jiraConnector = {jiraHttpClientEPConfig:jiraConnectorEP.jiraConfig.httpClientConfig,
-                                        base_url:jiraConnectorEP.jiraConfig.uri};
-
-    jira_base_url = jiraConnectorEP.jiraConnector.base_url == "" ?
-                    WSO2_STAGING_JIRA_BASE_URL : jiraConnectorEP.jiraConnector.base_url;
-    jira_authentication_ep = jira_base_url + JIRA_AUTH_RESOURCE;
-    jira_rest_api_uri = jira_base_url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
-
-    jiraHttpClientEP.init(jiraConnectorEP.jiraConfig.httpClientConfig);
+    jiraConnectorEP.jiraConnector.jiraHttpClientEP.init(jiraConnectorEP.jiraConfig.httpClientConfig);
 }
 
 @Description {value:"Returns the connector that client code uses"}

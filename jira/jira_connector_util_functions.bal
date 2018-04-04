@@ -29,10 +29,10 @@ import ballerina/io;
 @Description {value:"Add authoriaztion header to the request"}
 @Param {value:"authType: Authentication type preferred by the user"}
 @Param {value:"request: The http out request object"}
-public function constructAuthHeader (http:Request request) {
+public function constructAuthHeader (http:Request request,string encodedCredentials) {
 
-    if (base64EncodedString != "") {
-        request.addHeader("Authorization", "Basic " + base64EncodedString);
+    if (encodedCredentials != "") {
+        request.addHeader("Authorization", "Basic " +encodedCredentials);
     }
 }
 
