@@ -74,7 +74,7 @@ returns json|JiraConnectorError {
             }
         }
     }
-}
+} 
 
 @Description {value:" validates jira account credentials given by the by the user and returns an error if the
 login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting,
@@ -83,10 +83,10 @@ or any other reasons."}
 @Param {value:"password:jira account password."}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-function validateAuthentication (string username, string password) returns boolean|JiraConnectorError {
+function validateAuthentication (string username, string password,string authentationEndpointUrl) returns boolean|JiraConnectorError {
     //Initializes jira authentication endpoint
     endpoint http:ClientEndpoint jiraLoginHttpClientEP {
-        targets:[{uri:WSO2_STAGING_JIRA_BASE_URL + JIRA_AUTH_RESOURCE}],
+        targets:[{url:authentationEndpointUrl}],
         chunking:http:Chunking.NEVER
     };
 

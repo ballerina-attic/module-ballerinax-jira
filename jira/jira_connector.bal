@@ -25,10 +25,10 @@ import ballerina/io;
 
 //Jira Connector Struct
 public struct JiraConnector {
-    boolean hasVaildCredentials = false;
+
     http:ClientEndpointConfiguration jiraHttpClientEPConfig;
     string jira_base_url;
-    string jira_rest_api_uri;
+    string jira_rest_api_ep;
     string jira_authentication_ep;
 
     private:
@@ -46,7 +46,7 @@ or any other reasons."}
 public function <JiraConnector jiraConnector> authenticate (string username, string password)
 returns boolean|JiraConnectorError {
 
-    boolean|JiraConnectorError response = validateAuthentication(username, password);
+    boolean|JiraConnectorError response = validateAuthentication(username, password,jiraConnector.jira_authentication_ep);
     match response {
         boolean => jiraConnector.base64EncodedString = util:base64Encode(username + ":" + password);
         JiraConnectorError => jiraConnector.base64EncodedString = "";

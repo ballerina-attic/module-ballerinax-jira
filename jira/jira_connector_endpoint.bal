@@ -19,11 +19,11 @@
 package jira;
 
 import ballerina/io;
-import ballerina/net.http;
+import ballerina/http;
 
 public struct JiraConfiguration {
     http:ClientEndpointConfiguration httpClientConfig;
-    string uri;
+    string url;
 }
 
 public function <JiraConfiguration jiraConfig> JiraConfiguration () {
@@ -37,7 +37,7 @@ public struct JiraEndpoint {
 
 public function <JiraEndpoint jiraEP> init (JiraConfiguration userConfig) {
 
-    http:ClientEndpointConfiguration httpConfig = {targets:[{uri:userConfig.uri + JIRA_REST_API_RESOURCE +
+    http:ClientEndpointConfiguration httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
                                                                  JIRA_REST_API_VERSION}],
                                                       chunking:http:Chunking.NEVER
                                                   };
@@ -46,9 +46,9 @@ public function <JiraEndpoint jiraEP> init (JiraConfiguration userConfig) {
     jiraEP.jiraConfig = userConfig;
     jiraEP.jiraConnector = {
         jiraHttpClientEPConfig:jiraEP.jiraConfig.httpClientConfig,
-        jira_base_url:userConfig.uri,
-        jira_authentication_ep:userConfig.uri + JIRA_AUTH_RESOURCE,
-        jira_rest_api_uri:userConfig.uri + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION
+        jira_base_url:userConfig.url,
+        jira_authentication_ep:userConfig.url + JIRA_AUTH_RESOURCE,
+        jira_rest_api_ep:userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION
     };
 
     jiraEP.jiraConnector.jiraHttpClientEP.init(jiraEP.jiraConfig.httpClientConfig);

@@ -17,9 +17,10 @@
 //
 
 package jira;
-import ballerina/net.http;
+import ballerina/http;
 
 @Description {value:"Represents a summary of a jira project."}
+@Field {value:"self"}
 public struct ProjectSummary {
     string self;
     string id;

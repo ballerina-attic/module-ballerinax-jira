@@ -1,6 +1,6 @@
 package tests;
 
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/io;
@@ -12,7 +12,7 @@ jira:ProjectComponent projectComponent_test = {};
 jira:ProjectCategory projectCategory_test = {};
 
 endpoint jira:JiraEndpoint jiraConnectorEP {
-    uri:"https://support-staging.wso2.com"
+    url:"https://support-staging.wso2.com"
 };
 
 @test:BeforeSuite
