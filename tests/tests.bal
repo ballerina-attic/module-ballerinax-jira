@@ -88,13 +88,17 @@ function test_createProject () {
 
     var output = jiraConnectorEP -> createProject(newProject);
     match output {
-        jira:Project => test:assertTrue(true);
+        jira:Project p => {
+            project_test = p;
+            test:assertTrue(true);
+        }
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
 
+
 @test:Config {
-    dependsOn:["test_createProject"]
+    dependsOn:["test_getProject"]
 }
 function test_updateProject () {
     log:printInfo("CONNECTOR_ACTION - updateProject()");
@@ -313,6 +317,7 @@ function test_getProjectComponent () {
     var output = jiraConnectorEP -> getProjectComponent(projectComponent_test.id);
     match output {
         jira:ProjectComponent component => {
+            projectComponent_test = component;
             test:assertTrue(true);
         }
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
@@ -320,7 +325,7 @@ function test_getProjectComponent () {
 }
 
 @test:Config {
-    dependsOn:["test_createProjectComponent"]
+    dependsOn:["test_getProjectComponent"]
 }
 function test_getAssigneeUserDetailsOfProjectComponent () {
     log:printInfo("CONNECTOR_ACTION - getAssigneeUserDetailsOfProjectComponent()");
@@ -333,7 +338,7 @@ function test_getAssigneeUserDetailsOfProjectComponent () {
 }
 
 @test:Config {
-    dependsOn:["test_createProjectComponent"]
+    dependsOn:["test_getProjectComponent"]
 }
 function test_getLeadUserDetailsOfProjectComponent () {
     log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProjectComponent()");
@@ -381,7 +386,7 @@ function test_getAllProjectCategories () {
 function test_createProjectCategory () {
     log:printInfo("CONNECTOR_ACTION - createProjectCategory()");
 
-    jira:ProjectCategoryRequest newCategory = {name:"Test-Porject Category",
+    jira:ProjectCategoryRequest newCategory = {name:"Test-Project Category",
                                                   description:"new category created from balleirna jira connector"};
 
     var output = jiraConnectorEP -> createProjectCategory(newCategory);
@@ -402,13 +407,16 @@ function test_getProjectCategory () {
 
     var output = jiraConnectorEP -> getProjectCategory(projectCategory_test.id);
     match output {
-        jira:ProjectCategory => test:assertTrue(true);
+        jira:ProjectCategory category => {
+            projectCategory_test = category;
+            test:assertTrue(true);
+        }
         jira:JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
 
 @test:Config {
-    dependsOn:["test_createProjectCategory", "test_getProjectCategory"]
+    dependsOn:["test_getProjectCategory"]
 }
 function test_deleteProjectCategory () {
     log:printInfo("CONNECTOR_ACTION - deleteProjectCategory()");
