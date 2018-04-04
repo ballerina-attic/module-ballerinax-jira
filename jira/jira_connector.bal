@@ -34,11 +34,6 @@ public struct JiraConnector {
     private:
         string base64EncodedString = "";
         http:ClientEndpoint jiraHttpClientEP;
-
-}
-
-public function <JiraConnector jiraConnector> JiraConnector () {
-    jiraConnector.jiraHttpClientEP = {};
 }
 
 
@@ -68,11 +63,13 @@ If no user is logged in, it returns the list of projects that are visible when u
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAllProjectSummaries () returns ProjectSummary[]|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     ProjectSummary[] projects = [];
     http:Request request = {};
 
     //Adds Authorization Header
     constructAuthHeader(request, jiraConnector.base64EncodedString);
+
     var httpResponseOut = jiraHttpClientEP -> get("/project?expand=description", request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -112,6 +109,7 @@ permission to view it and if no any error occured."}
 public function <JiraConnector jiraConnector> getAllDetailsFromProjectSummary (ProjectSummary projectSummary)
 returns Project|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -147,6 +145,7 @@ returns Project|JiraConnectorError {
 public function <JiraConnector jiraConnector> createProject (ProjectRequest newProject)
 returns Project|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     var jsonPayloadOut = <json>newProject;
@@ -189,6 +188,7 @@ returns Project|JiraConnectorError {
 public function <JiraConnector jiraConnector> updateProject (string projectIdOrKey, ProjectRequest update)
 returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     json jsonPayload;
@@ -217,6 +217,7 @@ returns boolean|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> deleteProject (string projectIdOrKey) returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     constructAuthHeader(request, jiraConnector.base64EncodedString);
@@ -241,6 +242,7 @@ to view it and if no any error occured."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getProject (string projectIdOrKey) returns Project|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -276,6 +278,7 @@ public function <JiraConnector jiraConnector> getProject (string projectIdOrKey)
 public function <JiraConnector jiraConnector> getLeadUserDetailsOfProject (Project project)
 returns User|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -310,6 +313,7 @@ returns User|JiraConnectorError {
 public function <JiraConnector jiraConnector> getRoleDetailsOfProject (Project project, ProjectRoleType projectRoleType)
 returns ProjectRole|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -345,6 +349,8 @@ returns ProjectRole|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> addUserToRoleOfProject (Project project, ProjectRoleType projectRoleType,
                                                                       string userName) returns boolean|JiraConnectorError {
+
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     json jsonPayload = {"user":[userName]};
@@ -373,8 +379,10 @@ public function <JiraConnector jiraConnector> addUserToRoleOfProject (Project pr
 @Param {value:"groupName: name of the group to be added."}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> addGroupToRoleOfProject (Project project, ProjectRoleType projectRoleType,
-                                                                       string groupName) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> addGroupToRoleOfProject (
+Project project, ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     json jsonPayload = {"group":[groupName]};
@@ -404,9 +412,10 @@ public function <JiraConnector jiraConnector> addGroupToRoleOfProject (Project p
 @Param {value:"userName: name of the user required to be removed"}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (Project project,
-                                                                           ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (
+Project project, ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -432,8 +441,10 @@ public function <JiraConnector jiraConnector> removeUserFromRoleOfProject (Proje
 @Param {value:"groupName: name of the user required to be removed"}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function <JiraConnector jiraConnector> removeGroupFromRoleOfProject (Project project,
-                                                                            ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+public function <JiraConnector jiraConnector> removeGroupFromRoleOfProject (
+Project project, ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -460,6 +471,7 @@ public function <JiraConnector jiraConnector> removeGroupFromRoleOfProject (Proj
 public function <JiraConnector jiraConnector> getAllIssueTypeStatusesOfProject (Project project)
 returns ProjectStatus[]|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
     ProjectStatus[] statusArray = [];
 
@@ -508,6 +520,7 @@ returns ProjectStatus[]|JiraConnectorError {
 public function <JiraConnector jiraConnector> changeTypeOfProject (Project project, ProjectType newProjectType)
 returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -534,6 +547,7 @@ returns boolean|JiraConnectorError {
 public function <JiraConnector jiraConnector> createProjectComponent (ProjectComponentRequest newProjectComponent)
 returns ProjectComponent|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     var jsonPayloadOut = <json>newProjectComponent;
@@ -573,6 +587,7 @@ returns ProjectComponent|JiraConnectorError {
 public function <JiraConnector jiraConnector> getProjectComponent (string componentId)
 returns ProjectComponent|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -600,6 +615,7 @@ returns ProjectComponent|JiraConnectorError {
 public function <JiraConnector jiraConnector> deleteProjectComponent (string projectComponentId)
 returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -625,6 +641,7 @@ returns boolean|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAssigneeUserDetailsOfProjectComponent (ProjectComponent projectComponent) returns User|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -658,6 +675,7 @@ public function <JiraConnector jiraConnector> getAssigneeUserDetailsOfProjectCom
 public function <JiraConnector jiraConnector> getLeadUserDetailsOfProjectComponent (ProjectComponent projectComponent)
 returns User|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -689,6 +707,7 @@ returns User|JiraConnectorError {
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function <JiraConnector jiraConnector> getAllProjectCategories () returns ProjectCategory[]|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
     ProjectCategory[] projectCategories = [];
 
@@ -735,6 +754,7 @@ public function <JiraConnector jiraConnector> getAllProjectCategories () returns
 public function <JiraConnector jiraConnector> getProjectCategory (string projectCategoryId)
 returns ProjectCategory|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
@@ -764,6 +784,7 @@ returns ProjectCategory|JiraConnectorError {
 public function <JiraConnector jiraConnector> createProjectCategory (ProjectCategoryRequest newCategory)
 returns ProjectCategory|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     var jsonPayloadOut = <json>newCategory;
@@ -803,6 +824,7 @@ returns ProjectCategory|JiraConnectorError {
 public function <JiraConnector jiraConnector> deleteProjectCategory (string projectCategoryId)
 returns boolean|JiraConnectorError {
 
+    endpoint http:ClientEndpoint jiraHttpClientEP = jiraConnector.jiraHttpClientEP;
     http:Request request = {};
 
     //Adds Authorization Header
