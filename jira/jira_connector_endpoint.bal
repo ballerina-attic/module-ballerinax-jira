@@ -24,6 +24,8 @@ import ballerina/http;
 public struct JiraConfiguration {
     http:ClientEndpointConfiguration httpClientConfig;
     string url;
+    string username;
+    string password;
 }
 
 public function <JiraConfiguration jiraConfig> JiraConfiguration () {
@@ -43,7 +45,7 @@ public function <JiraEndpoint jiraEP> init (JiraConfiguration userConfig) {
                                                   };
     userConfig.httpClientConfig = httpConfig;
 
-    jiraEP.jiraConfig = userConfig;
+
     jiraEP.jiraConnector = {
         jiraHttpClientEPConfig:jiraEP.jiraConfig.httpClientConfig,
         jira_base_url:userConfig.url,
@@ -51,6 +53,9 @@ public function <JiraEndpoint jiraEP> init (JiraConfiguration userConfig) {
         jira_rest_api_ep:userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION
     };
 
+    jiraEP.jiraConnector.setBase64EncodedCredentials(userConfig.username,userConfig.password);
+
+    jiraEP.jiraConfig = {url:userConfig.url, httpClientConfig:userConfig.httpClientConfig};
     jiraEP.jiraConnector.jiraHttpClientEP.init(jiraEP.jiraConfig.httpClientConfig);
 }
 

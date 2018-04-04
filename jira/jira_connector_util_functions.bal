@@ -74,7 +74,7 @@ returns json|JiraConnectorError {
             }
         }
     }
-} 
+}
 
 @Description {value:" validates jira account credentials given by the by the user and returns an error if the
 login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting,

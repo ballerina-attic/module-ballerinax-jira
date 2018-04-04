@@ -12,7 +12,9 @@ jira:ProjectComponent projectComponent_test = {};
 jira:ProjectCategory projectCategory_test = {};
 
 endpoint jira:JiraEndpoint jiraConnectorEP {
-    url:"https://support-staging.wso2.com"
+    url:"https://support-staging.wso2.com",
+    username:"ashan@wso2.com",
+    password:"ashan123"
 };
 
 @test:BeforeSuite
@@ -24,18 +26,6 @@ function connector_init () {
 }
 
 @test:Config
-function test_authenticate () {
-    log:printInfo("CONNECTOR_ACTION - Authenticate()");
-    var output = jiraConnectorEP -> authenticate("ashan@wso2.com", "ashan123");
-    match output {
-        boolean => test:assertTrue(true);
-        jira:JiraConnectorError => test:assertFail(msg = "Failed");
-    }
-}
-
-@test:Config {
-    dependsOn:["test_authenticate"]
-}
 function test_getAllProjectSummaries () {
     log:printInfo("CONNECTOR_ACTION - getAllProjectSummaries()");
 
@@ -63,9 +53,7 @@ function test_getAllDetailsFromProjectSummary () {
     }
 }
 
-@test:Config {
-    dependsOn:["test_authenticate"]
-}
+@test:Config
 function test_createProject () {
     log:printInfo("CONNECTOR_ACTION - createProject()");
 
@@ -367,9 +355,7 @@ function test_deleteProjectComponent () {
     }
 }
 
-@test:Config {
-    dependsOn:["test_authenticate"]
-}
+@test:Config
 function test_getAllProjectCategories () {
     log:printInfo("CONNECTOR_ACTION - getAllProjectCategories()");
 
@@ -380,9 +366,7 @@ function test_getAllProjectCategories () {
     }
 }
 
-@test:Config {
-    dependsOn:["test_authenticate"]
-}
+@test:Config
 function test_createProjectCategory () {
     log:printInfo("CONNECTOR_ACTION - createProjectCategory()");
 
