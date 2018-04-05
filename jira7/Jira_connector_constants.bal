@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package jira;
+package jira7;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                      Configuration Constants                                                       //
@@ -24,6 +24,7 @@ package jira;
 
 string WSO2_STAGING_JIRA_BASE_URL = "https://support-staging.wso2.com";
 string JIRA_REST_API_RESOURCE = "/jira/rest/api/";
+string JIRA_AUTH_RESOURCE = "/jira/rest/auth/1/session/";
 string WSO2_STAGING_JIRA_REST_API_URL =  WSO2_STAGING_JIRA_BASE_URL + JIRA_REST_API_RESOURCE;
 string JIRA_REST_API_VERSION = "2";
 string WSO2_STAGING_JIRA_REST_API_ENDPOINT = WSO2_STAGING_JIRA_REST_API_URL + JIRA_REST_API_VERSION;
@@ -60,3 +61,16 @@ public const string STATUS_NOT_FOUND = "NOT-FOUND";
 public const string STATUS_BAD_REQUEST = "BAD-REQUEST";
 public const string STATUS_CONFLICT = "CONFLICT";
 public const string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                  Enums                                                             //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public enum ProjectRoleType {
+    DEVELOPERS, EXTERNAL_CONSULTANT, OBSERVER, ADMINISTRATORS, USERS, CSAT_ADMINISTRATORS, NOTIFICATIONS
+}
+
+public enum ProjectType {
+    SOFTWARE, BUSINESS
+}
