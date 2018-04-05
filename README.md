@@ -61,9 +61,6 @@ in the following sample code.(Connector will check for an existing jira user acc
 will return an error if the credentials are invalid.)
 ```Ballerina
 
-    jira:JiraConnectorError jiraConnectorError;
-    boolean isValid;
-    
     //Creating the jira Connector as an endpoint
     endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
         base_url:"https://support-staging.wso2.com"
@@ -90,7 +87,7 @@ You can easily test all the connector actions using the `test.bal` file, using t
 
 ## Working with Jira connector actions
 
-All the actions return two values: result and error. Results can be either`ballerina struct objects` or boolean values,depends on the context. Error response is also a ballerina struct object of type`JiraConnectorError`. If the actions was successfull, then the requested struct object or boolean `TRUE` response will be returned while the `JiraConnectorError` will be **null** and vice-versa.
+All actions of Jira Connector return two values: result and error. Results can be either`ballerina struct objects` or `boolean` values,depends on the context. Error response is also a ballerina struct object of type`JiraConnectorError`. If the actions was successfull, then the requested struct object or boolean `TRUE` response will be returned while the `JiraConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 

@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package jira;
+package jira7;
 import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
@@ -71,54 +71,6 @@ returns json|JiraConnectorError {
                     mime:EntityError errorOut => err = errorOut;
                 }
                 return jsonResponse;
-            }
-        }
-    }
-}
-
-@Description {value:" validates jira account credentials given by the by the user and returns an error if the
-login fails due to invalid credentials or if the login is denied due to a CAPTCHA requirement, throtting,
-or any other reasons."}
-@Param {value:"username: jira account username."}
-@Param {value:"password:jira account password."}
-@Return {value:"boolean: returns true if the process is successful."}
-@Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-function validateAuthentication (string username, string password,string authentationEndpointUrl) returns boolean|JiraConnectorError {
-    //Initializes jira authentication endpoint
-    endpoint http:ClientEndpoint jiraLoginHttpClientEP {
-        targets:[{url:authentationEndpointUrl}],
-        chunking:http:Chunking.NEVER
-    };
-
-    JiraConnectorError e = {};
-    error err = {};
-    mime:EntityError errr = {};
-    json jsonResponse;
-    json jsonPayload;
-    http:Request request = {};
-
-    jsonPayload = {"username":username, "password":password};
-    request.setJsonPayload(jsonPayload);
-
-    var output = jiraLoginHttpClientEP -> post("/", request);
-    match output {
-        http:HttpConnectorError connectionError => {
-            e = {^"type":"Connection Error", message:connectionError.message, cause:connectionError.cause};
-            return e;
-        }
-
-        http:Response response => {
-            if (response.statusCode != STATUS_CODE_OK) {
-                e = {^"type":"Server Error", message:"status " + <string>response.statusCode +
-                                                                         ": " + response.reasonPhrase};
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOutput => e.jiraServerErrorLog = jsonOutput;
-                    mime:EntityError errorOut => errr = {};
-                }
-                return e;
-            } else {
-                return true;
             }
         }
     }

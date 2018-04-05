@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package jira;
+package jira7;
 import ballerina/http;
 
 @Description {value:"Represents a summary of a jira project."}
