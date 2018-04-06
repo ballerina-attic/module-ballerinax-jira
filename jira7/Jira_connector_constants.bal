@@ -60,17 +60,21 @@ public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-type ADMINISTRATORS "10002";
-type CSAT_DEVELOPERS "10030";
-type DEVELOPERS "10001";
-type EXTERNAL_CONSULTANTS "10011";
-type NOTIFICATIONS "10010";
-type OBSERVER "10020";
-type USERS "10000";
 
-//type ProjectRoleType ADMINISTRATORS|CSAT_DEVELOPERS|DEVELOPERS|EXTERNAL_CONSULTANTS|NOTIFICATIONS|OBSERVER|USERS;
+type ProjectRoleType "10002"|"10030"|"10001"|"10011"|"10010"|"10020"|"10000";
+@final ProjectRoleType ADMINISTRATORS = "10002";
+@final ProjectRoleType CSAT_DEVELOPERS =  "10030";
+@final ProjectRoleType DEVELOPERS = "10001";
+@final ProjectRoleType EXTERNAL_CONSULTANTS = "10011";
+@final ProjectRoleType NOTIFICATIONS = "10010";
+@final ProjectRoleType OBSERVER = "10020";
+@final ProjectRoleType USERS = "10000";
+
 
 type ProjectType "software"|"business";
+@final ProjectType SOFTWARE = "software";
+@final ProjectType BUSINESS = "business";
+
 
 //public enum ProjectRoleType {
 //    DEVELOPERS, EXTERNAL_CONSULTANT, OBSERVER, ADMINISTRATORS, USERS, CSAT_ADMINISTRATORS, NOTIFICATIONS

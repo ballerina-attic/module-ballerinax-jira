@@ -115,13 +115,13 @@ function jsonToProjectSummary (json source) returns ProjectSummary {
 
     ProjectSummary target = {};
 
-    target.self = source.self.toString() ? :"";
-    target.id = source.id.toString() ? :"";
-    target.key = source.key.toString() ? :"";
-    target.name = source.name.toString() ? :"";
-    target.description = source.description != null ? source.description.toString() ? :"" : "";
-    target.projectTypeKey = source.projectTypeKey.toString() ? :"";
-    target.category = source.projectCategory != null ? source.projectCategory.name.toString() ? :"" : "";
+    target.self = source.self.toString() ?:"";
+    target.id = source.id.toString() ?:"";
+    target.key = source.key.toString() ?:"";
+    target.name = source.name.toString() ?:"";
+    target.description = source.description != null ? source.description.toString() ?:"" : "";
+    target.projectTypeKey = source.projectTypeKey.toString() ?:"";
+    target.category = source.projectCategory != null ? source.projectCategory.name.toString() ?:"" : "";
 
     return target;
 }
@@ -130,10 +130,10 @@ function jsonToProjectCategory (json source) returns ProjectCategory {
 
     ProjectCategory target = {};
 
-    target.self = source.self != null ? source.self.toString() ? :"" : "";
-    target.name = source.name != null ? source.name.toString() ? :"" : "";
-    target.id = source.id != null ? source.id.toString() ? :"" : "";
-    target.description = source.description != null ? source.description.toString() ? :"" : "";
+    target.self = source.self != null ? source.self.toString() ?:"" : "";
+    target.name = source.name != null ? source.name.toString() ?:"" : "";
+    target.id = source.id != null ? source.id.toString() ?: "" : "";
+    target.description = source.description != null ? source.description.toString() ?:"" : "";
 
     return target;
 }
@@ -141,26 +141,26 @@ function jsonToProjectCategory (json source) returns ProjectCategory {
 function jsonToProjectComponent (json source) returns ProjectComponent {
 
     ProjectComponent target = {};
-    target.self = source.self != null ? source.self.toString() ? : "" : "";
-    target.id = source.id != null ? source.id.toString() ? :"" : "";
-    target.name = source.name != null ? source.name.toString() ? :"" : "";
-    target.description = source.description != null ? source.description.toString() ? :"" : "";
-    target.assigneeType = source.assigneeType != null ? source.assigneeType.toString() ? :"" : "";
-    target.realAssigneeType = source.realAssigneeType != null ? source.realAssigneeType.toString() ? :"" : "";
-    target.project = source.project != null ? source.project.toString() ? :"" : "";
-    target.projectId = source.projectId != null ? source.projectId.toString() ? :"" : "";
+    target.self = source.self != null ? source.self.toString() ?: "" : "";
+    target.id = source.id != null ? source.id.toString() ?:"" : "";
+    target.name = source.name != null ? source.name.toString() ?:"" : "";
+    target.description = source.description != null ? source.description.toString() ?:"" : "";
+    target.assigneeType = source.assigneeType != null ? source.assigneeType.toString() ?:"" : "";
+    target.realAssigneeType = source.realAssigneeType != null ? source.realAssigneeType.toString() ?:"" : "";
+    target.project = source.project != null ? source.project.toString() ?:"" : "";
+    target.projectId = source.projectId != null ? source.projectId.toString() ?:"" : "";
 
     target.leadName = source.lead != null ?
                       source.lead.name != null ?
-                      source.lead.name.toString() ? :"" : "" : "";
+                      source.lead.name.toString() ?:"" : "" : "";
 
     target.assigneeName = source.assignee != null ?
                           source.assignee.name != null ?
-                          source.assignee.name.toString() ? :"" : "" : "";
+                          source.assignee.name.toString() ?:"" : "" : "";
 
     target.realAssigneeName = source.realAssignee != null ?
                               source.realAssignee.name != null ?
-                              source.realAssignee.name.toString() ? :"" : "" : "";
+                              source.realAssignee.name.toString() ?:"" : "" : "";
 
     return target;
 }

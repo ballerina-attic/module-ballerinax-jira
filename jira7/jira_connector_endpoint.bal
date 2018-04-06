@@ -20,7 +20,7 @@ package jira7;
 
 //import ballerina/io;
 //import ballerina/http;
-
+//
 //public struct JiraConfiguration {
 //    http:ClientEndpointConfiguration httpClientConfig;
 //    string url;
@@ -63,4 +63,4 @@ package jira7;
 //public function <JiraEndpoint jiraConnectorEP> getClient () returns JiraConnector {
 //    return jiraConnectorEP.jiraConnector;
 //}
-//
+
