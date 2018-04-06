@@ -17,11 +17,11 @@
 //
 
 package jira7;
-import ballerina/http;
+//import ballerina/http;
 
 @Description {value:"Represents a summary of a jira project."}
 @Field {value:"self"}
-public struct ProjectSummary {
+public type ProjectSummary {
     string self;
     string id;
     string key;
@@ -32,7 +32,7 @@ public struct ProjectSummary {
 }
 
 @Description {value:"Represents a detailed jira project."}
-public struct Project {
+public type Project {
     string self;
     string id;
     string key;
@@ -48,7 +48,7 @@ public struct Project {
 }
 
 @Description {value:"Represents a detailed jira project."}
-public struct ProjectRequest {
+public type ProjectRequest {
     string key;
     string name;
     string projectTypeKey;
@@ -65,7 +65,7 @@ public struct ProjectRequest {
 }
 
 @Description {value:"Represents a summary of a jira project component."}
-public struct ProjectComponentSummary {
+public type ProjectComponentSummary {
     string self;
     string id;
     string name;
@@ -73,7 +73,7 @@ public struct ProjectComponentSummary {
 }
 
 @Description {value:"Represents a detailed jira project component."}
-public struct ProjectComponent {
+public type ProjectComponent {
     string self;
     string id;
     string name;
@@ -88,7 +88,7 @@ public struct ProjectComponent {
 }
 
 @Description {value:"Represents jira project component creation template object."}
-public struct ProjectComponentRequest {
+public type ProjectComponentRequest {
     string name;
     string description;
     string leadUserName;
@@ -98,7 +98,7 @@ public struct ProjectComponentRequest {
 }
 
 @Description {value:"Represents a detailed jira project category."}
-public struct ProjectCategory {
+public type ProjectCategory {
     string self;
     string id;
     string name;
@@ -106,13 +106,13 @@ public struct ProjectCategory {
 }
 
 @Description {value:"Represents jira project category creation template object."}
-public struct ProjectCategoryRequest {
+public type ProjectCategoryRequest {
     string name;
     string description;
 }
 
-@Description {value:"Represents a jira project role (i.e. Developers,Users etc.)."}
-public struct ProjectRole {
+@Description {value:"Represents a jira project role (i.e. Developers;Users etc.)."}
+public type ProjectRole {
     string self;
     string name;
     string description;
@@ -120,7 +120,7 @@ public struct ProjectRole {
 }
 
 @Description {value:"Represent an assignee for a given project role (An actor can be either a jira user or a group)"}
-public struct Actor {
+public type Actor {
     string id;
     string name;
     string displayName;
@@ -128,7 +128,7 @@ public struct Actor {
 }
 
 @Description {value:"Represents a jira issue type status related to a jira project."}
-public struct ProjectStatus {
+public type ProjectStatus {
     string self;
     string name;
     string id;
@@ -136,7 +136,7 @@ public struct ProjectStatus {
 }
 
 @Description {value:"Represents a jira user"}
-public struct User {
+public type User {
     string self;
     string key;
     string name;
@@ -149,7 +149,7 @@ public struct User {
 }
 
 @Description {value:"Represents a jira issue type."}
-public struct IssueType {
+public type IssueType {
     string self;
     string id;
     string name;
@@ -159,7 +159,7 @@ public struct IssueType {
 }
 
 @Description {value:"Represents a jira project version."}
-public struct ProjectVersion {
+public type ProjectVersion {
     string self;
     string id;
     string name;
@@ -172,7 +172,7 @@ public struct ProjectVersion {
 }
 
 @Description {value:"Represents a set of avatar Urls related to a jira entity."}
-public struct AvatarUrls {
+public type AvatarUrls {
     string ^"16x16";
     string ^"24x24";
     string ^"32x32";
@@ -180,7 +180,7 @@ public struct AvatarUrls {
 }
 
 @Description {value:"Represent Jira Connector based errors."}
-public struct JiraConnectorError {
+public type JiraConnectorError {
     string ^"type";
     string message;
     json jiraServerErrorLog;
