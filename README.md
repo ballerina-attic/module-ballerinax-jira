@@ -6,10 +6,9 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|Connector Version | Ballerina Version | 
-|:------------------:|:-------------------:|
-|0.1|0.964.0|
-|0.2|0.970.0-alpha0|
+|Connector Version | Ballerina Version | API Version |
+|:------------------:|:-------------------:|:-------------------:|
+|0.8|0.970.0-alpha1|7.2.2|
 
 ### Why do you need the REST API for Jira
 
@@ -22,7 +21,6 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 - [Getting started](#getting-started)
 - [Authentication](#authentication)
-- [Running Samples](#running-samples)
 - [Working with Jira Connector](#working-with-jira-connector-actions)
 
 
@@ -56,33 +54,18 @@ Please follow the following steps to authenticate your connector.
   If you currently dont have a Jira account, you can create a new Jira account from 
   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
 
-- Provide the credentials which are obtained in the above step to your connector as shown 
-in the following sample code.(Connector will check for an existing jira user account with the given credentials and 
-will return an error if the credentials are invalid.)
+- Provide the credentials to your connector in the initialization step, as shown 
+in the following sample code.
 ```Ballerina
 
-    //Creating the jira Connector as an endpoint
-    endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
-        base_url:"https://support-staging.wso2.com"
-    };
-    
-    //this is the in-buit connctor action to get the user credentials and check the validity of the provided details.
-    var response = jiraConnector -> authenticate("ashan@wso2.com", "ashan123");
-    match response{
-        boolean success => io:println(success);
-        jira:JiraConnectorError error => io:println(e);
-    }
+     //Creation of connector endpoint
+     endpoint jira:JiraEndpoint jiraConnectorEP {
+            base_url:"https://support-staging.wso2.com",
+            username:"username",
+            password:"password"
+     };
 
 ```
-
-## Running Samples
-
-You can easily test all the connector actions using the `test.bal` file, using the following steps.
-
-1. Navigate to the folder `package-jira`.
-2. Run the following commands to execute the sample.
-
-    ```$ ballerina run tests "Run All Tests"```
 
 
 ## Working with Jira connector actions
@@ -98,13 +81,12 @@ All actions of Jira Connector return two values: result and error. Results can b
     string projectKey = "RRDEVSPRT";
     
     //Creating the jira Connector as an endpoint
-    endpoint jira:JiraConnectorEndpoint jiraConnectorEP {
-        base_url:"https://support-staging.wso2.com"
+    endpoint jira:JiraEndpoint jiraConnectorEP {
+        base_url:"https://support-staging.wso2.com",
+        username:"username",
+        password:"password"
     };
-    
-    //Authentication 
-    var response = jiraConnector -> authenticate("ashan@wso2.com", "ashan123");
-    
+         
     //Connector Action
     var result = jiraConnector -> getProject(projectKey);
     match result{
@@ -142,25 +124,6 @@ public struct JiraConnectorError {
 }
 ```
 
-Ballerina Jira connector API basically provides two types of functionalities, which are
-- **Connector-based actions**
-- **Entity-based actions**
-
-#### Connector-Based Actions
-
-   Connector-based actions provide generic functionalities related to jira, with the following format.
-
-   syntax: `connectorName.actionName(arguments)`
-
-
-#### Entity-Based Actions
- 
-   Entity-based actions are special set of actions which are defined on a Jira Entity (Eg: Jira Project,Jira Issue etc.),
-   which are also called struct-bound functions. Ballerina Jira connector API design allows users to retrieve the jira 
-   basic entities using connector-bound actions and then use entity-bound actions directly on the obtained structured          entities
-
-   syntax: `entityName.actionName(arguments)`
- 
 Now that you have basic knowledge about to how Ballerina Jira connector works, 
 use the information in the following sections to perform various operations with the connector.
 
@@ -176,37 +139,34 @@ use the information in the following sections to perform various operations with
 
 ### API Reference
 
-#### Connector-Based Actions
-
+#### Project
 - getAllProjectSummaries()
+- getAllDetailsFromProjectSummary()
 - getProject()
 - createProject()
 - updateProject()
 - deleteProject()
+- getLeadUserDetailsOfProject()
+- getRoleDetailsOfProject()
+- addUserToRoleOfProject()
+- addGroupToRoleOfProject()
+- removeUserFromRoleOfProject()
+- removeGroupFromRoleOfProject()
+- getAllIssueTypeStatusesOfProject()
+- changeTypeOfProject()
+
+#### Project Category
 - getAllProjectCategories()
 - createProjectCategory()
+- getProjectCategory()
 - deleteProjectCategory()
 
-#### Entity-Based Actions
-
-- ProjectSummary 
-    - getAllDetails()
-- Project
-    - getLeadUserDetails()
-    - getRoleDetails()
-    - addUserToRole()
-    - addGroupToRole()
-    - removeUserFromRole()
-    - removeGroupFromRole()
-    - getAllIssueTypeStatuses()
-    - changeProjectType()
-    
-- ProjectComponentSummary
-    - getAllDetails()
-
-- ProjectComponent
-    - getLeadUserDetails()
-    - getAssigneeUserDetails()
+#### Project Component
+- createProjectComponent()
+- getProjectComponent()
+- deleteProjectComponent()
+- getAssigneeUserDetailsOfProjectComponent()
+- getLeadUserDetailsOfProjectComponent()
 
 
 ***

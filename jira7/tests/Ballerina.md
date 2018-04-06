@@ -1,10 +1,10 @@
 
 
-## Running Samples
+## Running Tests
 
-You can easily test all the connector actions using the `test.bal` file, using the following steps.
+You can easily test all the connector actions using the `tests.bal` file, using the following steps.
 
-1. Navigate to the folder `package-jira`.
-2. Run the following commands to execute the sample.
+1. Navigate to the folder `package-jira` using terminal.
+2. Run the following commands to execute the tests.
 
-    ```$ ballerina run tests "Run All Tests"```
+    ```$ ballerina test jira7"```
