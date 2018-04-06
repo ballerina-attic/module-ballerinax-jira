@@ -75,13 +75,3 @@ type ProjectType "software"|"business";
 @final ProjectType SOFTWARE = "software";
 @final ProjectType BUSINESS = "business";
 
-
-//public enum ProjectRoleType {
-//    DEVELOPERS, EXTERNAL_CONSULTANT, OBSERVER, ADMINISTRATORS, USERS, CSAT_ADMINISTRATORS, NOTIFICATIONS
-//}
-//
-//
-//
-//public enum ProjectType {
-//    SOFTWARE, BUSINESS
-//}

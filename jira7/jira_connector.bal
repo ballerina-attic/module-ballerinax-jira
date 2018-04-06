@@ -29,11 +29,16 @@ public type JiraConnector object {
         http:ClientEndpointConfiguration jiraHttpClientEPConfig;
         string jira_base_url;
         string jira_rest_api_ep;
-        string jira_authentication_ep;
     }
     private {
         string base64EncodedCredentials;
         http:ClientEndpoint jiraHttpClientEP;
+    }
+
+    new(http:ClientEndpointConfiguration httpConfig,string baseUrl, string restEndpointUrl){
+        jiraHttpClientEPConfig = httpConfig;
+        jira_base_url = baseUrl;
+        jira_rest_api_ep = restEndpointUrl;
     }
 
     function setBase64EncodedCredentials (string username, string password);
@@ -52,25 +57,25 @@ public type JiraConnector object {
 
     public function getLeadUserDetailsOfProject (Project project) returns User|JiraConnectorError;
 
-    public function getRoleDetailsOfProject (Project project, ProjectRoleType projectRoleType)
+    public function getRoleDetailsOfProject (Project project, string projectRoleType)
                     returns ProjectRole|JiraConnectorError;
 
-    public function addUserToRoleOfProject (Project project, ProjectRoleType projectRoleType, string userName)
+    public function addUserToRoleOfProject (Project project, string projectRoleType, string userName)
                     returns boolean|JiraConnectorError;
 
-    public function addGroupToRoleOfProject (Project project, ProjectRoleType projectRoleType, string groupName)
+    public function addGroupToRoleOfProject (Project project, string projectRoleType, string groupName)
                     returns boolean|JiraConnectorError;
 
-    public function removeUserFromRoleOfProject(Project project, ProjectRoleType projectRoleType, string userName)
+    public function removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
                     returns boolean|JiraConnectorError;
 
-    public function removeGroupFromRoleOfProject (Project project, ProjectRoleType projectRoleType, string groupName)
+    public function removeGroupFromRoleOfProject (Project project, string projectRoleType, string groupName)
                     returns boolean|JiraConnectorError;
 
     public function getAllIssueTypeStatusesOfProject (Project project)
                     returns ProjectStatus[]|JiraConnectorError;
 
-    public function changeTypeOfProject (Project project, ProjectType newProjectType)
+    public function changeTypeOfProject (Project project, string newProjectType)
                     returns boolean|JiraConnectorError;
 
     public function createProjectComponent (ProjectComponentRequest newProjectComponent)
@@ -359,7 +364,7 @@ returns User|JiraConnectorError {
 @Param {value:"projectRoleType: Enum which provides the possible project roles for a jira project"}
 @Return {value:"ProjectRole 'ProjectRole' object containing the details of the requested role."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function JiraConnector::getRoleDetailsOfProject (Project project, ProjectRoleType projectRoleType)
+public function JiraConnector::getRoleDetailsOfProject (Project project, string projectRoleType)
 returns ProjectRole|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
@@ -396,7 +401,7 @@ returns ProjectRole|JiraConnectorError {
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function JiraConnector::addUserToRoleOfProject (
-Project project, ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
+Project project, string projectRoleType, string userName) returns boolean|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
     http:Request request = new;
@@ -427,7 +432,7 @@ Project project, ProjectRoleType projectRoleType, string userName) returns boole
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function JiraConnector::addGroupToRoleOfProject (
-Project project, ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+Project project, string projectRoleType, string groupName) returns boolean|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
     http:Request request = new;
@@ -459,7 +464,7 @@ Project project, ProjectRoleType projectRoleType, string groupName) returns bool
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function JiraConnector::removeUserFromRoleOfProject (
-Project project, ProjectRoleType projectRoleType, string userName) returns boolean|JiraConnectorError {
+Project project, string projectRoleType, string userName) returns boolean|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
     http:Request request = new;
@@ -488,7 +493,7 @@ Project project, ProjectRoleType projectRoleType, string userName) returns boole
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
 public function JiraConnector::removeGroupFromRoleOfProject (
-Project project, ProjectRoleType projectRoleType, string groupName) returns boolean|JiraConnectorError {
+Project project, string projectRoleType, string groupName) returns boolean|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
     http:Request request = new;
@@ -560,10 +565,10 @@ returns ProjectStatus[]|JiraConnectorError {
 
 @Description {value:"Updates the type of a jira project."}
 @Param {value:"project: 'Project' object."}
-@Param {value:"newProjectType: Enum which provides the possible project types for a jira project"}
+@Param {value:"newProjectType: Enum which provides the possible project types ('software' or 'business') for a jira project."}
 @Return {value:"boolean: returns true if the process is successful."}
 @Return {value:"JiraConnectorError: 'JiraConnectorError' object."}
-public function JiraConnector::changeTypeOfProject (Project project, ProjectType newProjectType)
+public function JiraConnector::changeTypeOfProject (Project project, string newProjectType)
 returns boolean|JiraConnectorError {
 
     endpoint http:ClientEndpoint jiraHttpClientEP = jiraHttpClientEP;
