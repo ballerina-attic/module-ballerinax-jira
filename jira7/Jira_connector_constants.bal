@@ -60,15 +60,15 @@ public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-string ADMINISTRATORS = "10002";
-string CSAT_DEVELOPERS = "10030";
-string DEVELOPERS = "10001";
-string EXTERNAL_CONSULTANTS = "10011";
-string NOTIFICATIONS = "10010";
-string OBSERVER = "10020";
-string USERS = "10000";
+type ADMINISTRATORS "10002";
+type CSAT_DEVELOPERS "10030";
+type DEVELOPERS "10001";
+type EXTERNAL_CONSULTANTS "10011";
+type NOTIFICATIONS "10010";
+type OBSERVER "10020";
+type USERS "10000";
 
-type ProjectRoleType ADMINISTRATORS|CSAT_DEVELOPERS|DEVELOPERS|EXTERNAL_CONSULTANTS|NOTIFICATIONS|OBSERVER|USERS;
+//type ProjectRoleType ADMINISTRATORS|CSAT_DEVELOPERS|DEVELOPERS|EXTERNAL_CONSULTANTS|NOTIFICATIONS|OBSERVER|USERS;
 
 type ProjectType "software"|"business";
 

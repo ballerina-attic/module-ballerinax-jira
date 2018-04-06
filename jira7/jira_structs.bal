@@ -29,7 +29,7 @@ public type ProjectSummary {
     string description;
     string category;
     string projectTypeKey;
-}
+};
 
 @Description {value:"Represents a detailed jira project."}
 public type Project {
@@ -45,7 +45,7 @@ public type Project {
     IssueType[] issueTypes;
     ProjectComponentSummary[] components;
     ProjectVersion[] versions;
-}
+};
 
 @Description {value:"Represents a detailed jira project."}
 public type ProjectRequest {
@@ -62,7 +62,7 @@ public type ProjectRequest {
     string permissionScheme;
     string notificationScheme;
     string categoryId;
-}
+};
 
 @Description {value:"Represents a summary of a jira project component."}
 public type ProjectComponentSummary {
@@ -70,7 +70,7 @@ public type ProjectComponentSummary {
     string id;
     string name;
     string description;
-}
+};
 
 @Description {value:"Represents a detailed jira project component."}
 public type ProjectComponent {
@@ -85,7 +85,7 @@ public type ProjectComponent {
     string realAssigneeType;
     string project;
     string projectId;
-}
+};
 
 @Description {value:"Represents jira project component creation template object."}
 public type ProjectComponentRequest {
@@ -95,7 +95,7 @@ public type ProjectComponentRequest {
     string assigneeType;
     string project;
     string projectId;
-}
+};
 
 @Description {value:"Represents a detailed jira project category."}
 public type ProjectCategory {
@@ -103,13 +103,13 @@ public type ProjectCategory {
     string id;
     string name;
     string description;
-}
+};
 
 @Description {value:"Represents jira project category creation template object."}
 public type ProjectCategoryRequest {
     string name;
     string description;
-}
+};
 
 @Description {value:"Represents a jira project role (i.e. Developers;Users etc.)."}
 public type ProjectRole {
@@ -117,7 +117,7 @@ public type ProjectRole {
     string name;
     string description;
     Actor[] actors;
-}
+};
 
 @Description {value:"Represent an assignee for a given project role (An actor can be either a jira user or a group)"}
 public type Actor {
@@ -125,7 +125,7 @@ public type Actor {
     string name;
     string displayName;
     string ^"type";
-}
+};
 
 @Description {value:"Represents a jira issue type status related to a jira project."}
 public type ProjectStatus {
@@ -133,7 +133,7 @@ public type ProjectStatus {
     string name;
     string id;
     json statuses;
-}
+};
 
 @Description {value:"Represents a jira user"}
 public type User {
@@ -146,7 +146,7 @@ public type User {
     boolean active;
     string timeZone;
     string locale;
-}
+};
 
 @Description {value:"Represents a jira issue type."}
 public type IssueType {
@@ -156,7 +156,7 @@ public type IssueType {
     string description;
     string iconUrl;
     boolean subtask;
-}
+};
 
 @Description {value:"Represents a jira project version."}
 public type ProjectVersion {
@@ -169,7 +169,7 @@ public type ProjectVersion {
     boolean overdue;
     string userReleaseDate;
     string projectId;
-}
+};
 
 @Description {value:"Represents a set of avatar Urls related to a jira entity."}
 public type AvatarUrls {
@@ -177,7 +177,7 @@ public type AvatarUrls {
     string ^"24x24";
     string ^"32x32";
     string ^"48x48";
-}
+};
 
 @Description {value:"Represent Jira Connector based errors."}
 public type JiraConnectorError {
@@ -185,4 +185,4 @@ public type JiraConnectorError {
     string message;
     json jiraServerErrorLog;
     error[] cause;
-}
+};
