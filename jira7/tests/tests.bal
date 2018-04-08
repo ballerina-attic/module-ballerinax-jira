@@ -10,10 +10,10 @@ ProjectSummary[] projectSummaryArray_test = [];
 ProjectComponent projectComponent_test = {};
 ProjectCategory projectCategory_test = {};
 
-endpoint JiraEndpoint jiraConnectorEP {
-    url:config:getAsString(url)?:"",
-    username:config:getAsString(username)?:"",
-    password:config:getAsString(password)?:""
+endpoint JiraClient jiraConnectorEP {
+    url:"https://support-staging.wso2.com",
+    username:"ashan@wso2.com",
+    password:"ashan123"
 };
 
 @test:BeforeSuite

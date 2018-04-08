@@ -30,15 +30,12 @@ string password;
 
 
 
-public type JiraEndpoint object {
+public type JiraClient object {
     public {
-        JiraConfiguration jiraConfig;
-        JiraConnector jiraConnector;
+        JiraConfiguration jiraConfig = {};
+        JiraConnector jiraConnector = new;
     }
 
-    new (string urlIn, string usernameIn, string passwordIn) {
-        jiraConfig = {url:urlIn,username:usernameIn,password:passwordIn};
-    }
 
     public function init (JiraConfiguration userConfig) {
 
@@ -48,17 +45,28 @@ public type JiraEndpoint object {
                                                       };
         userConfig.httpClientConfig = httpConfig;
 
-        jiraConnector = new (userConfig.httpClientConfig, userConfig.url, userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION);
+        jiraConnector.jiraHttpClientEPConfig = userConfig.httpClientConfig;
+        jiraConnector.jira_base_url = userConfig.url;
+        jiraConnector.jira_rest_api_ep = userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
 
         jiraConnector.setBase64EncodedCredentials(userConfig.username, userConfig.password);
 
         jiraConfig = {url:userConfig.url, httpClientConfig:userConfig.httpClientConfig};
-        jiraConnector.jiraHttpClientEP.init(userConfig.httpClientConfig);
+        jiraConnector.jiraHttpClient.init(userConfig.httpClientConfig);
     }
 
+    @Description {value: "Register Jira connector endpoint"}
+    @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+    public function register (typedesc serviceType) {}
 
-    @Description {value:"Returns the connector that client code uses"}
-    @Return {value:"The connector that client code uses"}
+    @Description {value: "Start Jira connector client endpoint"}
+    public function start () {}
+
+    @Description {value: "Stop Jira connector client endpoint"}
+    public function stop () {}
+
+    @Description {value:"Returns the Jira connector client"}
+    @Return {value:"The Jira connector client"}
     public function getClient () returns JiraConnector {
         return jiraConnector;
     }
