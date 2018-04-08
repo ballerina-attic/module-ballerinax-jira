@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package jira7;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                      Configuration Constants                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,37 +27,30 @@ package jira7;
 @final public string JIRA_REST_API_VERSION = "2";
 @final public string WSO2_STAGING_JIRA_REST_API_ENDPOINT = WSO2_STAGING_JIRA_REST_API_URL + JIRA_REST_API_VERSION;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          Entity Constants                                                          //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          HTTP Status Codes                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public int STATUS_CODE_OK = 200;
-public int STATUS_CODE_CREATED = 201;
-public int STATUS_CODE_NO_CONTENT = 204;
-public int STATUS_CODE_NOTFOUND = 404;
-public int STATUS_CODE_INTERNAL_ERROR = 500;
-public int STATUS_CODE_BAD_REQUEST = 400;
-public int STATUS_CODE_UNAUTHORIZED = 401;
-public int Status_CODE_CONFLICT = 409;
+@final public int STATUS_CODE_OK = 200;
+@final public int STATUS_CODE_CREATED = 201;
+@final public int STATUS_CODE_NO_CONTENT = 204;
+@final public int STATUS_CODE_NOTFOUND = 404;
+@final public int STATUS_CODE_INTERNAL_ERROR = 500;
+@final public int STATUS_CODE_BAD_REQUEST = 400;
+@final public int STATUS_CODE_UNAUTHORIZED = 401;
+@final public int Status_CODE_CONFLICT = 409;
 
-public string STATUS_CREATED = "CREATED";
-public string STATUS_NOT_FOUND = "NOT-FOUND";
-public string STATUS_BAD_REQUEST = "BAD-REQUEST";
-public string STATUS_CONFLICT = "CONFLICT";
-public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
+@final public string STATUS_CREATED = "CREATED";
+@final public string STATUS_NOT_FOUND = "NOT-FOUND";
+@final public string STATUS_BAD_REQUEST = "BAD-REQUEST";
+@final public string STATUS_CONFLICT = "CONFLICT";
+@final public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Enums                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 type ProjectRoleType "10002"|"10030"|"10001"|"10011"|"10010"|"10020"|"10000";
 @final ProjectRoleType ADMINISTRATORS = "10002";
@@ -69,7 +60,6 @@ type ProjectRoleType "10002"|"10030"|"10001"|"10011"|"10010"|"10020"|"10000";
 @final ProjectRoleType NOTIFICATIONS = "10010";
 @final ProjectRoleType OBSERVER = "10020";
 @final ProjectRoleType USERS = "10000";
-
 
 type ProjectType "software"|"business";
 @final ProjectType SOFTWARE = "software";

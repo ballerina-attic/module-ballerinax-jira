@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package jira7;
-
 import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
@@ -156,7 +154,7 @@ function jsonToProjectComponent (json source) returns ProjectComponent {
 
     target.assigneeName = source.assignee != null ?
                           source.assignee.name != null ?
-                          source.assignee.name.toString() ?:"" : "" : "";
+                          source.assignee.name.toString() ?: "" : "" : "";
 
     target.realAssigneeName = source.realAssignee != null ?
                               source.realAssignee.name != null ?

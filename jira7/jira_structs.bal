@@ -16,9 +16,6 @@
 // under the License.
 //
 
-package jira7;
-
-
 @Description {value:"Represents a summary of a jira project."}
 @Field {value:"self"}
 public type ProjectSummary {

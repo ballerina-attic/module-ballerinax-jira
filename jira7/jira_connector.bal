@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package jira7;
-
 import ballerina/http;
 import ballerina/util;
 import ballerina/log;

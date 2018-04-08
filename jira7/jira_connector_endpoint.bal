@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package jira7;
-
 import ballerina/io;
 import ballerina/http;
 
@@ -26,6 +24,8 @@ public type JiraConfiguration {
 string url;
 string username;
 string password;
+
+
 };
 
 
@@ -36,15 +36,19 @@ public type JiraEndpoint object {
         JiraConnector jiraConnector;
     }
 
+    new (string urlIn, string usernameIn, string passwordIn) {
+        jiraConfig = {url:urlIn,username:usernameIn,password:passwordIn};
+    }
+
     public function init (JiraConfiguration userConfig) {
 
-        http:ClientEndpointConfiguration httpConfig = {targets: [{url:userConfig.url + JIRA_REST_API_RESOURCE +
+        http:ClientEndpointConfiguration httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
                                                                      JIRA_REST_API_VERSION}],
                                                           chunking:"NEVER"
                                                       };
         userConfig.httpClientConfig = httpConfig;
 
-        jiraConnector = new(userConfig.httpClientConfig,userConfig.url,userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION);
+        jiraConnector = new (userConfig.httpClientConfig, userConfig.url, userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION);
 
         jiraConnector.setBase64EncodedCredentials(userConfig.username, userConfig.password);
 
