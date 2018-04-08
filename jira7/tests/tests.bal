@@ -3,23 +3,15 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/io;
-import ballerina/config;
-
-Project project_test = {};
-ProjectSummary[] projectSummaryArray_test = [];
-ProjectComponent projectComponent_test = {};
-ProjectCategory projectCategory_test = {};
 
 endpoint JiraClient jiraConnectorEP {
-    url:"https://support-staging.wso2.com",
-    username:"ashan@wso2.com",
-    password:"ashan123"
+    url:getUrl(),
+    username:getUsername(),
+    password:getPassword()
 };
 
 @test:BeforeSuite
 function connector_init () {
-    log:printInfo("Init");
-
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
     _ = jiraConnectorEP -> deleteProject("TESTPROJECT2");
 }
@@ -410,3 +402,5 @@ function test_deleteProjectCategory () {
         JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
+
+
