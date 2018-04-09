@@ -6,7 +6,7 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|Connector Version | Ballerina Version | API Version |
+|Connector Version | Ballerina Version |  Jira API Version |
 |:------------------:|:-------------------:|:-------------------:|
 |0.8|0.970.0-alpha1|7.2.2|
 
