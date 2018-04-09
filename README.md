@@ -59,7 +59,7 @@ in the following sample code.
 ```Ballerina
 
      //Creation of connector endpoint
-     endpoint jira:client jiraConnectorEP {
+     endpoint jira:Client jiraConnectorEP {
             base_url:"https://support-staging.wso2.com",
             username:"username",
             password:"password"
@@ -83,7 +83,7 @@ All actions of Jira Connector return two values: result and error. Results can b
     string projectKey = "RRDEVSPRT";
     
     //Creating the jira Connector as an endpoint
-    endpoint jira:client jiraConnectorEP {
+    endpoint jira:Client jiraConnectorEP {
         base_url:"https://support-staging.wso2.com",
         username:"username",
         password:"password"

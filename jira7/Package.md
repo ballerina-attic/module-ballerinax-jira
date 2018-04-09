@@ -6,7 +6,7 @@ The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/
 view and update issues, work with jira user accounts, and more.
 ![Overview](Overview.png)
 
-|Connector Version | Ballerina Version | API Version |
+|Connector Version | Ballerina Version | Jira API Version |
 |:------------------:|:-------------------:|:-------------------:|
 |0.8|0.970.0-alpha1|7.2.2|
 
@@ -59,7 +59,7 @@ in the following sample code.
 ```Ballerina
 
      //Creation of connector endpoint
-     endpoint jira:client jiraConnectorEP {
+     endpoint jira:Client jiraConnectorEP {
             base_url:"https://support-staging.wso2.com",
             username:"username",
             password:"password"
@@ -83,7 +83,7 @@ All actions of Jira Connector return two values: result and error. Results can b
    string projectKey = "RRDEVSPRT";
    
    //Creating the jira Connector as an endpoint
-   endpoint jira:client jiraConnectorEP {
+   endpoint jira:Client jiraConnectorEP {
        base_url:"https://support-staging.wso2.com",
        username:"username",
        password:"password"
