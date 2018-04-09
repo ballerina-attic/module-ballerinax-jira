@@ -1,25 +1,17 @@
-package jira7;
 
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/io;
 
-Project project_test = {};
-ProjectSummary[] projectSummaryArray_test = [];
-ProjectComponent projectComponent_test = {};
-ProjectCategory projectCategory_test = {};
-
-endpoint JiraEndpoint jiraConnectorEP {
-    url:"https://support-staging.wso2.com",
-    username:"ashan@wso2.com",
-    password:"ashan123"
+endpoint JiraClient jiraConnectorEP {
+    url:getUrl(),
+    username:getUsername(),
+    password:getPassword()
 };
 
 @test:BeforeSuite
 function connector_init () {
-    log:printInfo("Init");
-
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
     _ = jiraConnectorEP -> deleteProject("TESTPROJECT2");
 }
@@ -171,7 +163,7 @@ function test_getLeadUserDetailsOfProject () {
 function test_getRoleDetailsOfProject () {
     log:printInfo("CONNECTOR_ACTION - getRoleDetailsOfProject()");
 
-    var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, ProjectRoleType.DEVELOPERS);
+    var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, "10001");
     match output {
         ProjectRole => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -184,7 +176,7 @@ function test_getRoleDetailsOfProject () {
 function test_addUserToRoleOfProject () {
     log:printInfo("CONNECTOR_ACTION - addUserToRoleOfProject()");
 
-    var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, ProjectRoleType.DEVELOPERS,
+    var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, "10001",
                                                            "pasan@wso2.com");
     match output {
         boolean => test:assertTrue(true);
@@ -198,7 +190,7 @@ function test_addUserToRoleOfProject () {
 function test_addGroupToRoleOfProject () {
     log:printInfo("CONNECTOR_ACTION - addGroupToRoleOfProject()");
 
-    var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, ProjectRoleType.DEVELOPERS,
+    var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, "10001",
                                                             "support.client.AAALIFEDEV.user");
     match output {
         boolean => test:assertTrue(true);
@@ -212,7 +204,7 @@ function test_addGroupToRoleOfProject () {
 function test_removeUserFromRoleOfProject () {
     log:printInfo("CONNECTOR_ACTION - removeUserFromRoleOfProject()");
 
-    var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, ProjectRoleType.DEVELOPERS,
+    var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, "10001",
                                                                 "pasan@wso2.com");
     match output {
         boolean => test:assertTrue(true);
@@ -227,7 +219,7 @@ function test_removeUserFromRoleOfProject () {
 function test_removeGroupFromRoleOfProject () {
     log:printInfo("CONNECTOR_ACTION - removeGroupFromRoleOfProject()");
 
-    var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, ProjectRoleType.DEVELOPERS,
+    var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, "10001",
                                                                  "support.client.AAALIFEDEV.user");
     match output {
         boolean => test:assertTrue(true);
@@ -255,7 +247,7 @@ function test_getAllIssueTypeStatusesOfProject () {
 function test_changeTypeOfProject () {
     log:printInfo("CONNECTOR_ACTION - changeTypeOfProject()");
 
-    var output = jiraConnectorEP -> changeTypeOfProject(project_test, ProjectType.SOFTWARE);
+    var output = jiraConnectorEP -> changeTypeOfProject(project_test, "software");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -410,3 +402,5 @@ function test_deleteProjectCategory () {
         JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
+
+
