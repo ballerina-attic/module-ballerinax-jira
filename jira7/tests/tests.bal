@@ -4,7 +4,7 @@ import ballerina/log;
 import ballerina/test;
 import ballerina/io;
 
-endpoint JiraClient jiraConnectorEP {
+endpoint Client jiraConnectorEP {
     url:getUrl(),
     username:getUsername(),
     password:getPassword()
@@ -370,7 +370,7 @@ function test_createProjectCategory () {
             projectCategory_test = category;
             test:assertTrue(true);
         }
-        JiraConnectorError => test:assertFail(msg = "Failed");
+        JiraConnectorError err=> test:assertFail(msg = "Failed");
     }
 }
 

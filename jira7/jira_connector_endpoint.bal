@@ -20,23 +20,23 @@ import ballerina/io;
 import ballerina/http;
 
 public type JiraConfiguration {
-            http:ClientEndpointConfiguration httpClientConfig;
-string url;
-string username;
-string password;
-
-
+    http:ClientEndpointConfiguration httpClientConfig;
+    string url;
+    string username;
+    string password;
 };
 
 
 
-public type JiraClient object {
+public type Client object {
     public {
         JiraConfiguration jiraConfig = {};
         JiraConnector jiraConnector = new;
     }
 
 
+    @Description {value: "Jira connector endpoint initialization function"}
+    @Param {value: "userConfig: Jira connector configuration"}
     public function init (JiraConfiguration userConfig) {
 
         http:ClientEndpointConfiguration httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +

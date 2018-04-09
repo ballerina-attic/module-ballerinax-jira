@@ -28,7 +28,7 @@ import ballerina/io;
 @Description {value:"Add authoriaztion header to the request"}
 @Param {value:"authType: Authentication type preferred by the user"}
 @Param {value:"request: The http out request object"}
-function constructAuthHeader (http:Request request, string encodedCredentials) {
+function constructAuthHeader(http:Request request, string encodedCredentials) {
 
     if (encodedCredentials != "") {
         request.addHeader("Authorization", "Basic " + encodedCredentials);
@@ -40,8 +40,8 @@ function constructAuthHeader (http:Request request, string encodedCredentials) {
 @Param {value:"connectionError: http response error object"}
 @Return {value:"Returns the json Payload of the server response if there is no any http or server error.
 Otherwise returns a 'JiraConnecorError'."}
-function getValidatedResponse (http:Response|http:HttpConnectorError httpConnectorResponse)
-returns json|JiraConnectorError {
+function getValidatedResponse(http:Response|http:HttpConnectorError httpConnectorResponse)
+    returns json|JiraConnectorError {
     JiraConnectorError e = {};
     mime:EntityError err = {};
     json jsonResponse;
@@ -55,7 +55,7 @@ returns json|JiraConnectorError {
             if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
                 && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
                 e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " +
-                                                                         response.reasonPhrase};
+                        response.reasonPhrase};
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
                     json jsonOutput => e.jiraServerErrorLog = jsonOutput;
@@ -76,19 +76,19 @@ returns json|JiraConnectorError {
 }
 
 @Description {value:"Returns whether a given error object is empty."}
-public function isEmpty (error|JiraConnectorError e) returns boolean {
+public function isEmpty(error|JiraConnectorError e) returns boolean {
     match e {
         error err => return err.message == "";
         JiraConnectorError err => return err.message == "";
     }
 }
 
-function errorToJiraConnectorError (error source) returns JiraConnectorError {
+function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = source.message != "" ? {message:source.message, cause:source.cause} : {};
     return target;
 }
 
-function projectRequestToJson (ProjectRequest source) returns json {
+function projectRequestToJson(ProjectRequest source) returns json {
 
     json target = {};
 
@@ -109,29 +109,29 @@ function projectRequestToJson (ProjectRequest source) returns json {
     return target;
 }
 
-function jsonToProjectSummary (json source) returns ProjectSummary {
+function jsonToProjectSummary(json source) returns ProjectSummary {
 
     ProjectSummary target = {};
 
-    target.self = source.self.toString() ?:"";
-    target.id = source.id.toString() ?:"";
-    target.key = source.key.toString() ?:"";
-    target.name = source.name.toString() ?:"";
-    target.description = source.description != null ? source.description.toString() ?:"" : "";
-    target.projectTypeKey = source.projectTypeKey.toString() ?:"";
-    target.category = source.projectCategory != null ? source.projectCategory.name.toString() ?:"" : "";
+    target.self = source.self.toString() ?: "";
+    target.id = source.id.toString() ?: "";
+    target.key = source.key.toString() ?: "";
+    target.name = source.name.toString() ?: "";
+    target.description = source.description != null ? source.description.toString() ?: "" : "";
+    target.projectTypeKey = source.projectTypeKey.toString() ?: "";
+    target.category = source.projectCategory != null ? source.projectCategory.name.toString() ?: "" : "";
 
     return target;
 }
 
-function jsonToProjectCategory (json source) returns ProjectCategory {
+function jsonToProjectCategory(json source) returns ProjectCategory {
 
     ProjectCategory target = {};
 
-    target.self = source.self != null ? source.self.toString() ?:"" : "";
-    target.name = source.name != null ? source.name.toString() ?:"" : "";
+    target.self = source.self != null ? source.self.toString() ?: "" : "";
+    target.name = source.name != null ? source.name.toString() ?: "" : "";
     target.id = source.id != null ? source.id.toString() ?: "" : "";
-    target.description = source.description != null ? source.description.toString() ?:"" : "";
+    target.description = source.description != null ? source.description.toString() ?: "" : "";
 
     return target;
 }

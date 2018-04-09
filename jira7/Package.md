@@ -59,7 +59,7 @@ in the following sample code.
 ```Ballerina
 
      //Creation of connector endpoint
-     endpoint jira:JiraEndpoint jiraConnectorEP {
+     endpoint jira:client jiraConnectorEP {
             base_url:"https://support-staging.wso2.com",
             username:"username",
             password:"password"
@@ -75,30 +75,32 @@ All actions of Jira Connector return two values: result and error. Results can b
 ##### Example
 * Request 
 ```ballerina
-    
-    jira:JiraConnectorError jiraError = {};
-    jira:Project project = {};
-    string projectKey = "RRDEVSPRT";
-    
-    //Creating the jira Connector as an endpoint
-    endpoint jira:JiraEndpoint jiraConnectorEP {
-        base_url:"https://support-staging.wso2.com",
-        username:"username",
-        password:"password"
-    };
-         
-    //Connector Action
-    var result = jiraConnector -> getProject(projectKey);
-    match result{
-        jira:Project p => project = p;
-        jira:JoraConnectorError e => jiraError = err;
-    }
+  
+   import wso2/jira;
+       
+   jira:JiraConnectorError jiraError = {};
+   jira:Project project = {};
+   string projectKey = "RRDEVSPRT";
+   
+   //Creating the jira Connector as an endpoint
+   endpoint jira:client jiraConnectorEP {
+       base_url:"https://support-staging.wso2.com",
+       username:"username",
+       password:"password"
+   };
+        
+   //Connector Action
+   var result = jiraConnector -> getProject(projectKey);
+   match result{
+       jira:Project p => project = p;
+       jira:JoraConnectorError e => jiraError = err;
+   }
     
 ```
 
-* Response struct
+* Response Object
 ```ballerina
-public struct Project {
+public type Project {
     string self;
     string id;
     string key;
@@ -114,9 +116,9 @@ public struct Project {
 }
 ```
 
-* Error Struct
+* Error Object
 ```ballerina
-public struct JiraConnectorError {
+public type JiraConnectorError {
     string ^"type";
     string message;
     json jiraServerErrorLog;
