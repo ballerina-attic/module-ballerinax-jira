@@ -25,9 +25,10 @@ import ballerina/io;
 //                                                  Functions                                                         //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Description {value:"Add authoriaztion header to the request"}
-@Param {value:"authType: Authentication type preferred by the user"}
-@Param {value:"request: The http out request object"}
+documentation{Add authoriaztion header to the request.
+    P{{request}} The http request object
+    P{{encodedCredentials}} base64 encoded credentials
+}
 function constructAuthHeader(http:Request request, string encodedCredentials) {
 
     if (encodedCredentials != "") {
@@ -35,11 +36,11 @@ function constructAuthHeader(http:Request request, string encodedCredentials) {
     }
 }
 
-@Description {value:"Checks whether the http response contains any errors "}
-@Param {value:"httpConnectorResponse: The http response object"}
-@Param {value:"connectionError: http response error object"}
-@Return {value:"Returns the json Payload of the server response if there is no any http or server error.
-Otherwise returns a 'JiraConnecorError'."}
+documentation{Checks whether the http response contains any errors.
+    P{{ httpConnectorResponse}} response of the ballerina standard http client
+    R{{^"json"}} json payload of the server response
+     R{{JiraConnectorError}} 'JiraConnectorError' type record
+}
 function getValidatedResponse(http:Response|http:HttpConnectorError httpConnectorResponse)
     returns json|JiraConnectorError {
     JiraConnectorError e = {};
@@ -77,7 +78,10 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
     }
 }
 
-@Description {value:"Returns whether a given error object is empty."}
+documentation{Returns whether a given error object is empty.
+    P{{e}} ballerina error or jira connector error object
+    R{{^"boolean"}} returns true if the error is empty, otherwise returns false
+}
 public function isEmpty(error|JiraConnectorError e) returns boolean {
     match e {
         error err => return err.message == "";

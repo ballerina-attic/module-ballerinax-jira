@@ -275,10 +275,10 @@ public type ProjectVersion {
 };
 
 documentation{Represents a set of avatar Urls related to a jira entity.
-    F{{^"16x16"}}
-    F{{^"24x24"}}
-    F{{^"32x32"}}
-    F{{^"48x48"}}
+    F{{^"16x16"}} avatar url icon of size 16x16
+    F{{^"24x24"}} avatar url icon of size 24x24
+    F{{^"32x32"}} avatar url icon of size 32x32
+    F{{^"48x48"}} avatar url icon of size 48x48
 }
 public type AvatarUrls {
     string ^"16x16";
