@@ -48,7 +48,9 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
     //checks for any http errors
     match httpConnectorResponse {
         http:HttpConnectorError connectionError => {
-            e = {^"type":"Connection Error", message:connectionError.message, cause:connectionError.cause};
+            e.^"type" = "Connection Error";
+            e.message = connectionError.message;
+            e.cause = [connectionError.cause ?: {}];
             return e;
         }
         http:Response response => {
@@ -84,7 +86,7 @@ public function isEmpty(error|JiraConnectorError e) returns boolean {
 }
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
-    JiraConnectorError target = source.message != "" ? {message:source.message, cause:source.cause} : {};
+    JiraConnectorError target = source.message != "" ? {message:source.message, cause:[source.cause?:{}]} : {};
     return target;
 }
 
