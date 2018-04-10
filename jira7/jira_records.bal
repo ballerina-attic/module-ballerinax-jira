@@ -213,8 +213,6 @@ public type ProjectStatus {
     json statuses;
 };
 
-@Description {value:""}
-
 documentation{Represents a jira user
     F{{self}} API resource url
     F{{key}} key of the user
@@ -257,9 +255,9 @@ documentation{Represents a jira project version.
     F{{self}} API resource url
     F{{id}} project version id
     F{{name}} project version name
-    F{{archieved}} boolean field which indicates whether the version is archieved
+    F{{archived}} boolean field which indicates whether the version is archived
     F{{released}} boolean field which indicates whether the version is released
-    F{{releasedDate}} release date of the project version
+    F{{releaseDate}} release date of the project version
     F{{overdue}} boolean field which indicates whether the version is overdue
     F{{userReleaseDate}} user release date of the project version
     F{{projectId}} id of the related project
@@ -282,7 +280,6 @@ documentation{Represents a set of avatar Urls related to a jira entity.
     F{{^"32x32"}}
     F{{^"48x48"}}
 }
-@Description {value:""}
 public type AvatarUrls {
     string ^"16x16";
     string ^"24x24";
@@ -290,7 +287,6 @@ public type AvatarUrls {
     string ^"48x48";
 };
 
-@Description {value:""}
 documentation{Represent Jira Connector based errors.
     F{{^"type"}} type of the error (HTTP error,server error etc.)
     F{{message}} error message
