@@ -24,7 +24,7 @@ import ballerina/io;
 @Description {value:""}
 public type JiraConnector object {
     public {
-        http:ClientEndpointConfiguration jiraHttpClientEPConfig = {};
+        http:ClientEndpointConfig jiraHttpClientEPConfig = {};
         string jira_base_url;
         string jira_rest_api_ep;
     }
@@ -103,7 +103,7 @@ documentation{Encodes user credentials and assigns to a private field in connect
     P{{password}} jira account password
 }
 function JiraConnector::setBase64EncodedCredentials(string username, string password) {
-    base64EncodedCredentials = check util:base64EncodeString(username + ":" + password);
+    self.base64EncodedCredentials = check util:base64EncodeString(username + ":" + password);
 }
 
 documentation{Returns an array of all projects summaries which are visible for the currently logged in user who has
@@ -113,12 +113,12 @@ BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
 }
 public function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     ProjectSummary[] projects = [];
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
 
     var httpResponseOut = jiraHttpClientEP -> get("/project?expand=description", request);
     //Evaluate http response for connection and server errors
@@ -160,11 +160,11 @@ permission to view it and if no any error occured.
 public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
     returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/project/" + projectSummary.key, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -196,7 +196,7 @@ documentation{Creates a new project.Values available for the assigneeType field 
 }
 public function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var jsonPayloadOut = <json>newProject;
@@ -209,7 +209,7 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
             request.setJsonPayload(jsonPayload);
 
             //Adds Authorization Header
-            constructAuthHeader(request, base64EncodedCredentials);
+            constructAuthHeader(request, self.base64EncodedCredentials);
             var httpResponseOut = jiraHttpClientEP -> post("/project", request);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -219,7 +219,7 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
                     return e;
                 }
                 json jsonResponse => {
-                    var projectOut = getProject(jsonResponse.key.toString() ?: "");
+                    var projectOut = self.getProject(jsonResponse.key.toString() ?: "");
                     match projectOut {
                         Project project => return project;
                         JiraConnectorError e => return e;
@@ -240,7 +240,7 @@ documentation{Updates a project. Only non null values sent in 'ProjectRequest' s
 public function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     json jsonPayload;
@@ -248,7 +248,7 @@ public function JiraConnector::updateProject(string projectIdOrKey, ProjectReque
     request.setJsonPayload(jsonPayload);
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> put("/project/" + projectIdOrKey, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -270,10 +270,10 @@ documentation{Deletes a project.
 }
 public function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + projectIdOrKey, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -296,11 +296,11 @@ to view it and if no any error occured.
 }
 public function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/project/" + projectIdOrKey, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -332,11 +332,11 @@ documentation{Returns jira user details of the project lead.
 }
 public function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + project.leadName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -368,11 +368,11 @@ documentation{Returns detailed reprensentation of a given project role(ie:Develo
 public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleType)
     returns ProjectRole|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleType, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -405,14 +405,14 @@ documentation{Assigns a user to a given project role.
 public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleType, string userName)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     json jsonPayload = {"user":[userName]};
     request.setJsonPayload(jsonPayload);
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -437,14 +437,14 @@ documentation{Assigns a group to a given project role.
 public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleType, string groupName)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     json jsonPayload = {"group":[groupName]};
     request.setJsonPayload(jsonPayload);
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
 
     //Evaluate http response for connection and server errors
@@ -470,11 +470,11 @@ documentation{removes a given user from a given project role.
 public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
             projectRoleType + "?user=" + userName, request);
     //Evaluate http response for connection and server errors
@@ -500,11 +500,11 @@ documentation{removes a given group from a given project role.
 public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleType, string groupName)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
             projectRoleType + "?group=" + groupName, request);
     //Evaluate http response for connection and server errors
@@ -528,12 +528,12 @@ documentation{Gets all issue types with valid status values for a project.
 public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
     returns ProjectStatus[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
     ProjectStatus[] statusArray = [];
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/statuses", request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -578,11 +578,11 @@ documentation{Updates the type of a jira project.
 public function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
     returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> put("/project/" + project.key + "/type/" + newProjectType, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -605,7 +605,7 @@ documentation{Creates a new project component.
 public function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
     returns ProjectComponent|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var jsonPayloadOut = <json>newProjectComponent;
@@ -618,7 +618,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
             request.setJsonPayload(jsonPayload);
 
             //Adds Authorization Header
-            constructAuthHeader(request, base64EncodedCredentials);
+            constructAuthHeader(request, self.base64EncodedCredentials);
             var httpResponseOut = jiraHttpClientEP -> post("/component/", request);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -627,7 +627,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
                     return e;
                 }
                 json jsonResponse => {
-                    var projectComponentOut = getProjectComponent(jsonResponse.id.toString() ?: "");
+                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString() ?: "");
                     match projectComponentOut {
                         ProjectComponent projectComponent => return projectComponent;
                         JiraConnectorError e => return e;
@@ -645,11 +645,11 @@ documentation{Returns detailed representation of project component.
 }
 public function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/component/" + componentId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -672,11 +672,11 @@ documentation{Deletes a project component.
 }
 public function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/component/" + componentId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -699,11 +699,11 @@ documentation{Returns jira user details of the assignee of the project component
 public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + projectComponent.assigneeName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -734,11 +734,11 @@ documentation{Returns jira user details of the lead of the project component.
 public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + projectComponent.leadName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -767,12 +767,12 @@ documentation{Returns all existing project categories.
 }
 public function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
     ProjectCategory[] projectCategories = [];
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/projectCategory", request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -814,11 +814,11 @@ documentation{Returns a detailed representation of a project category.
 }
 public function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> get("/projectCategory/" + projectCategoryId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -845,7 +845,7 @@ documentation{Create a new project category.
 public function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
     returns ProjectCategory|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var jsonPayloadOut = <json>newCategory;
@@ -857,7 +857,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
             request.setJsonPayload(jsonPayload);
 
             //Adds Authorization Header
-            constructAuthHeader(request, base64EncodedCredentials);
+            constructAuthHeader(request, self.base64EncodedCredentials);
             var httpResponseOut = jiraHttpClientEP -> post("/projectCategory", request);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -867,7 +867,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
                     return e;
                 }
                 json jsonResponse => {
-                    var ProjectCategoryOut = getProjectCategory(jsonResponse.id.toString() ?: "");
+                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString() ?: "");
                     match ProjectCategoryOut {
                         ProjectCategory category => return category;
                         JiraConnectorError e => return e;
@@ -885,11 +885,11 @@ documentation{Delete a project category.
 }
 public function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = jiraHttpClient;
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     //Adds Authorization Header
-    constructAuthHeader(request, base64EncodedCredentials);
+    constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/projectCategory/" + projectCategoryId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);

@@ -26,7 +26,7 @@ documentation{ Represents the Jira Client Connector Endpoint configuration.
     F{{password}} jira account password
 }
 public type JiraConfiguration {
-    http:ClientEndpointConfiguration httpClientConfig;
+    http:ClientEndpointConfig httpClientConfig;
     string url;
     string username;
     string password;
@@ -47,7 +47,7 @@ public type Client object {
     }
     public function init (JiraConfiguration userConfig) {
 
-        http:ClientEndpointConfiguration httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
+        http:ClientEndpointConfig httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
             JIRA_REST_API_VERSION}],
             chunking:"NEVER"
         };
