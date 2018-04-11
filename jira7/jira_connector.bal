@@ -35,19 +35,26 @@ public type JiraConnector object {
 
     function setBase64EncodedCredentials (string username, string password);
 
-    public function getAllProjectSummaries () returns ProjectSummary[]|JiraConnectorError;
+    public function getAllProjectSummaries ()
+        returns ProjectSummary[]|JiraConnectorError;
 
-    public function getAllDetailsFromProjectSummary (ProjectSummary projectSummary) returns Project|JiraConnectorError;
+    public function getAllDetailsFromProjectSummary (ProjectSummary projectSummary)
+        returns Project|JiraConnectorError;
 
-    public function createProject (ProjectRequest newProject) returns Project|JiraConnectorError;
+    public function createProject (ProjectRequest newProject)
+        returns Project|JiraConnectorError;
 
-    public function updateProject (string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
+    public function updateProject (string projectIdOrKey, ProjectRequest update)
+        returns boolean|JiraConnectorError;
 
-    public function deleteProject (string projectIdOrKey) returns boolean|JiraConnectorError;
+    public function deleteProject (string projectIdOrKey)
+        returns boolean|JiraConnectorError;
 
-    public function getProject (string projectIdOrKey) returns Project|JiraConnectorError;
+    public function getProject (string projectIdOrKey)
+        returns Project|JiraConnectorError;
 
-    public function getLeadUserDetailsOfProject (Project project) returns User|JiraConnectorError;
+    public function getLeadUserDetailsOfProject (Project project)
+        returns User|JiraConnectorError;
 
     public function getRoleDetailsOfProject (Project project, string projectRoleType)
         returns ProjectRole|JiraConnectorError;
@@ -93,7 +100,17 @@ public type JiraConnector object {
     public function createProjectCategory (ProjectCategoryRequest newCategory)
         returns ProjectCategory|JiraConnectorError;
 
-    public function deleteProjectCategory (string projectCategoryId) returns boolean|JiraConnectorError;
+    public function deleteProjectCategory (string projectCategoryId)
+        returns boolean|JiraConnectorError;
+
+    public function getIssue (string issueIdOrKey)
+        returns Issue|JiraConnectorError;
+
+    public function createIssue (IssueRequest newIssue)
+        returns Issue|JiraConnectorError;
+
+    public function deleteIssue(string issueIdOrKey)
+        returns boolean|JiraConnectorError;
 
 };
 
@@ -891,6 +908,80 @@ public function JiraConnector::deleteProjectCategory(string projectCategoryId) r
     //Adds Authorization Header
     constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/projectCategory/" + projectCategoryId, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            return true;
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> get("/issue/" + issueIdOrKey, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            var issue = jsonToIssue(jsonResponse);
+            return issue;
+        }
+    }
+}
+
+public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    json jsonPayload = issueRequestToJson(newIssue);
+    request.setJsonPayload(jsonPayload);
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> post("/issue", request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            var issueOut = self.getIssue(jsonResponse.key.toString()?:"");
+            match issueOut {
+                Issue issue => return issue;
+                JiraConnectorError e => return e;
+            }
+        }
+    }
+}
+
+public function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> delete("/issue/" + issueIdOrKey, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
