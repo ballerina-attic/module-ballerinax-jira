@@ -19,30 +19,38 @@
 import ballerina/io;
 import ballerina/http;
 
+documentation{ Represents the Jira Client Connector Endpoint configuration.
+    F{{httpClientConfig}} Http client endpoint configuration
+    F{{url}} jira base url
+    F{{username}} jira account username
+    F{{password}} jira account password
+}
 public type JiraConfiguration {
-    http:ClientEndpointConfiguration httpClientConfig;
+    http:ClientEndpointConfig httpClientConfig;
     string url;
     string username;
     string password;
 };
 
-
-
+documentation{ Represents the Jira Client Connector Endpoint object.
+    F{{jiraConfig}} jira client Connector endpoint configuration
+    F{{jiraConnector}} jira client connector object
+}
 public type Client object {
     public {
         JiraConfiguration jiraConfig = {};
         JiraConnector jiraConnector = new;
     }
 
-
-    @Description {value: "Jira connector endpoint initialization function"}
-    @Param {value: "userConfig: Jira connector configuration"}
+    documentation{ Jira connector endpoint initialization function.
+        P{{userConfig}} Jira connector endpoint configuration
+    }
     public function init (JiraConfiguration userConfig) {
 
-        http:ClientEndpointConfiguration httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
-                                                                     JIRA_REST_API_VERSION}],
-                                                          chunking:"NEVER"
-                                                      };
+        http:ClientEndpointConfig httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
+            JIRA_REST_API_VERSION}],
+            chunking:"NEVER"
+        };
         userConfig.httpClientConfig = httpConfig;
 
         jiraConnector.jiraHttpClientEPConfig = userConfig.httpClientConfig;
@@ -55,18 +63,20 @@ public type Client object {
         jiraConnector.jiraHttpClient.init(userConfig.httpClientConfig);
     }
 
-    @Description {value: "Register Jira connector endpoint"}
-    @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+    documentation{Register Jira connector endpoint.
+        P{{serviceType}} Accepts types of data (int, float, string, boolean, etc)
+    }
     public function register (typedesc serviceType) {}
 
-    @Description {value: "Start Jira connector client endpoint"}
+    documentation{Start Jira connector client endpoint.}
     public function start () {}
 
-    @Description {value: "Stop Jira connector client endpoint"}
+    documentation{Stop Jira connector client endpoint.}
     public function stop () {}
 
-    @Description {value:"Returns the Jira connector client"}
-    @Return {value:"The Jira connector client"}
+    documentation{Returns the Jira connector client.
+        R{{JiraConnector}} The Jira connector client
+    }
     public function getClient () returns JiraConnector {
         return jiraConnector;
     }
