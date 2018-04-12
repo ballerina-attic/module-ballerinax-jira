@@ -4,9 +4,14 @@ import ballerina/test;
 import ballerina/io;
 
 endpoint Client jiraConnectorEP {
-    url:getUrl(),
-    username:getUsername(),
-    password:getPassword()
+    httpClientConfig:{
+        auth:{
+            scheme:"basic",
+            username:getUsername(),
+            password:getPassword()
+        }
+    },
+    url:getUrl()
 };
 
 @test:BeforeSuite

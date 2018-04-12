@@ -21,20 +21,9 @@ import ballerina/config;
 import ballerina/mime;
 import ballerina/io;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Functions                                                         //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-documentation{Add authoriaztion header to the request.
-    P{{request}} The http request object
-    P{{encodedCredentials}} base64 encoded credentials
-}
-function constructAuthHeader(http:Request request, string encodedCredentials) {
-
-    if (encodedCredentials != "") {
-        request.addHeader("Authorization", "Basic " + encodedCredentials);
-    }
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 documentation{Checks whether the http response contains any errors.
     P{{ httpConnectorResponse}} response of the ballerina standard http client

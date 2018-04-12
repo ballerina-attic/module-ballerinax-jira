@@ -22,14 +22,10 @@ import ballerina/http;
 documentation{ Represents the Jira Client Connector Endpoint configuration.
     F{{httpClientConfig}} Http client endpoint configuration
     F{{url}} jira base url
-    F{{username}} jira account username
-    F{{password}} jira account password
 }
 public type JiraConfiguration {
     http:ClientEndpointConfig httpClientConfig;
     string url;
-    string username;
-    string password;
 };
 
 documentation{ Represents the Jira Client Connector Endpoint object.
@@ -47,17 +43,13 @@ public type Client object {
     }
     public function init (JiraConfiguration userConfig) {
 
-        http:ClientEndpointConfig httpConfig = {targets:[{url:userConfig.url + JIRA_REST_API_RESOURCE +
-            JIRA_REST_API_VERSION}],
-            chunking:"NEVER"
-        };
-        userConfig.httpClientConfig = httpConfig;
+        userConfig.httpClientConfig.targets = [{url:userConfig.url + JIRA_REST_API_RESOURCE +
+            JIRA_REST_API_VERSION}];
+        userConfig.httpClientConfig.chunking = "NEVER";
 
         jiraConnector.jiraHttpClientEPConfig = userConfig.httpClientConfig;
         jiraConnector.jira_base_url = userConfig.url;
         jiraConnector.jira_rest_api_ep = userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
-
-        jiraConnector.setBase64EncodedCredentials(userConfig.username, userConfig.password);
 
         jiraConfig = {url:userConfig.url, httpClientConfig:userConfig.httpClientConfig};
         jiraConnector.jiraHttpClient.init(userConfig.httpClientConfig);
@@ -81,6 +73,3 @@ public type Client object {
         return jiraConnector;
     }
 };
-
-
-
