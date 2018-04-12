@@ -213,7 +213,7 @@ public type ProjectStatus {
     json statuses;
 };
 
-documentation{Represents a jira user
+documentation{Represents a jira user.
     F{{self}} API resource url
     F{{key}} key of the user
     F{{name}} name of the user
@@ -248,7 +248,7 @@ public type IssueType {
     string name;
     string description;
     string iconUrl;
-    boolean subtask;
+    string avatarId;
 };
 
 documentation{Represents a jira project version.
@@ -287,6 +287,83 @@ public type AvatarUrls {
     string ^"48x48";
 };
 
+documentation{Represents a jira issue.
+    F{{self}} API resource url
+    F{{id}} issue Id
+    F{{key}} issue key
+    F{{summary}} summary of the issue
+    F{{priorityId}} issue priority Id
+    F{{resolutionId}} issue resolution Id
+    F{{statusId}} issue status Id
+    F{{creatorName}} jira username of the issue creator
+    F{{assigneeName}} jira username of the issue assignee
+    F{{reporterName}} jira username of the issue reporter
+    F{{createdDate}} created date of the issue
+    F{{dueDate}} due date of the issue
+    F{{timespent}} assigned time spent for the issue
+    F{{issueType}} type of the jira issue
+    F{{parent}} parent issue of the issue
+    F{{project}} represent summarized details of the project which the issue is related to
+    F{{customFields}} customly created fields which contain issue related information
+}
+public type Issue{
+    string self;
+    string id;
+    string key;
+    string summary;
+    string priorityId;
+    string resolutionId;
+    string statusId;
+    string creatorName;
+    string assigneeName;
+    string reporterName;
+    string createdDate;
+    string dueDate;
+    string timespent;
+    string resolutionDate;
+    string aggregatetimespent;
+    IssueType issueType;
+    IssueSummary parent;
+    ProjectSummary project;
+    json[] customFields = [];
+};
+
+documentation{Represents record of jira issue creation template.
+    F{{key}} issue key
+    F{{summary}} summary of the issue
+    F{{issueTypeId}} Id of the issue type for the new issue
+    F{{projectId}} Id of the project related to the new issue
+    F{{parentIssueKey}} issue key of parent of the new issue
+    F{{assigneeName}} jira username of the issue assignee
+    F{{dueDate}} due date of the issue
+}
+public type IssueRequest{
+    string key;
+    string summary;
+    string issueTypeId;
+    string projectId;
+    string parentIssueKey;
+    string assigneeName;
+    string dueDate;
+};
+
+documentation{Represents a jira issue.
+    F{{self}} API resource url
+    F{{id}} issue Id
+    F{{key}} issue key
+    F{{priorityId}} issue priority Id
+    F{{statusId}} issue status Id
+    F{{issueType}} type of the jira issue
+}
+public type IssueSummary{
+    string self;
+    string id;
+    string key;
+    string priorityId;
+    string statusId;
+    IssueType issueType;
+};
+
 documentation{Represent Jira Connector based errors.
     F{{^"type"}} type of the error (HTTP error,server error etc.)
     F{{message}} error message
@@ -297,5 +374,5 @@ public type JiraConnectorError {
     string ^"type";
     string message;
     json jiraServerErrorLog;
-    error[] cause;
+    error? cause;
 };

@@ -47,7 +47,6 @@
 @final public string STATUS_CONFLICT = "CONFLICT";
 @final public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Enums                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,4 +63,3 @@ type ProjectRoleType "10002"|"10030"|"10001"|"10011"|"10010"|"10020"|"10000";
 type ProjectType "software"|"business";
 @final ProjectType SOFTWARE = "software";
 @final ProjectType BUSINESS = "business";
-

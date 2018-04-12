@@ -21,7 +21,11 @@ import ballerina/util;
 import ballerina/log;
 import ballerina/io;
 
-@Description {value:""}
+documentation{Represents Jira Client Connector Object
+    F{{jiraHttpClientEPConfig}}
+    F{{jira_base_url}} Base Url to be used for the REST API calls
+    F{{jira_rest_api_ep}} Jira rest API endpoint URL to be used for the REST API calls
+}
 public type JiraConnector object {
     public {
         http:ClientEndpointConfig jiraHttpClientEPConfig = {};
@@ -35,19 +39,26 @@ public type JiraConnector object {
 
     function setBase64EncodedCredentials (string username, string password);
 
-    public function getAllProjectSummaries () returns ProjectSummary[]|JiraConnectorError;
+    public function getAllProjectSummaries ()
+        returns ProjectSummary[]|JiraConnectorError;
 
-    public function getAllDetailsFromProjectSummary (ProjectSummary projectSummary) returns Project|JiraConnectorError;
+    public function getAllDetailsFromProjectSummary (ProjectSummary projectSummary)
+        returns Project|JiraConnectorError;
 
-    public function createProject (ProjectRequest newProject) returns Project|JiraConnectorError;
+    public function createProject (ProjectRequest newProject)
+        returns Project|JiraConnectorError;
 
-    public function updateProject (string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
+    public function updateProject (string projectIdOrKey, ProjectRequest update)
+        returns boolean|JiraConnectorError;
 
-    public function deleteProject (string projectIdOrKey) returns boolean|JiraConnectorError;
+    public function deleteProject (string projectIdOrKey)
+        returns boolean|JiraConnectorError;
 
-    public function getProject (string projectIdOrKey) returns Project|JiraConnectorError;
+    public function getProject (string projectIdOrKey)
+        returns Project|JiraConnectorError;
 
-    public function getLeadUserDetailsOfProject (Project project) returns User|JiraConnectorError;
+    public function getLeadUserDetailsOfProject (Project project)
+        returns User|JiraConnectorError;
 
     public function getRoleDetailsOfProject (Project project, string projectRoleType)
         returns ProjectRole|JiraConnectorError;
@@ -93,10 +104,19 @@ public type JiraConnector object {
     public function createProjectCategory (ProjectCategoryRequest newCategory)
         returns ProjectCategory|JiraConnectorError;
 
-    public function deleteProjectCategory (string projectCategoryId) returns boolean|JiraConnectorError;
+    public function deleteProjectCategory (string projectCategoryId)
+        returns boolean|JiraConnectorError;
+
+    public function getIssue (string issueIdOrKey)
+        returns Issue|JiraConnectorError;
+
+    public function createIssue (IssueRequest newIssue)
+        returns Issue|JiraConnectorError;
+
+    public function deleteIssue(string issueIdOrKey)
+        returns boolean|JiraConnectorError;
 
 };
-
 
 documentation{Encodes user credentials and assigns to a private field in connector.
     P{{username}} jira account username
@@ -109,7 +129,7 @@ function JiraConnector::setBase64EncodedCredentials(string username, string pass
 documentation{Returns an array of all projects summaries which are visible for the currently logged in user who has
 BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
     R{{ProjectSummary}} Array of 'ProjectSummary' objects
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
@@ -155,7 +175,7 @@ documentation{Returns detailed representation of the summarized project, if the 
 permission to view it and if no any error occured.
     P{{projectSummary}} 'ProjectSummary' object
     R{{Project}} 'Project' object
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
     returns Project|JiraConnectorError {
@@ -192,7 +212,7 @@ public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary pr
 documentation{Creates a new project.Values available for the assigneeType field are: 'PROJECT_LEAD' and 'UNASSIGNED'.
     P{{newProject}} record which contains the mandatory fields for new project creation
     R{{Project}} 'Project' object which contains detailed representation of the new project
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
@@ -235,7 +255,7 @@ documentation{Updates a project. Only non null values sent in 'ProjectRequest' s
     P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
     P{{update}} record which contain fields which need to be updated
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
     returns boolean|JiraConnectorError {
@@ -266,7 +286,7 @@ public function JiraConnector::updateProject(string projectIdOrKey, ProjectReque
 documentation{Deletes a project.
     P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
@@ -292,7 +312,7 @@ documentation{Returns detailed representation of a project, if the project exist
 to view it and if no any error occured.
     P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
     R{{Project}} 'Project' type object
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
@@ -328,7 +348,7 @@ public function JiraConnector::getProject(string projectIdOrKey) returns Project
 documentation{Returns jira user details of the project lead.
     P{{project}} 'Project' type record
     R{{User}} 'User' type record containing user details of the project lead.
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
@@ -363,7 +383,7 @@ documentation{Returns detailed reprensentation of a given project role(ie:Develo
     P{{project}} 'Project' type record
     P{{projectRoleType}} Enum which provides the possible project roles for a jira project
     R{{ProjectRole}} 'ProjectRole' object containing the details of the requested role
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleType)
     returns ProjectRole|JiraConnectorError {
@@ -400,7 +420,7 @@ documentation{Assigns a user to a given project role.
     P{{projectRoleType}} Enum which provides the possible project roles for a jira project
     P{{userName}} jira account username of the user to be added
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleType, string userName)
     returns boolean|JiraConnectorError {
@@ -432,7 +452,7 @@ documentation{Assigns a group to a given project role.
     P{{projectRoleType}} Enum which provides the possible project roles for a jira project
     P{{groupName}} name of the group to be added
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleType, string groupName)
     returns boolean|JiraConnectorError {
@@ -465,7 +485,7 @@ documentation{removes a given user from a given project role.
     P{{projectRoleType}} Enum which provides the possible project roles for a jira project
     P{{userName}} name of the user required to be removed
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
     returns boolean|JiraConnectorError {
@@ -495,7 +515,7 @@ documentation{removes a given group from a given project role.
     P{{projectRoleType}} Enum which provides the possible project roles for a jira project
     P{{groupName}} name of the group required to be removed
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleType, string groupName)
     returns boolean|JiraConnectorError {
@@ -523,7 +543,7 @@ public function JiraConnector::removeGroupFromRoleOfProject(Project project, str
 documentation{Gets all issue types with valid status values for a project.
     P{{project}} 'Project' type record
     R{{ProjectStatus}} Array of 'ProjectStatus' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
     returns ProjectStatus[]|JiraConnectorError {
@@ -573,7 +593,7 @@ documentation{Updates the type of a jira project.
     P{{project}} 'Project' type record
     P{{newProjectType}} Enum which provides the possible project types ('software' or 'business') for a jira project
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
     returns boolean|JiraConnectorError {
@@ -600,7 +620,7 @@ public function JiraConnector::changeTypeOfProject(Project project, string newPr
 documentation{Creates a new project component.
     P{{newProjectComponent}} record which contains the mandatory fields for new project component creation
     R{{ProjectComponent}} 'ProjectComponent' object which contains the created project component
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
     returns ProjectComponent|JiraConnectorError {
@@ -641,7 +661,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
 documentation{Returns detailed representation of project component.
     P{{componentId}} string which contains a unique id for a given component.
     R{{ProjectComponent}} 'ProjectComponent' type record
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
@@ -668,7 +688,7 @@ public function JiraConnector::getProjectComponent(string componentId) returns P
 documentation{Deletes a project component.
     P{{componentId}} string which contains a unique id for a given component
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
@@ -694,7 +714,7 @@ public function JiraConnector::deleteProjectComponent(string componentId) return
 documentation{Returns jira user details of the assignee of the project component.
     P{{projectComponent}} 'ProjectComponent' type record
     R{{User}} 'User' object containing user details of the assignee.
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
@@ -729,7 +749,7 @@ public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectC
 documentation{Returns jira user details of the lead of the project component.
     P{{projectComponent}} 'ProjectComponent' type record
     R{{User}} 'User' object containing user details of the lead.
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
@@ -763,7 +783,7 @@ public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectCompo
 
 documentation{Returns all existing project categories.
     R{{ProjectCategory}} Array of 'ProjectCategory' objects
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
@@ -810,7 +830,7 @@ public function JiraConnector::getAllProjectCategories() returns ProjectCategory
 documentation{Returns a detailed representation of a project category.
     P{{projectCategoryId}} jira id of the project category
     R{{ProjectCategory}} 'ProjectCategory' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
 
@@ -840,7 +860,7 @@ public function JiraConnector::getProjectCategory(string projectCategoryId) retu
 documentation{Create a new project category.
     P{{newCategory}} record which contains the mandatory fields for new project category creation
     R{{ProjectCategory}} 'ProjectCategory' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
     returns ProjectCategory|JiraConnectorError {
@@ -881,7 +901,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
 documentation{Delete a project category.
     P{{projectCategoryId}} jira id of the project category
     R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' object
+    R{{JiraConnectorError}} 'JiraConnectorError' record
 }
 public function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
@@ -891,6 +911,93 @@ public function JiraConnector::deleteProjectCategory(string projectCategoryId) r
     //Adds Authorization Header
     constructAuthHeader(request, self.base64EncodedCredentials);
     var httpResponseOut = jiraHttpClientEP -> delete("/projectCategory/" + projectCategoryId, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            return true;
+        }
+    }
+}
+
+
+documentation{Returns a detailed representation of a jira issue.
+    P{{issueIdOrKey}} id or key of the required issue
+    R{{Issue}} 'Issue' type record
+    R{{JiraConnectorError}} 'JiraConnectorError' record
+}
+public function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> get("/issue/" + issueIdOrKey, request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            var issue = jsonToIssue(jsonResponse);
+            return issue;
+        }
+    }
+}
+
+documentation{Creates a new jira issue.
+    P{{newIssue}} record which contains the mandatory fields for new issue creation
+    R{{Issue}} 'Issue' type record
+    R{{JiraConnectorError}} 'JiraConnectorError' record
+}
+public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    json jsonPayload = issueRequestToJson(newIssue);
+    request.setJsonPayload(jsonPayload);
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> post("/issue", request);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => {
+            return e;
+        }
+        json jsonResponse => {
+            var issueOut = self.getIssue(jsonResponse.key.toString() ?: "");
+            match issueOut {
+                Issue issue => return issue;
+                JiraConnectorError e => return e;
+            }
+        }
+    }
+}
+
+documentation{Deletes a jira issue.
+    P{{issueIdOrKey}} id or key of the issue
+    R{{^"boolean"}} returns true if the process is successful
+    R{{JiraConnectorError}} 'JiraConnectorError' record
+}
+public function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request request = new;
+
+    //Adds Authorization Header
+    constructAuthHeader(request, self.base64EncodedCredentials);
+    var httpResponseOut = jiraHttpClientEP -> delete("/issue/" + issueIdOrKey, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
