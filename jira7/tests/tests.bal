@@ -1,4 +1,3 @@
-
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
@@ -11,13 +10,13 @@ endpoint Client jiraConnectorEP {
 };
 
 @test:BeforeSuite
-function connector_init () {
+function connector_init() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
     _ = jiraConnectorEP -> deleteProject("TESTPROJECT2");
 }
 
 @test:Config
-function test_getAllProjectSummaries () {
+function test_getAllProjectSummaries() {
     log:printInfo("CONNECTOR_ACTION - getAllProjectSummaries()");
 
     var output = jiraConnectorEP -> getAllProjectSummaries();
@@ -34,7 +33,7 @@ function test_getAllProjectSummaries () {
 @test:Config {
     dependsOn:["test_getAllProjectSummaries"]
 }
-function test_getAllDetailsFromProjectSummary () {
+function test_getAllDetailsFromProjectSummary() {
     log:printInfo("CONNECTOR_ACTION - getAllDetailsFromProjectSummary()");
 
     var output = jiraConnectorEP -> getAllDetailsFromProjectSummary(projectSummaryArray_test[0]);
@@ -45,7 +44,7 @@ function test_getAllDetailsFromProjectSummary () {
 }
 
 @test:Config
-function test_createProject () {
+function test_createProject() {
     log:printInfo("CONNECTOR_ACTION - createProject()");
 
     ProjectRequest newProject =
@@ -78,7 +77,7 @@ function test_createProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_updateProject () {
+function test_updateProject() {
     log:printInfo("CONNECTOR_ACTION - updateProject()");
 
     ProjectRequest projectUpdate = {
@@ -95,24 +94,24 @@ function test_updateProject () {
 
 @test:Config {
     dependsOn:["test_createProject",
-               "test_updateProject",
-               "test_getLeadUserDetailsOfProject",
-               "test_getRoleDetailsOfProject",
-               "test_addUserToRoleOfProject",
-               "test_addGroupToRoleOfProject",
-               "test_removeUserFromRoleOfProject",
-               "test_removeGroupFromRoleOfProject",
-               "test_getAllIssueTypeStatusesOfProject",
-               "test_changeTypeOfProject",
-               "test_getProjectComponent",
-               "test_createProjectComponent",
-               "test_deleteProjectComponent",
-               "test_getLeadUserDetailsOfProjectComponent",
-               "test_getAssigneeUserDetailsOfProjectComponent"
-              ]
+    "test_updateProject",
+    "test_getLeadUserDetailsOfProject",
+    "test_getRoleDetailsOfProject",
+    "test_addUserToRoleOfProject",
+    "test_addGroupToRoleOfProject",
+    "test_removeUserFromRoleOfProject",
+    "test_removeGroupFromRoleOfProject",
+    "test_getAllIssueTypeStatusesOfProject",
+    "test_changeTypeOfProject",
+    "test_getProjectComponent",
+    "test_createProjectComponent",
+    "test_deleteProjectComponent",
+    "test_getLeadUserDetailsOfProjectComponent",
+    "test_getAssigneeUserDetailsOfProjectComponent"
+    ]
 }
 
-function test_deleteProject () {
+function test_deleteProject() {
     log:printInfo("CONNECTOR_ACTION - deleteProject()");
 
     var output = jiraConnectorEP -> deleteProject("TESTPROJECT2");
@@ -126,7 +125,7 @@ function test_deleteProject () {
 @test:Config {
     dependsOn:["test_createProject"]
 }
-function test_getProject () {
+function test_getProject() {
     log:printInfo("CONNECTOR_ACTION - getProject()");
 
     var output = jiraConnectorEP -> getProject("TESTPROJECT2");
@@ -142,7 +141,7 @@ function test_getProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_getLeadUserDetailsOfProject () {
+function test_getLeadUserDetailsOfProject() {
     log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProject()");
 
     var output = jiraConnectorEP -> getLeadUserDetailsOfProject(project_test);
@@ -155,7 +154,7 @@ function test_getLeadUserDetailsOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_getRoleDetailsOfProject () {
+function test_getRoleDetailsOfProject() {
     log:printInfo("CONNECTOR_ACTION - getRoleDetailsOfProject()");
 
     var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, "10001");
@@ -168,11 +167,11 @@ function test_getRoleDetailsOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_addUserToRoleOfProject () {
+function test_addUserToRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - addUserToRoleOfProject()");
 
     var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, "10001",
-                                                           "pasan@wso2.com");
+        "pasan@wso2.com");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -182,11 +181,11 @@ function test_addUserToRoleOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_addGroupToRoleOfProject () {
+function test_addGroupToRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - addGroupToRoleOfProject()");
 
     var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, "10001",
-                                                            "support.client.AAALIFEDEV.user");
+        "support.client.AAALIFEDEV.user");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -196,11 +195,11 @@ function test_addGroupToRoleOfProject () {
 @test:Config {
     dependsOn:["test_getProject", "test_addUserToRoleOfProject"]
 }
-function test_removeUserFromRoleOfProject () {
+function test_removeUserFromRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - removeUserFromRoleOfProject()");
 
     var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, "10001",
-                                                                "pasan@wso2.com");
+        "pasan@wso2.com");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -211,11 +210,11 @@ function test_removeUserFromRoleOfProject () {
 @test:Config {
     dependsOn:["test_getProject", "test_addGroupToRoleOfProject"]
 }
-function test_removeGroupFromRoleOfProject () {
+function test_removeGroupFromRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - removeGroupFromRoleOfProject()");
 
     var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, "10001",
-                                                                 "support.client.AAALIFEDEV.user");
+        "support.client.AAALIFEDEV.user");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
@@ -225,7 +224,7 @@ function test_removeGroupFromRoleOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_getAllIssueTypeStatusesOfProject () {
+function test_getAllIssueTypeStatusesOfProject() {
     log:printInfo("CONNECTOR_ACTION - getAllIssueTypeStatusesOfProject()");
 
     var output = jiraConnectorEP -> getAllIssueTypeStatusesOfProject(project_test);
@@ -238,7 +237,7 @@ function test_getAllIssueTypeStatusesOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_changeTypeOfProject () {
+function test_changeTypeOfProject() {
     log:printInfo("CONNECTOR_ACTION - changeTypeOfProject()");
 
     var output = jiraConnectorEP -> changeTypeOfProject(project_test, "software");
@@ -251,7 +250,7 @@ function test_changeTypeOfProject () {
 @test:Config {
     dependsOn:["test_getProject"]
 }
-function test_createProjectComponent () {
+function test_createProjectComponent() {
     log:printInfo("CONNECTOR_ACTION - createProjectComponent()");
 
     ProjectComponentRequest newProjectComponent =
@@ -277,7 +276,7 @@ function test_createProjectComponent () {
 @test:Config {
     dependsOn:["test_createProjectComponent"]
 }
-function test_getProjectComponent () {
+function test_getProjectComponent() {
     log:printInfo("CONNECTOR_ACTION - getProjectComponent()");
 
     ProjectComponentSummary sampleComponentSummary = {id:"10001"};
@@ -296,7 +295,7 @@ function test_getProjectComponent () {
 @test:Config {
     dependsOn:["test_getProjectComponent"]
 }
-function test_getAssigneeUserDetailsOfProjectComponent () {
+function test_getAssigneeUserDetailsOfProjectComponent() {
     log:printInfo("CONNECTOR_ACTION - getAssigneeUserDetailsOfProjectComponent()");
 
     var output = jiraConnectorEP -> getAssigneeUserDetailsOfProjectComponent(projectComponent_test);
@@ -309,7 +308,7 @@ function test_getAssigneeUserDetailsOfProjectComponent () {
 @test:Config {
     dependsOn:["test_getProjectComponent"]
 }
-function test_getLeadUserDetailsOfProjectComponent () {
+function test_getLeadUserDetailsOfProjectComponent() {
     log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProjectComponent()");
 
     var output = jiraConnectorEP -> getLeadUserDetailsOfProjectComponent(projectComponent_test);
@@ -321,12 +320,12 @@ function test_getLeadUserDetailsOfProjectComponent () {
 
 @test:Config {
     dependsOn:["test_createProjectComponent",
-               "test_getProjectComponent",
-               "test_getAssigneeUserDetailsOfProjectComponent",
-               "test_getLeadUserDetailsOfProjectComponent"
-              ]
+    "test_getProjectComponent",
+    "test_getAssigneeUserDetailsOfProjectComponent",
+    "test_getLeadUserDetailsOfProjectComponent"
+    ]
 }
-function test_deleteProjectComponent () {
+function test_deleteProjectComponent() {
     log:printInfo("CONNECTOR_ACTION - deleteProjectComponent()");
 
     var output = jiraConnectorEP -> deleteProjectComponent(projectComponent_test.id);
@@ -337,7 +336,7 @@ function test_deleteProjectComponent () {
 }
 
 @test:Config
-function test_getAllProjectCategories () {
+function test_getAllProjectCategories() {
     log:printInfo("CONNECTOR_ACTION - getAllProjectCategories()");
 
     var output = jiraConnectorEP -> getAllProjectCategories();
@@ -348,11 +347,11 @@ function test_getAllProjectCategories () {
 }
 
 @test:Config
-function test_createProjectCategory () {
+function test_createProjectCategory() {
     log:printInfo("CONNECTOR_ACTION - createProjectCategory()");
 
     ProjectCategoryRequest newCategory = {name:"Test-Project Category",
-                                                  description:"new category created from balleirna jira connector"};
+        description:"new category created from balleirna jira connector"};
 
     var output = jiraConnectorEP -> createProjectCategory(newCategory);
     match output {
@@ -360,14 +359,14 @@ function test_createProjectCategory () {
             projectCategory_test = category;
             test:assertTrue(true);
         }
-        JiraConnectorError err=> test:assertFail(msg = "Failed");
+        JiraConnectorError err => test:assertFail(msg = "Failed");
     }
 }
 
 @test:Config {
     dependsOn:["test_createProjectCategory"]
 }
-function test_getProjectCategory () {
+function test_getProjectCategory() {
     log:printInfo("CONNECTOR_ACTION - getProjectCategory()");
 
     var output = jiraConnectorEP -> getProjectCategory(projectCategory_test.id);
@@ -383,10 +382,65 @@ function test_getProjectCategory () {
 @test:Config {
     dependsOn:["test_getProjectCategory"]
 }
-function test_deleteProjectCategory () {
+function test_deleteProjectCategory() {
     log:printInfo("CONNECTOR_ACTION - deleteProjectCategory()");
 
     var output = jiraConnectorEP -> deleteProjectCategory(projectCategory_test.id);
+    match output {
+        boolean => test:assertTrue(true);
+        JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+///////////////////////////////
+
+@test:Config{
+    dependsOn:["test_getProject"]
+}
+function test_createIssue() {
+    log:printInfo("CONNECTOR_ACTION - createIssue()");
+
+    IssueRequest newIssue = {
+        key:"TESTISSUE",
+        summary:"This is a test issue created for Ballerina Jira Connector",
+        issueTypeId:"4",
+        projectId:project_test.id,
+        assigneeName:"inshaf@wso2.com"
+    };
+
+    var output = jiraConnectorEP -> createIssue(newIssue);
+    match output {
+        Issue issue => {
+            issue_test = issue;
+            test:assertTrue(true);
+        }
+        JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_createIssue"]
+}
+function test_getIssue() {
+    log:printInfo("CONNECTOR_ACTION - getIssue()");
+
+    var output = jiraConnectorEP -> getIssue(issue_test.key);
+    match output {
+        Issue issue => {
+            issue_test = issue;
+            test:assertTrue(true);
+        }
+        JiraConnectorError => test:assertFail(msg = "Failed");
+    }
+}
+
+@test:Config {
+    dependsOn:["test_getIssue"]
+}
+function test_deleteIssue() {
+    log:printInfo("CONNECTOR_ACTION - deleteIssue()");
+
+    var output = jiraConnectorEP -> deleteIssue(issue_test.key);
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");

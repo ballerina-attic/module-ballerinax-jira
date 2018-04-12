@@ -5,6 +5,7 @@ Project project_test = {};
 ProjectSummary[] projectSummaryArray_test = [];
 ProjectComponent projectComponent_test = {};
 ProjectCategory projectCategory_test = {};
+Issue issue_test = {};
 
 function getUrl() returns string {
     return config:getAsString("test_url");
