@@ -248,7 +248,7 @@ public type IssueType {
     string name;
     string description;
     string iconUrl;
-    boolean subtask;
+    string avatarId;
 };
 
 documentation{Represents a jira project version.
@@ -285,6 +285,49 @@ public type AvatarUrls {
     string ^"24x24";
     string ^"32x32";
     string ^"48x48";
+};
+
+
+public type Issue{
+    string self;
+    string id;
+    string key;
+    string summary;
+    string priorityId;
+    string resolutionId;
+    string statusId;
+    string creatorName;
+    string assigneeName;
+    string reporterName;
+    string createdDate;
+    string dueDate;
+    string timespent;
+    string resolutionDate;
+    string aggregatetimespent;
+    IssueType issueType;
+    IssueSummary parent;
+    ProjectSummary project;
+    json[] customFields = [];
+};
+
+
+public type IssueRequest{
+    string key;
+    string summary;
+    string issueTypeId;
+    string projectKey;
+    string parentIssueKey;
+    string assigneeName;
+    string dueDate;
+};
+
+public type IssueSummary{
+    string self;
+    string id;
+    string key;
+    string priorityId;
+    string statusId;
+    IssueType issueType;
 };
 
 documentation{Represent Jira Connector based errors.
