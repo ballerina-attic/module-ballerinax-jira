@@ -298,9 +298,8 @@ function issueRequestToJson(IssueRequest source) returns json {
     target.key = source.key != "" ? source.key : null;
     target.fields.summary = source.summary != "" ? source.summary : null;
     target.fields.issuetype = source.issueTypeId != "" ? {id:source.issueTypeId} : null;
-    target.fields.project = source.projectKey != "" ? {key:source.projectKey} : null;
+    target.fields.project = source.projectId!= "" ? {id:source.projectId} : null;
     target.fields.assignee = source.assigneeName != "" ? {name:source.assigneeName} : null;
 
     return target;
-
 }

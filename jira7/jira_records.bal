@@ -213,7 +213,7 @@ public type ProjectStatus {
     json statuses;
 };
 
-documentation{Represents a jira user
+documentation{Represents a jira user.
     F{{self}} API resource url
     F{{key}} key of the user
     F{{name}} name of the user
@@ -315,7 +315,7 @@ public type IssueRequest{
     string key;
     string summary;
     string issueTypeId;
-    string projectKey;
+    string projectId;
     string parentIssueKey;
     string assigneeName;
     string dueDate;
