@@ -287,7 +287,25 @@ public type AvatarUrls {
     string ^"48x48";
 };
 
-
+documentation{Represents a jira issue.
+    F{{self}} API resource url
+    F{{id}} issue Id
+    F{{key}} issue key
+    F{{summary}} summary of the issue
+    F{{priorityId}} issue priority Id
+    F{{resolutionId}} issue resolution Id
+    F{{statusId}} issue status Id
+    F{{creatorName}} jira username of the issue creator
+    F{{assigneeName}} jira username of the issue assignee
+    F{{reporterName}} jira username of the issue reporter
+    F{{createdDate}} created date of the issue
+    F{{dueDate}} due date of the issue
+    F{{timespent}} assigned time spent for the issue
+    F{{issueType}} type of the jira issue
+    F{{parent}} parent issue of the issue
+    F{{project}} represent summarized details of the project which the issue is related to
+    F{{customFields}} customly created fields which contain issue related information
+}
 public type Issue{
     string self;
     string id;
@@ -310,7 +328,15 @@ public type Issue{
     json[] customFields = [];
 };
 
-
+documentation{Represents record of jira issue creation template.
+    F{{key}} issue key
+    F{{summary}} summary of the issue
+    F{{issueTypeId}} Id of the issue type for the new issue
+    F{{projectId}} Id of the project related to the new issue
+    F{{parentIssueKey}} issue key of parent of the new issue
+    F{{assigneeName}} jira username of the issue assignee
+    F{{dueDate}} due date of the issue
+}
 public type IssueRequest{
     string key;
     string summary;
@@ -321,6 +347,16 @@ public type IssueRequest{
     string dueDate;
 };
 
+
+documentation{Represents a jira issue.
+    F{{self}} API resource url
+    F{{id}} issue Id
+    F{{key}} issue key
+    F{{summary}} summary of the issue
+    F{{priorityId}} issue priority Id
+    F{{statusId}} issue status Id
+    F{{issueType}} type of the jira issue
+}
 public type IssueSummary{
     string self;
     string id;
