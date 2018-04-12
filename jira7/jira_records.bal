@@ -347,7 +347,6 @@ public type IssueRequest{
     string dueDate;
 };
 
-
 documentation{Represents a jira issue.
     F{{self}} API resource url
     F{{id}} issue Id

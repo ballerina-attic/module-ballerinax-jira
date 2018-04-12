@@ -446,5 +446,3 @@ function test_deleteIssue() {
         JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
-
-

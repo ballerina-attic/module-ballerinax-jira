@@ -118,7 +118,6 @@ public type JiraConnector object {
 
 };
 
-
 documentation{Encodes user credentials and assigns to a private field in connector.
     P{{username}} jira account username
     P{{password}} jira account password
