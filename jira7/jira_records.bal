@@ -352,7 +352,6 @@ documentation{Represents a jira issue.
     F{{self}} API resource url
     F{{id}} issue Id
     F{{key}} issue key
-    F{{summary}} summary of the issue
     F{{priorityId}} issue priority Id
     F{{statusId}} issue status Id
     F{{issueType}} type of the jira issue
@@ -376,5 +375,5 @@ public type JiraConnectorError {
     string ^"type";
     string message;
     json jiraServerErrorLog;
-    error[] cause;
+    error? cause;
 };
