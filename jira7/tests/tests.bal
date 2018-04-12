@@ -75,7 +75,6 @@ function test_createProject () {
     }
 }
 
-
 @test:Config {
     dependsOn:["test_getProject"]
 }
@@ -92,7 +91,6 @@ function test_updateProject () {
         boolean => test:assertTrue(true);
         JiraConnectorError => test:assertFail(msg = "Failed");
     }
-
 }
 
 @test:Config {
@@ -128,7 +126,6 @@ function test_deleteProject () {
 @test:Config {
     dependsOn:["test_createProject"]
 }
-
 function test_getProject () {
     log:printInfo("CONNECTOR_ACTION - getProject()");
 
@@ -142,11 +139,9 @@ function test_getProject () {
     }
 }
 
-
 @test:Config {
     dependsOn:["test_getProject"]
 }
-
 function test_getLeadUserDetailsOfProject () {
     log:printInfo("CONNECTOR_ACTION - getLeadUserDetailsOfProject()");
 
@@ -227,7 +222,6 @@ function test_removeGroupFromRoleOfProject () {
     }
 }
 
-
 @test:Config {
     dependsOn:["test_getProject"]
 }
@@ -253,10 +247,6 @@ function test_changeTypeOfProject () {
         JiraConnectorError => test:assertFail(msg = "Failed");
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 @test:Config {
     dependsOn:["test_getProject"]
