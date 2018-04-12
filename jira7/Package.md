@@ -173,7 +173,12 @@ use the information in the following sections to perform various operations with
 
 ***
 ## Working with Issues in JIRA
-**[ To be Implemented ]**
+
+### API Reference
+
+- createIssue()
+- updateIssue()
+- deleteIssue()
 
 ## Working with Users in JIRA
 **[ To be Implemented ]**
