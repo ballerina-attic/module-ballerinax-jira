@@ -8,7 +8,7 @@ view and update issues, work with jira user accounts, and more.
 
 |Connector Version | Ballerina Version |  Jira API Version |
 |:------------------:|:-------------------:|:-------------------:|
-|0.8.2|0.970.0-alpha4|7.2.2|
+|0.8.3|0.970.0-beta0|7.2.2|
 
 ### Why do you need the REST API for Jira
 
