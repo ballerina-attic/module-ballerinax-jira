@@ -371,8 +371,8 @@ documentation{Represent Jira Connector based errors.
     F{{cause}} cause for the error
 }
 public type JiraConnectorError {
-    string ^"type";
     string message;
-    json jiraServerErrorLog;
     error? cause;
+    string ^"type";
+    json jiraServerErrorLog;
 };
