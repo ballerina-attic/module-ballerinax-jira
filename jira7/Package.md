@@ -21,7 +21,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 - [Getting started](#getting-started)
 - [Authentication](#authentication)
-- [Working with Jira Connector](#working-with-jira-connector-actions)
+- [Working with Jira Connector Actions](#working-with-jira-connector-actions)
 
 
 
@@ -31,9 +31,8 @@ The following sections provide information on how to use Ballerina Jira connecto
 - Install the ballerina distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
 
 - Clone the repository by running the following command
- ```
-    git clone https://github.com/wso2-ballerina/package-jira
- ```
+
+   > git clone https://github.com/wso2-ballerina/package-jira
  
 - Import the package as a ballerina project.
 
@@ -41,7 +40,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 ## Authentication
 
-**Note -** 
+> **Note -** 
 *JIRA’s REST API is protected by the same restrictions which are provided via JIRAs standard web interface.
 This means that if you do not have valid jira credentials, you are accessing JIRA anonymously. Furthermore, 
 if you log in and do not have permission to view something in JIRA, you will not be able to view it using the 
@@ -151,8 +150,6 @@ use the information in the following sections to perform various operations with
 
 - [Working with Issues in JIRA](#working-with-issues-in-jira)
 
-- [Working with Users in JIRA](#working-with-users-in-jira)
-
 
 ***
 ### Working with Projects in JIRA
@@ -199,10 +196,5 @@ use the information in the following sections to perform various operations with
 - createIssue()
 - updateIssue()
 - deleteIssue()
-
-***
-### Working with Users in JIRA
-***
-**[ To be Implemented ]**
 
 
