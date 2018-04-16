@@ -21,20 +21,9 @@ import ballerina/config;
 import ballerina/mime;
 import ballerina/io;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Functions                                                         //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-documentation{Add authoriaztion header to the request.
-    P{{request}} The http request object
-    P{{encodedCredentials}} base64 encoded credentials
-}
-function constructAuthHeader(http:Request request, string encodedCredentials) {
-
-    if (encodedCredentials != "") {
-        request.addHeader("Authorization", "Basic " + encodedCredentials);
-    }
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 documentation{Checks whether the http response contains any errors.
     P{{ httpConnectorResponse}} response of the ballerina standard http client
@@ -75,17 +64,6 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
                 return jsonResponse;
             }
         }
-    }
-}
-
-documentation{Returns whether a given error object is empty.
-    P{{e}} ballerina error or jira connector error object
-    R{{^"boolean"}} returns true if the error is empty, otherwise returns false
-}
-public function isEmpty(error|JiraConnectorError e) returns boolean {
-    match e {
-        error err => return err.message == "";
-        JiraConnectorError err => return err.message == "";
     }
 }
 
