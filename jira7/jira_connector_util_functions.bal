@@ -67,17 +67,6 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
     }
 }
 
-documentation{Returns whether a given error object is empty.
-    P{{e}} ballerina error or jira connector error object
-    R{{^"boolean"}} returns true if the error is empty, otherwise returns false
-}
-public function isEmpty(error|JiraConnectorError e) returns boolean {
-    match e {
-        error err => return err.message == "";
-        JiraConnectorError err => return err.message == "";
-    }
-}
-
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = source.message != "" ? {message:source.message, cause:source.cause} : {};
     return target;
