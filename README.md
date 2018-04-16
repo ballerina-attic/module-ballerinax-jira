@@ -58,11 +58,18 @@ Please follow the following steps to authenticate your connector.
 in the following sample code.
 ```Ballerina
 
+     import wso2/jira7;
+     
      //Creation of connector endpoint
-     endpoint jira:Client jiraConnectorEP {
-            base_url:"https://support-staging.wso2.com",
-            username:"username",
-            password:"password"
+     endpoint jira7:Client jiraConnectorEP {
+         url:"https://support-staging.wso2.com",
+         httpClientConfig:{
+             auth:{
+                 scheme:"basic",
+                 username:"username",
+                 password:"passord"
+             }
+         } 
      };
 
 ```
@@ -81,19 +88,23 @@ will returns an Connector error with error message,error type and cause.
 * Request 
 ```ballerina
     
-    import wso2/jira;
+    import wso2/jira7;
+    
+    //Creating the jira Connector as an endpoint
+    endpoint jira7:Client jiraConnectorEP {
+         url:"https://support-staging.wso2.com",
+         httpClientConfig:{
+             auth:{
+                 scheme:"basic",
+                 username:"username",
+                 password:"passord"
+             }
+         }
+    };
     
     jira:JiraConnectorError jiraError = {};
     jira:Project project = {};
-    string projectKey = "RRDEVSPRT";
-    
-    //Creating the jira Connector as an endpoint
-    endpoint jira:Client jiraConnectorEP {
-        base_url:"https://support-staging.wso2.com",
-        username:"username",
-        password:"password"
-    };
-         
+    string projectKey = "RRDEVSPRT";    
     //Connector Action
     var result = jiraConnector -> getProject(projectKey);
     match result{
