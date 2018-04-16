@@ -21,7 +21,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 - [Getting started](#getting-started)
 - [Authentication](#authentication)
-- [Working with Jira Connector](#working-with-jira-connector-actions)
+- [Working with Jira Connector Actions](#working-with-jira-connector-actions)
 
 
 
@@ -31,9 +31,8 @@ The following sections provide information on how to use Ballerina Jira connecto
 - Install the ballerina distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
 
 - Clone the repository by running the following command
- ```
-    git clone https://github.com/wso2-ballerina/package-jira
- ```
+
+   > git clone https://github.com/wso2-ballerina/package-jira
  
 - Import the package as a ballerina project.
 
@@ -41,7 +40,7 @@ The following sections provide information on how to use Ballerina Jira connecto
 
 ## Authentication
 
-**Note -** 
+> **Note -** 
 *JIRA’s REST API is protected by the same restrictions which are provided via JIRAs standard web interface.
 This means that if you do not have valid jira credentials, you are accessing JIRA anonymously. Furthermore, 
 if you log in and do not have permission to view something in JIRA, you will not be able to view it using the 
@@ -58,12 +57,19 @@ Please follow the following steps to authenticate your connector.
 in the following sample code.
 ```Ballerina
 
-     //Creation of connector endpoint
-     endpoint jira:Client jiraConnectorEP {
-            base_url:"https://support-staging.wso2.com",
-            username:"username",
-            password:"password"
-     };
+      import wso2/jira7;
+          
+      //Creation of connector endpoint
+      endpoint jira7:Client jiraConnectorEP {
+          url:"https://support-staging.wso2.com",
+          httpClientConfig:{
+              auth:{
+                  scheme:"basic",
+                  username:"username",
+                  password:"passord"
+              }
+          } 
+      };
 
 ```
 
@@ -79,20 +85,23 @@ will returns an Connector error with error message,error type and cause.
 ### Example
 * Request 
 ```ballerina
-  
-   import wso2/jira;
+   import wso2/jira7;
        
+   //Creating the jira Connector as an endpoint
+   endpoint jira7:Client jiraConnectorEP {
+        url:"https://support-staging.wso2.com",
+        httpClientConfig:{
+            auth:{
+                scheme:"basic",
+                username:"username",
+                password:"passord"
+            }
+        }
+   };
+   
    jira:JiraConnectorError jiraError = {};
    jira:Project project = {};
-   string projectKey = "RRDEVSPRT";
-   
-   //Creating the jira Connector as an endpoint
-   endpoint jira:Client jiraConnectorEP {
-       base_url:"https://support-staging.wso2.com",
-       username:"username",
-       password:"password"
-   };
-        
+   string projectKey = "RRDEVSPRT";    
    //Connector Action
    var result = jiraConnector -> getProject(projectKey);
    match result{
@@ -141,8 +150,6 @@ use the information in the following sections to perform various operations with
 
 - [Working with Issues in JIRA](#working-with-issues-in-jira)
 
-- [Working with Users in JIRA](#working-with-users-in-jira)
-
 
 ***
 ### Working with Projects in JIRA
@@ -189,10 +196,5 @@ use the information in the following sections to perform various operations with
 - createIssue()
 - updateIssue()
 - deleteIssue()
-
-***
-### Working with Users in JIRA
-***
-**[ To be Implemented ]**
 
 
