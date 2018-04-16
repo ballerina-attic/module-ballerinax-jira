@@ -70,7 +70,12 @@ in the following sample code.
 
 ## Working with Jira connector actions
 
-All actions of Jira Connector return two values: result and error. Results can be either`ballerina struct objects` or `boolean` values,depends on the context. Error response is also a ballerina struct object of type`JiraConnectorError`. If the actions was successfull, then the requested struct object or boolean `TRUE` response will be returned while the `JiraConnectorError` will be **null** and vice-versa.
+All actions of Jira Connector are single-return type actions, which will returns either response or an error.
+Response can be either a `ballerina record` or a boolean value,depending on the context.
+Error response is also a ballerina record of type`JiraConnectorError`. 
+
+If a action was successfull, then the requested struct object or boolean `true` response will be returned or otherwise 
+will returns an Connector error with error message,error type and cause.
 
 ##### Example
 * Request 
@@ -119,10 +124,10 @@ public type Project {
 * Error Object
 ```ballerina
 public type JiraConnectorError {
-    string ^"type";
     string message;
-    json jiraServerErrorLog;
-    error cause;
+    error? cause;
+    string ^"type";
+    json jiraServerErrorLog;   
 }
 ```
 
@@ -131,17 +136,19 @@ use the information in the following sections to perform various operations with
 
 - [Working with Projects in JIRA](#working-with-projects-in-jira)
 
+- [Working with Project Categories in JIRA](#working-with-project-categories-in-jira)
+
+- [Working with Project Components in JIRA](#working-with-project-components-in-jira)
+
 - [Working with Issues in JIRA](#working-with-issues-in-jira)
 
 - [Working with Users in JIRA](#working-with-users-in-jira)
 
 
-
-## Working with Projects in JIRA
-
-### API Reference
-
-#### Project
+***
+### Working with Projects in JIRA
+***
+#### API Reference
 - getAllProjectSummaries()
 - getAllDetailsFromProjectSummary()
 - getProject()
@@ -157,29 +164,34 @@ use the information in the following sections to perform various operations with
 - getAllIssueTypeStatusesOfProject()
 - changeTypeOfProject()
 
-#### Project Category
+***
+### Working with Project Categories in JIRA
+***
+#### API Reference
 - getAllProjectCategories()
 - createProjectCategory()
 - getProjectCategory()
 - deleteProjectCategory()
 
-#### Project Component
+***
+### Working with Project Components in JIRA
+***
+#### API Reference
 - createProjectComponent()
 - getProjectComponent()
 - deleteProjectComponent()
 - getAssigneeUserDetailsOfProjectComponent()
 - getLeadUserDetailsOfProjectComponent()
 
-
 ***
-## Working with Issues in JIRA
-
-### API Reference
-
+### Working with Issues in JIRA
+***
+#### API Reference
 - createIssue()
 - updateIssue()
 - deleteIssue()
 
-## Working with Users in JIRA
+***
+### Working with Users in JIRA
+***
 **[ To be Implemented ]**
-
