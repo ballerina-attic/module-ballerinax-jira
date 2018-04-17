@@ -1,12 +1,12 @@
-# Ballerina Jira Connector
+# Ballerina Jira Endpoint
 
-This Ballerina client connector allows to connect to [Atlassian JIRA](https://www.jira.com), an online issue-tracking database. It provides bug tracking, 
+This Ballerina client endpoint allows to connect to [Atlassian JIRA](https://www.jira.com), an online issue-tracking database. It provides bug tracking, 
 issue tracking, and project management functions.
-The connector uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/software/jira/docs/api/REST/7.2.2/) to connect to JIRA, work with JIRA projects, 
+The endpoint uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/software/jira/docs/api/REST/7.2.2/) to connect to JIRA, work with JIRA projects, 
 view and update issues, work with jira user accounts, and more.
-![Overview](Overview.png)
+![Overview](resources/Overview.png)
 
-|Connector Version | Ballerina Version | Jira API Version |
+|Endpoint Version | Ballerina Version | Jira API Version |
 |:------------------:|:-------------------:|:-------------------:|
 |0.8.3|0.970.0-beta0|7.2.2|
 
@@ -17,11 +17,11 @@ and administrators who want to script interactions with the JIRA server. Because
 standards, you can use any web development language to access the API.
 
 
-The following sections provide information on how to use Ballerina Jira connector.
+The following sections provide information on how to use Ballerina Jira endpoint.
 
 - [Getting started](#getting-started)
 - [Authentication](#authentication)
-- [Working with Jira Connector Actions](#working-with-jira-connector-actions)
+- [Working with Jira Endpoint Actions](#working-with-jira-endpoint-actions)
 
 
 
@@ -44,23 +44,23 @@ The following sections provide information on how to use Ballerina Jira connecto
 *JIRA’s REST API is protected by the same restrictions which are provided via JIRAs standard web interface.
 This means that if you do not have valid jira credentials, you are accessing JIRA anonymously. Furthermore, 
 if you log in and do not have permission to view something in JIRA, you will not be able to view it using the 
-Ballerina JIRA Connector as well.*
+Ballerina JIRA Endpoint as well.*
 
-Ballerina Jira connector currently provides basic authentication as the authentication method.  
-Please follow the following steps to authenticate your connector.
+Ballerina Jira endpoint currently provides basic authentication as the authentication method.  
+Please follow the following steps to authenticate your endpoint.
      
 - Obtain your Jira user account credentials(username and password).
   If you currently dont have a Jira account, you can create a new Jira account from 
   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
 
-- Provide the credentials to your connector in the initialization step, as shown 
+- Provide the credentials to your endpoint in the initialization step, as shown 
 in the following sample code.
 ```Ballerina
 
       import wso2/jira7;
           
-      //Creation of connector endpoint
-      endpoint jira7:Client jiraConnectorEP {
+      //Creation of endpoint endpoint
+      endpoint jira7:Client jiraEndpointEP {
           url:"https://support-staging.wso2.com",
           httpClientConfig:{
               auth:{
@@ -73,22 +73,22 @@ in the following sample code.
 
 ```
 
-## Working with Jira connector actions
+## Working with Jira endpoint actions
 
-All actions of Jira Connector are **single-return type actions**, which will returns either response or an error.
+All actions of Jira Endpoint are **single-return type actions**, which will returns either response or an error.
 Response can be either a `ballerina record` or a boolean value,depending on the context.
-Error response is also a ballerina record of type`JiraConnectorError`. 
+Error response is also a ballerina record of type`JiraEndpointError`. 
 
 If a action was successfull, then the requested struct object or boolean `true` response will be returned or otherwise 
-will returns an Connector error with error message,error type and cause.
+will returns an Endpoint error with error message,error type and cause.
 
 ### Example
 * Request 
 ```ballerina
    import wso2/jira7;
        
-   //Creating the jira Connector as an endpoint
-   endpoint jira7:Client jiraConnectorEP {
+   //Creating the jira Endpoint as an endpoint
+   endpoint jira7:Client jiraEndpointEP {
         url:"https://support-staging.wso2.com",
         httpClientConfig:{
             auth:{
@@ -99,14 +99,14 @@ will returns an Connector error with error message,error type and cause.
         }
    };
    
-   jira:JiraConnectorError jiraError = {};
+   jira:JiraEndpointError jiraError = {};
    jira:Project project = {};
    string projectKey = "RRDEVSPRT";    
-   //Connector Action
-   var result = jiraConnector -> getProject(projectKey);
+   //Endpoint Action
+   var result = jiraEndpoint -> getProject(projectKey);
    match result{
        jira:Project p => project = p;
-       jira:JoraConnectorError e => jiraError = err;
+       jira:JoraEndpointError e => jiraError = err;
    }
     
 ```
@@ -131,7 +131,7 @@ public type Project {
 
 * Error Object
 ```ballerina
-public type JiraConnectorError {
+public type JiraEndpointError {
     string message;
     error? cause;
     string ^"type";
@@ -139,8 +139,8 @@ public type JiraConnectorError {
 }
 ```
 
-Now that you have basic knowledge about to how Ballerina Jira connector works, 
-use the information in the following sections to perform various operations with the connector.
+Now that you have basic knowledge about to how Ballerina Jira endpoint works, 
+use the information in the following sections to perform various operations with the endpoint.
 
 - [Working with Projects in JIRA](#working-with-projects-in-jira)
 
