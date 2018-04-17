@@ -12,7 +12,7 @@ function getUrl() returns string {
 }
 
 function getUsername() returns string {
-   return  config:getAsString("test_username");
+    return config:getAsString("test_username");
 }
 
 function getPassword() returns string {

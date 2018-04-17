@@ -19,7 +19,6 @@
 import ballerina/http;
 import ballerina/util;
 import ballerina/log;
-import ballerina/io;
 
 documentation{Represents Jira Client Connector Object
     F{{jiraHttpClientEPConfig}}
