@@ -19,53 +19,6 @@
 import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
-import ballerina/io;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                  Functions                                                         //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-documentation{Checks whether the http response contains any errors.
-    P{{ httpConnectorResponse}} response of the ballerina standard http client
-    R{{^"json"}} json payload of the server response
-     R{{JiraConnectorError}} 'JiraConnectorError' type record
-}
-function getValidatedResponse(http:Response|http:HttpConnectorError httpConnectorResponse)
-    returns json|JiraConnectorError {
-    JiraConnectorError e = {};
-    mime:EntityError err = {};
-    json jsonResponse;
-    //checks for any http errors
-    match httpConnectorResponse {
-        http:HttpConnectorError connectionError => {
-            e.^"type" = "Connection Error";
-            e.message = connectionError.message;
-            e.cause = connectionError.cause;
-            return e;
-        }
-        http:Response response => {
-            if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
-                && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
-                e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " +
-                        response.reasonPhrase};
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOutput => e.jiraServerErrorLog = jsonOutput;
-                    mime:EntityError errorOut => err = errorOut;
-                }
-                return e;
-
-            } else {//if there is no any http or server error
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOutput => jsonResponse = jsonOutput;
-                    mime:EntityError errorOut => err = errorOut;
-                }
-                return jsonResponse;
-            }
-        }
-    }
-}
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = source.message != "" ? {message:source.message, cause:source.cause} : {};
@@ -150,103 +103,103 @@ function jsonToProjectComponent(json source) returns ProjectComponent {
 
 function jsonToIssue(json source) returns Issue {
     Issue target = {};
-    target.self = source.self.toString()?:"";
-    target.id = source.id.toString()?:"";
-    target.key = source.key.toString()?:"";
+    target.self = source.self.toString() ?: "";
+    target.id = source.id.toString() ?: "";
+    target.key = source.key.toString() ?: "";
 
     target.summary = source.fields != null ?
     source.fields.summary != null ?
-    source.fields.summary.toString()?:"" : "" : "";
+    source.fields.summary.toString() ?: "" : "" : "";
 
     target.creatorName = source.fields != null ?
     source.fields.creator != null ?
     source.fields.creator.name != null ?
-    source.fields.creator.name.toString()?:"" : "" : "" : "";
+    source.fields.creator.name.toString() ?: "" : "" : "" : "";
 
     target.assigneeName = source.fields != null ?
     source.fields.assignee != null ?
     source.fields.assignee.name != null ?
-    source.fields.assignee.name.toString()?:"" : "" : "" : "";
+    source.fields.assignee.name.toString() ?: "" : "" : "" : "";
 
     target.reporterName = source.fields != null ?
     source.fields.reporter != null ?
     source.fields.reporter.name != null ?
-    source.fields.reporter.name.toString()?:"" : "" : "" : "";
+    source.fields.reporter.name.toString() ?: "" : "" : "" : "";
 
     target.priorityId = source.fields != null ?
     source.fields.priority != null ?
     source.fields.priority.id != null ?
-    source.fields.priority.id.toString()?:"" : "" : "" : "";
+    source.fields.priority.id.toString() ?: "" : "" : "" : "";
 
     target.resolutionId = source.fields != null ?
     source.fields.resolution != null ?
     source.fields.resolution.id != null ?
-    source.fields.resolution.id.toString()?:"" : "" : "" : "";
+    source.fields.resolution.id.toString() ?: "" : "" : "" : "";
 
     target.statusId = source.fields != null ?
     source.fields.status != null ?
     source.fields.status.id != null ?
-    source.fields.status.id.toString()?:"" : "" : "" : "";
+    source.fields.status.id.toString() ?: "" : "" : "" : "";
 
     target.timespent = source.fields != null ?
     source.fields.timespent != null ?
-    source.fields.timespent.toString()?:"" : "" : "";
+    source.fields.timespent.toString() ?: "" : "" : "";
 
     target.aggregatetimespent = source.fields != null ?
     source.fields.aggregatetimespent != null ?
-    source.fields.aggregatetimespent.toString()?:"" : "" : "";
+    source.fields.aggregatetimespent.toString() ?: "" : "" : "";
 
     target.createdDate = source.fields != null ?
     source.fields.created != null ?
-    source.fields.created.toString()?:"" : "" : "";
+    source.fields.created.toString() ?: "" : "" : "";
 
     target.dueDate = source.fields != null ?
     source.fields.duedate != null ?
-    source.fields.duedate.toString()?:"" : "" : "";
+    source.fields.duedate.toString() ?: "" : "" : "";
 
     target.resolutionDate = source.fields != null ?
     source.fields.resolutiondate != null ?
-    source.fields.resolutiondate.toString()?:"" : "" : "";
+    source.fields.resolutiondate.toString() ?: "" : "" : "";
 
     target.project = source.fields != null ?
     source.fields.project != null ?
     jsonToProjectSummary(source.fields.project) : {}: {};
 
-    target.parent = source.fields != null ?
+    target.parent= source.fields != null ?
     source.fields.parent != null ?
     jsonToIssueSummary(source.fields.parent): {}: {};
 
-    target.issueType = source.fields != null ?
+    target.issueType= source.fields != null ?
     source.fields.issuetype != null ?
     jsonToIssueType(source.fields.issuetype) : {}: {};
 
     int i = 0;
-    string[] fieldNames = source.fields.getKeys()?:[];
+    string[] fieldNames = source.fields.getKeys()?: [];
     foreach (fieldName in fieldNames) {
         if (fieldName.hasPrefix("customfield")) {
             target.customFields[i] = {(fieldName):source.fields[fieldName]};
-            i += 1;
+            i +=1;
         }
     }
 
-    return target;
+return target;
 }
 
-function jsonToIssueSummary (json source) returns IssueSummary {
+function jsonToIssueSummary(json source) returns IssueSummary {
     IssueSummary target = {};
-    target.self = source.self.toString()?:"";
-    target.id = source.id.toString()?:"";
-    target.key = source.key.toString()?:"";
+    target.self = source.self.toString() ?: "";
+    target.id = source.id.toString() ?: "";
+    target.key = source.key.toString() ?: "";
 
     target.priorityId = source.fields != null ?
     source.fields.priority != null ?
     source.fields.priority.id != null ?
-    source.fields.priority.id.toString()?:"" : "" : "" : "";
+    source.fields.priority.id.toString() ?: "" : "" : "" : "";
 
     target.statusId = source.fields != null ?
     source.fields.status != null ?
     source.fields.status.id != null ?
-    source.fields.status.id.toString()?:"" : "" : "" : "";
+    source.fields.status.id.toString() ?: "" : "" : "" : "";
 
     target.issueType = source.fields != null ?
     source.fields.issuetype != null ?
@@ -276,7 +229,7 @@ function issueRequestToJson(IssueRequest source) returns json {
     target.key = source.key != "" ? source.key : null;
     target.fields.summary = source.summary != "" ? source.summary : null;
     target.fields.issuetype = source.issueTypeId != "" ? {id:source.issueTypeId} : null;
-    target.fields.project = source.projectId!= "" ? {id:source.projectId} : null;
+    target.fields.project = source.projectId != "" ? {id:source.projectId} : null;
     target.fields.assignee = source.assigneeName != "" ? {name:source.assigneeName} : null;
 
     return target;

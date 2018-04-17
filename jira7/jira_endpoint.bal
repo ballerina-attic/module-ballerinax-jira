@@ -16,7 +16,6 @@
 // under the License.
 //
 
-import ballerina/io;
 import ballerina/http;
 
 documentation{ Represents the Jira Client Connector Endpoint configuration.

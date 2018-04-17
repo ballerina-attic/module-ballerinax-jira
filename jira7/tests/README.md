@@ -1,11 +1,10 @@
 
-
 ## Running Tests
 
-You can easily test all the connector actions using the `tests.bal` file, using the following steps.
+You can easily test all the endpoint actions using the `tests.bal` file, using the following steps.
 
 1. Navigate to the `package-jira` directory.
-2. Create a `ballerina.conf` file and add folloing lines to provide your jira url,username and password.
+2. Create a `ballerina.conf` file and add following lines to provide your jira url,username and password.
     ```
         test_url="place your url here"
         test_username="place your username here"

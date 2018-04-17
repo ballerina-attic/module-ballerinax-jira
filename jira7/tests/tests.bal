@@ -1,7 +1,6 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
-import ballerina/io;
 
 endpoint Client jiraConnectorEP {
     httpClientConfig:{
@@ -363,7 +362,7 @@ function test_createProjectCategory() {
             projectCategory_test = category;
             test:assertTrue(true);
         }
-        JiraConnectorError err => test:assertFail(msg = "Failed");
+        JiraConnectorError e => test:assertFail(msg = e.message);
     }
 }
 
