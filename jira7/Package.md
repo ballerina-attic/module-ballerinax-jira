@@ -1,5 +1,4 @@
 # Ballerina Jira Endpoint
-
 This Ballerina client endpoint allows to connect to [Atlassian JIRA](https://www.jira.com), an online issue-tracking database. It provides bug tracking, 
 issue tracking, and project management functions.
 The endpoint uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/software/jira/docs/api/REST/7.2.2/) to connect to JIRA, work with JIRA projects, 
@@ -17,7 +16,7 @@ and administrators who want to script interactions with the JIRA server. Because
 standards, you can use any web development language to access the API.
 
 
-The following sections provide information on how to use Ballerina Jira endpoint.
+The following sections provide information on how to use Ballerina Jira Endpoint.
 
 - [Getting started](#getting-started)
 - [Authentication](#authentication)
@@ -59,8 +58,8 @@ in the following sample code.
 
       import wso2/jira7;
           
-      //Creation of endpoint endpoint
-      endpoint jira7:Client jiraEndpointEP {
+      //Creation of endpoint
+      endpoint jira7:Client jiraEndpoint {
           url:"https://support-staging.wso2.com",
           httpClientConfig:{
               auth:{
@@ -77,7 +76,7 @@ in the following sample code.
 
 All actions of Jira Endpoint are **single-return type actions**, which will returns either response or an error.
 Response can be either a `ballerina record` or a boolean value,depending on the context.
-Error response is also a ballerina record of type`JiraEndpointError`. 
+Error response is also a ballerina record of type`JiraConnectorError`. 
 
 If a action was successfull, then the requested struct object or boolean `true` response will be returned or otherwise 
 will returns an Endpoint error with error message,error type and cause.
@@ -87,8 +86,8 @@ will returns an Endpoint error with error message,error type and cause.
 ```ballerina
    import wso2/jira7;
        
-   //Creating the jira Endpoint as an endpoint
-   endpoint jira7:Client jiraEndpointEP {
+   //Creating the jira endpoint
+   endpoint jira7:Client jiraEndpoint {
         url:"https://support-staging.wso2.com",
         httpClientConfig:{
             auth:{
@@ -99,14 +98,14 @@ will returns an Endpoint error with error message,error type and cause.
         }
    };
    
-   jira:JiraEndpointError jiraError = {};
+   jira:JiraConnectorError jiraError = {};
    jira:Project project = {};
    string projectKey = "RRDEVSPRT";    
    //Endpoint Action
    var result = jiraEndpoint -> getProject(projectKey);
    match result{
        jira:Project p => project = p;
-       jira:JoraEndpointError e => jiraError = err;
+       jira:JiraConnectorError e => jiraError = err;
    }
     
 ```
@@ -131,7 +130,7 @@ public type Project {
 
 * Error Object
 ```ballerina
-public type JiraEndpointError {
+public type JiraConnectorError {
     string message;
     error? cause;
     string ^"type";
