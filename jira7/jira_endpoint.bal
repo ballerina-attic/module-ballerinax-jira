@@ -54,17 +54,6 @@ public type Client object {
         jiraConnector.jiraHttpClient.init(userConfig.httpClientConfig);
     }
 
-    documentation{Register Jira connector endpoint.
-        P{{serviceType}} Accepts types of data (int, float, string, boolean, etc)
-    }
-    public function register (typedesc serviceType) {}
-
-    documentation{Start Jira connector client endpoint.}
-    public function start () {}
-
-    documentation{Stop Jira connector client endpoint.}
-    public function stop () {}
-
     documentation{Returns the Jira connector client.
         R{{JiraConnector}} The Jira connector client
     }
