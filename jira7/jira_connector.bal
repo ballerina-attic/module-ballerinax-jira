@@ -210,7 +210,7 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var projectOut = self.getProject(jsonResponse.key.toString() ?: "");
+                    var projectOut = self.getProject(jsonResponse.key.toString() ?: EMPTY_STRING);
                     match projectOut {
                         Project project => return project;
                         JiraConnectorError e => return e;
@@ -585,7 +585,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString() ?: "");
+                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString() ?: EMPTY_STRING);
                     match projectComponentOut {
                         ProjectComponent projectComponent => return projectComponent;
                         JiraConnectorError e => return e;
@@ -790,7 +790,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString() ?: "");
+                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString() ?: EMPTY_STRING);
                     match ProjectCategoryOut {
                         ProjectCategory category => return category;
                         JiraConnectorError e => return e;
@@ -863,7 +863,7 @@ public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|
         JiraConnectorError e => return e;
 
         json jsonResponse => {
-            var issueOut = self.getIssue(jsonResponse.key.toString() ?: "");
+            var issueOut = self.getIssue(jsonResponse.key.toString() ?: EMPTY_STRING);
             match issueOut {
                 Issue issue => return issue;
                 JiraConnectorError e => return e;

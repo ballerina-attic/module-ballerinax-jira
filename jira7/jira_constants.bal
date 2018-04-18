@@ -57,3 +57,5 @@
 
 @final string PROJECT_TYPE_SOFTWARE = "software";
 @final string PROJECT_TYPE_BUSINESS = "business";
+
+@final string EMPTY_STRING = "";
