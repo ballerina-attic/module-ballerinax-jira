@@ -1,6 +1,7 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
+import ballerina/io;
 
 endpoint Client jiraConnectorEP {
     httpClientConfig:{
@@ -16,7 +17,7 @@ endpoint Client jiraConnectorEP {
 @test:BeforeSuite
 function connector_init() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
-    _ = jiraConnectorEP -> deleteProject("TESTPROJECT2");
+    _ = jiraConnectorEP -> deleteProject("TSTPROJECT");
 }
 
 @test:Config
@@ -46,25 +47,27 @@ function test_getAllDetailsFromProjectSummary() {
     }
 }
 
-@test:Config
+@test:Config{
+    dependsOn:["test_createProjectCategory"]
+}
 function test_createProject() {
     log:printInfo("CONNECTOR_ACTION - createProject()");
 
     ProjectRequest newProject =
     {
-        key:"TESTPROJECT2",
+        key:"TSTPROJECT",
         name:"Test Project - Production Support",
         projectTypeKey:"software",
         projectTemplateKey:"com.pyxis.greenhopper.jira:basic-software-development-template",
         description:"Example Project description",
-        lead:"pasan@wso2.com",
+        lead:config:getAsString("test_username"),
         url:"http://atlassian.com",
         assigneeType:"PROJECT_LEAD",
-        avatarId:"10005",
-        issueSecurityScheme:"10000",
-        permissionScheme:"10075",
-        notificationScheme:"10086",
-        categoryId:"10000"
+        avatarId:"10000",
+        //issueSecurityScheme:"10000",
+        permissionScheme:"10000",
+        notificationScheme:"10000",
+        categoryId:projectCategory_test.id
     };
 
     var output = jiraConnectorEP -> createProject(newProject);
@@ -84,11 +87,11 @@ function test_updateProject() {
     log:printInfo("CONNECTOR_ACTION - updateProject()");
 
     ProjectRequest projectUpdate = {
-        lead:"inshaf@wso2.com",
+        lead:config:getAsString("test_username"),
         projectTypeKey:"business"
     };
 
-    var output = jiraConnectorEP -> updateProject("TESTPROJECT2", projectUpdate);
+    var output = jiraConnectorEP -> updateProject("TSTPROJECT", projectUpdate);
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -117,7 +120,7 @@ function test_updateProject() {
 function test_deleteProject() {
     log:printInfo("CONNECTOR_ACTION - deleteProject()");
 
-    var output = jiraConnectorEP -> deleteProject("TESTPROJECT2");
+    var output = jiraConnectorEP -> deleteProject("TSTPROJECT");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -131,7 +134,7 @@ function test_deleteProject() {
 function test_getProject() {
     log:printInfo("CONNECTOR_ACTION - getProject()");
 
-    var output = jiraConnectorEP -> getProject("TESTPROJECT2");
+    var output = jiraConnectorEP -> getProject("TSTPROJECT");
     match output {
         Project p => {
             project_test = p;
@@ -160,7 +163,7 @@ function test_getLeadUserDetailsOfProject() {
 function test_getRoleDetailsOfProject() {
     log:printInfo("CONNECTOR_ACTION - getRoleDetailsOfProject()");
 
-    var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, "10001");
+    var output = jiraConnectorEP -> getRoleDetailsOfProject(project_test, "10002");
     match output {
         ProjectRole => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -173,8 +176,8 @@ function test_getRoleDetailsOfProject() {
 function test_addUserToRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - addUserToRoleOfProject()");
 
-    var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, "10001",
-        "pasan@wso2.com");
+    var output = jiraConnectorEP -> addUserToRoleOfProject(project_test, "10002",
+        config:getAsString("test_username"));
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -182,13 +185,13 @@ function test_addUserToRoleOfProject() {
 }
 
 @test:Config {
-    dependsOn:["test_getProject"]
+    dependsOn:["test_getProject", "test_removeGroupFromRoleOfProject"]
 }
 function test_addGroupToRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - addGroupToRoleOfProject()");
 
-    var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, "10001",
-        "support.client.AAALIFEDEV.user");
+    var output = jiraConnectorEP -> addGroupToRoleOfProject(project_test, "10002",
+            "jira-administrators");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -201,8 +204,8 @@ function test_addGroupToRoleOfProject() {
 function test_removeUserFromRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - removeUserFromRoleOfProject()");
 
-    var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, "10001",
-        "pasan@wso2.com");
+    var output = jiraConnectorEP -> removeUserFromRoleOfProject(project_test, "10002",
+        config:getAsString("test_username"));
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -211,13 +214,13 @@ function test_removeUserFromRoleOfProject() {
 
 
 @test:Config {
-    dependsOn:["test_getProject", "test_addGroupToRoleOfProject"]
+    dependsOn:["test_getProject"]
 }
 function test_removeGroupFromRoleOfProject() {
     log:printInfo("CONNECTOR_ACTION - removeGroupFromRoleOfProject()");
 
-    var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, "10001",
-        "support.client.AAALIFEDEV.user");
+    var output = jiraConnectorEP -> removeGroupFromRoleOfProject(project_test, "10002",
+        "jira-administrators");
     match output {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
@@ -260,7 +263,7 @@ function test_createProjectComponent() {
     {
         name:"Test-ProjectComponent",
         description:"Test component created by ballerina jira connector.",
-        leadUserName:"pasan@wso2.com",
+        leadUserName:config:getAsString("test_username"),
         assigneeType:"PROJECT_LEAD",
         project:project_test.key,
         projectId:project_test.id
@@ -383,7 +386,7 @@ function test_getProjectCategory() {
 }
 
 @test:Config {
-    dependsOn:["test_getProjectCategory"]
+    dependsOn:["test_getProjectCategory","test_deleteProject"]
 }
 function test_deleteProjectCategory() {
     log:printInfo("CONNECTOR_ACTION - deleteProjectCategory()");
@@ -406,9 +409,9 @@ function test_createIssue() {
     IssueRequest newIssue = {
         key:"TESTISSUE",
         summary:"This is a test issue created for Ballerina Jira Connector",
-        issueTypeId:"4",
+        issueTypeId:"10002",
         projectId:project_test.id,
-        assigneeName:"inshaf@wso2.com"
+        assigneeName:config:getAsString("test_username")
     };
 
     var output = jiraConnectorEP -> createIssue(newIssue);
@@ -448,4 +451,12 @@ function test_deleteIssue() {
         boolean => test:assertTrue(true);
         JiraConnectorError e => test:assertFail(msg = e.message);
     }
+}
+
+
+@test:AfterSuite
+function afterSuite() {
+    //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
+    _ = jiraConnectorEP -> deleteProject("TSTPROJECT");
+    _ = jiraConnectorEP -> deleteProjectCategory(projectCategory_test.id);
 }
