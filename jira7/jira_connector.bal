@@ -56,19 +56,19 @@ public type JiraConnector object {
     public function getLeadUserDetailsOfProject (Project project)
         returns User|JiraConnectorError;
 
-    public function getRoleDetailsOfProject (Project project, string projectRoleType)
+    public function getRoleDetailsOfProject (Project project, string projectRoleId)
         returns ProjectRole|JiraConnectorError;
 
-    public function addUserToRoleOfProject (Project project, string projectRoleType, string userName)
+    public function addUserToRoleOfProject (Project project, string projectRoleId, string userName)
         returns boolean|JiraConnectorError;
 
-    public function addGroupToRoleOfProject (Project project, string projectRoleType, string groupName)
+    public function addGroupToRoleOfProject (Project project, string projectRoleId, string groupName)
         returns boolean|JiraConnectorError;
 
-    public function removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
+    public function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
         returns boolean|JiraConnectorError;
 
-    public function removeGroupFromRoleOfProject (Project project, string projectRoleType, string groupName)
+    public function removeGroupFromRoleOfProject (Project project, string projectRoleId, string groupName)
         returns boolean|JiraConnectorError;
 
     public function getAllIssueTypeStatusesOfProject (Project project)
@@ -355,17 +355,25 @@ public function JiraConnector::getLeadUserDetailsOfProject(Project project) retu
 
 documentation{Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.)
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     R{{ProjectRole}} 'ProjectRole' object containing the details of the requested role
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleType)
+public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
     returns ProjectRole|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
-    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -389,12 +397,20 @@ public function JiraConnector::getRoleDetailsOfProject(Project project, string p
 
 documentation{Assigns a user to a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{userName}} jira account username of the user to be added
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleType, string userName)
+public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -403,7 +419,7 @@ public function JiraConnector::addUserToRoleOfProject(Project project, string pr
     json jsonPayload = {"user":[userName]};
     request.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -419,12 +435,20 @@ public function JiraConnector::addUserToRoleOfProject(Project project, string pr
 
 documentation{Assigns a group to a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{groupName}} name of the group to be added
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleType, string groupName)
+public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -433,7 +457,7 @@ public function JiraConnector::addGroupToRoleOfProject(Project project, string p
     json jsonPayload = {"group":[groupName]};
     request.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -449,19 +473,27 @@ public function JiraConnector::addGroupToRoleOfProject(Project project, string p
 
 documentation{removes a given user from a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{userName}} name of the user required to be removed
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
+public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
-            projectRoleType + "?user=" + userName, request);
+            projectRoleId + "?user=" + userName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -477,19 +509,27 @@ public function JiraConnector::removeUserFromRoleOfProject(Project project, stri
 
 documentation{removes a given group from a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{groupName}} name of the group required to be removed
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleType, string groupName)
+public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
-            projectRoleType + "?group=" + groupName, request);
+            projectRoleId + "?group=" + groupName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -552,7 +592,7 @@ public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
 
 documentation{Updates the type of a jira project.
     P{{project}} 'Project' type record
-    P{{newProjectType}} Enum which provides the possible project types ('software' or 'business') for a jira project
+    P{{newProjectType}} new project type for the jira project(PROJECT_TYPE_SOFTWARE or PROJECT_TYPE_BUSINESS)
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
