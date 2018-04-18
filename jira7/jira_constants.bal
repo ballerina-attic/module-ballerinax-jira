@@ -37,12 +37,6 @@
 @final public int STATUS_CODE_UNAUTHORIZED = 401;
 @final public int Status_CODE_CONFLICT = 409;
 
-@final public string STATUS_CREATED = "CREATED";
-@final public string STATUS_NOT_FOUND = "NOT-FOUND";
-@final public string STATUS_BAD_REQUEST = "BAD-REQUEST";
-@final public string STATUS_CONFLICT = "CONFLICT";
-@final public string STATUS_INTERNEL_ERROR = "INTERNEL_ERROR";
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Other Jira Constants                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
