@@ -1,16 +1,11 @@
 
 ### Compatibility
 
-|Endpoint Version | Ballerina Version | Jira API Version |
+|Endpoint Version | Ballerina Version | Jira REST API Version |
 |:------------------:|:-------------------:|:-------------------:|
 |0.8.4|0.970.0-beta1|7.2.2|
 
-### Prerequisites
-
-1. Jira Administration User Account.
-
 ## Running Tests
-
 
 > **Important -** All the tests inside this package will make HTTP calls to the JIRA REST API. If the HTTP call fails, 
 then so will the test case.

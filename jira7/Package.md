@@ -5,7 +5,7 @@ The endpoint uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/s
 view and update issues, work with jira user accounts, and more.
 ![Overview](resources/Overview.png)
 
-|Endpoint Version | Ballerina Version | Jira API Version |
+|Endpoint Version | Ballerina Version | Jira REST API Version |
 |:------------------:|:-------------------:|:-------------------:|
 |0.8.4|0.970.0-beta1|7.2.2|
 
