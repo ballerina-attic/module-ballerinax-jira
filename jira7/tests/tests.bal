@@ -1,7 +1,6 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
-import ballerina/io;
 
 endpoint Client jiraConnectorEP {
     httpClientConfig:{

@@ -47,6 +47,12 @@ Please follow the following steps to authenticate your endpoint.
   If you currently dont have a Jira account, you can create a new Jira account from 
   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
 
+- Import the package to your ballerina project.
+```ballerina
+   import wso2/jira7;
+```
+This will download the jira7 artifacts from the `ballerina central` to your local repository.
+
 - Provide the credentials to your endpoint in the initialization step, as shown 
 in the following sample code.
 ```Ballerina
@@ -191,4 +197,6 @@ use the information in the following sections to perform various operations with
 - updateIssue()
 - deleteIssue()
 
+***
+Visit the [package-jira](https://github.com/wso2-ballerina/package-jira) repository for the source code.
 
