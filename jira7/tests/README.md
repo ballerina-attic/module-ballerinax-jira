@@ -25,4 +25,7 @@ You can test all the endpoint actions using the `tests.bal` file, using the foll
 3. Navigate to the folder `package-jira` using the terminal.
 4. Run the following commands to execute the tests.
 
-    ```$ ballerina test jira7"```
+    ``` 
+        $ ballerina init
+        $ ballerina test jira7
+    ```

@@ -26,16 +26,11 @@ The following sections provide information on how to use Ballerina Jira Endpoint
 
 ## Getting started
 
-
 - Install the ballerina distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
 
-- Clone the repository by running the following command
-
-   > git clone https://github.com/wso2-ballerina/package-jira
- 
 - Import the package as a ballerina project.
 
-- Provide the Ballerina directory as project SDK
+- Provide the Ballerina directory as project SDK.
 
 ## Authentication
 
