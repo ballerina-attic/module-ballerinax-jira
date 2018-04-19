@@ -56,19 +56,19 @@ public type JiraConnector object {
     public function getLeadUserDetailsOfProject (Project project)
         returns User|JiraConnectorError;
 
-    public function getRoleDetailsOfProject (Project project, string projectRoleType)
+    public function getRoleDetailsOfProject (Project project, string projectRoleId)
         returns ProjectRole|JiraConnectorError;
 
-    public function addUserToRoleOfProject (Project project, string projectRoleType, string userName)
+    public function addUserToRoleOfProject (Project project, string projectRoleId, string userName)
         returns boolean|JiraConnectorError;
 
-    public function addGroupToRoleOfProject (Project project, string projectRoleType, string groupName)
+    public function addGroupToRoleOfProject (Project project, string projectRoleId, string groupName)
         returns boolean|JiraConnectorError;
 
-    public function removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
+    public function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
         returns boolean|JiraConnectorError;
 
-    public function removeGroupFromRoleOfProject (Project project, string projectRoleType, string groupName)
+    public function removeGroupFromRoleOfProject (Project project, string projectRoleId, string groupName)
         returns boolean|JiraConnectorError;
 
     public function getAllIssueTypeStatusesOfProject (Project project)
@@ -129,15 +129,13 @@ public function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var jsonResponseArrayOut = < json[]>jsonResponse;
             match jsonResponseArrayOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
+                error err => return errorToJiraConnectorError(err);
+
                 json[] jsonResponseArray => {
                     if (jsonResponseArray == null) {
                         error err = {message:"Error: server response doesn't contain any projects."};
@@ -173,20 +171,15 @@ public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary pr
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
             jsonResponse.lead.name : null: null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                Project project => {
-                    return project;
-                }
+                error err => return errorToJiraConnectorError(err);
+                Project project => return project;
             }
         }
     }
@@ -204,9 +197,7 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
 
     var jsonPayloadOut = <json>newProject;
     match jsonPayloadOut {
-        error err => {
-            return errorToJiraConnectorError(err);
-        }
+        error err => return errorToJiraConnectorError(err);
 
         json jsonPayload => {
             request.setJsonPayload(jsonPayload);
@@ -216,11 +207,10 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
             match jsonResponseOut {
-                JiraConnectorError e => {
-                    return e;
-                }
+                JiraConnectorError e => return e;
+
                 json jsonResponse => {
-                    var projectOut = self.getProject(jsonResponse.key.toString() ?: "");
+                    var projectOut = self.getProject(jsonResponse.key.toString() ?: EMPTY_STRING);
                     match projectOut {
                         Project project => return project;
                         JiraConnectorError e => return e;
@@ -253,12 +243,8 @@ public function JiraConnector::updateProject(string projectIdOrKey, ProjectReque
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -277,12 +263,8 @@ public function JiraConnector::deleteProject(string projectIdOrKey) returns bool
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -302,20 +284,15 @@ public function JiraConnector::getProject(string projectIdOrKey) returns Project
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
             jsonResponse.lead.name : null : null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                Project project => {
-                    return project;
-                }
+                error err => return errorToJiraConnectorError(err);
+                Project project => return project;
             }
         }
     }
@@ -336,18 +313,13 @@ public function JiraConnector::getLeadUserDetailsOfProject(Project project) retu
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var userOut = <User>jsonResponse;
             match userOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                User lead => {
-                    return lead;
-                }
+                error err => return errorToJiraConnectorError(err);
+                User lead => return lead;
             }
         }
     }
@@ -355,33 +327,36 @@ public function JiraConnector::getLeadUserDetailsOfProject(Project project) retu
 
 documentation{Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.)
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     R{{ProjectRole}} 'ProjectRole' object containing the details of the requested role
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleType)
+public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
     returns ProjectRole|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
-    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var projectRoleOut = <ProjectRole>jsonResponse;
             match projectRoleOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                ProjectRole projectRole => {
-                    return projectRole;
-                }
+                error err => return errorToJiraConnectorError(err);
+                ProjectRole projectRole => return projectRole;
             }
         }
     }
@@ -389,12 +364,20 @@ public function JiraConnector::getRoleDetailsOfProject(Project project, string p
 
 documentation{Assigns a user to a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{userName}} jira account username of the user to be added
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleType, string userName)
+public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -403,28 +386,32 @@ public function JiraConnector::addUserToRoleOfProject(Project project, string pr
     json jsonPayload = {"user":[userName]};
     request.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
 documentation{Assigns a group to a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{groupName}} name of the group to be added
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleType, string groupName)
+public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -433,73 +420,77 @@ public function JiraConnector::addGroupToRoleOfProject(Project project, string p
     json jsonPayload = {"group":[groupName]};
     request.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleType, request);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
 documentation{removes a given user from a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{userName}} name of the user required to be removed
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleType, string userName)
+public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
-            projectRoleType + "?user=" + userName, request);
+            projectRoleId + "?user=" + userName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
 documentation{removes a given group from a given project role.
     P{{project}} 'Project' type record
-    P{{projectRoleType}} Enum which provides the possible project roles for a jira project
+    P{{projectRoleId}} id of the project role(
+        ROLE_ID_ADMINISTRATORS,
+        ROLE_ID_CSAT_DEVELOPERS,
+        ROLE_ID_DEVELOPERS,
+        ROLE_ID_EXTERNAL_CONSULTANTS,
+        ROLE_ID_NOTIFICATIONS,
+        ROLE_ID_OBSERVER,
+        ROLE_ID_USERS
+    )
     P{{groupName}} name of the group required to be removed
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleType, string groupName)
+public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
 
     var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
-            projectRoleType + "?group=" + groupName, request);
+            projectRoleId + "?group=" + groupName, request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -513,30 +504,27 @@ public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
-    ProjectStatus[] statusArray = [];
 
     var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/statuses", request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var jsonResponseArrayOut = < json[]>jsonResponse;
             match jsonResponseArrayOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
+                error err => return errorToJiraConnectorError(err);
+
                 json[] jsonResponseArray => {
+                    ProjectStatus[] statusArray = [];
                     int i = 0;
                     foreach (status in jsonResponseArray) {
                         var statusOut = <ProjectStatus>status;
                         match statusOut {
-                            error err => {
-                                return errorToJiraConnectorError(err);
-                            }
+                            error err => return errorToJiraConnectorError(err);
+
                             ProjectStatus projectStatus => {
                                 statusArray[i] = projectStatus;
                                 i += 1;
@@ -552,7 +540,7 @@ public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
 
 documentation{Updates the type of a jira project.
     P{{project}} 'Project' type record
-    P{{newProjectType}} Enum which provides the possible project types ('software' or 'business') for a jira project
+    P{{newProjectType}} new project type for the jira project(PROJECT_TYPE_SOFTWARE or PROJECT_TYPE_BUSINESS)
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
@@ -567,12 +555,8 @@ public function JiraConnector::changeTypeOfProject(Project project, string newPr
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -589,9 +573,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
 
     var jsonPayloadOut = <json>newProjectComponent;
     match jsonPayloadOut {
-        error err => {
-            return errorToJiraConnectorError(err);
-        }
+        error err => return errorToJiraConnectorError(err);
 
         json jsonPayload => {
             request.setJsonPayload(jsonPayload);
@@ -600,11 +582,10 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
             match jsonResponseOut {
-                JiraConnectorError e => {
-                    return e;
-                }
+                JiraConnectorError e => return e;
+
                 json jsonResponse => {
-                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString() ?: "");
+                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString() ?: EMPTY_STRING);
                     match projectComponentOut {
                         ProjectComponent projectComponent => return projectComponent;
                         JiraConnectorError e => return e;
@@ -630,9 +611,8 @@ public function JiraConnector::getProjectComponent(string componentId) returns P
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             ProjectComponent component = jsonToProjectComponent(jsonResponse);
             return component;
@@ -655,12 +635,8 @@ public function JiraConnector::deleteProjectComponent(string componentId) return
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -680,18 +656,13 @@ public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectC
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var userOut = <User>jsonResponse;
             match userOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                User assignee => {
-                    return assignee;
-                }
+                error err => return errorToJiraConnectorError(err);
+                User assignee => return assignee;
             }
         }
     }
@@ -713,18 +684,13 @@ public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectCompo
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var userOut = <User>jsonResponse;
             match userOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
-                User lead => {
-                    return lead;
-                }
+                error err => return errorToJiraConnectorError(err);
+                User lead => return lead;
             }
         }
     }
@@ -738,23 +704,20 @@ public function JiraConnector::getAllProjectCategories() returns ProjectCategory
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request request = new;
-    ProjectCategory[] projectCategories = [];
 
     var httpResponseOut = jiraHttpClientEP -> get("/projectCategory", request);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var jsonResponseArrayOut = < json[]>jsonResponse;
             match jsonResponseArrayOut {
-                error err => {
-                    return errorToJiraConnectorError(err);
-                }
+                error err => return errorToJiraConnectorError(err);
 
                 json[] jsonResponseArray => {
+                    ProjectCategory[] projectCategories = [];
                     int i = 0;
                     foreach (jsonProjectCategory in jsonResponseArray) {
                         var projectCategoryOut = <ProjectCategory>jsonProjectCategory;
@@ -789,9 +752,8 @@ public function JiraConnector::getProjectCategory(string projectCategoryId) retu
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
             var projectCategoryOut = <ProjectCategory>jsonResponse;
             match projectCategoryOut {
@@ -815,9 +777,8 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
 
     var jsonPayloadOut = <json>newCategory;
     match jsonPayloadOut {
-        error err => {
-            return errorToJiraConnectorError(err);
-        }
+        error err => return errorToJiraConnectorError(err);
+
         json jsonPayload => {
             request.setJsonPayload(jsonPayload);
 
@@ -826,11 +787,10 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
             match jsonResponseOut {
-                JiraConnectorError e => {
-                    return e;
-                }
+                JiraConnectorError e => return e;
+
                 json jsonResponse => {
-                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString() ?: "");
+                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString() ?: EMPTY_STRING);
                     match ProjectCategoryOut {
                         ProjectCategory category => return category;
                         JiraConnectorError e => return e;
@@ -856,12 +816,8 @@ public function JiraConnector::deleteProjectCategory(string projectCategoryId) r
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }
 
@@ -881,13 +837,8 @@ public function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraC
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            var issue = jsonToIssue(jsonResponse);
-            return issue;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return jsonToIssue(jsonResponse);
     }
 }
 
@@ -909,11 +860,10 @@ public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
+        JiraConnectorError e => return e;
+
         json jsonResponse => {
-            var issueOut = self.getIssue(jsonResponse.key.toString() ?: "");
+            var issueOut = self.getIssue(jsonResponse.key.toString() ?: EMPTY_STRING);
             match issueOut {
                 Issue issue => return issue;
                 JiraConnectorError e => return e;
@@ -937,11 +887,7 @@ public function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
     match jsonResponseOut {
-        JiraConnectorError e => {
-            return e;
-        }
-        json jsonResponse => {
-            return true;
-        }
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
     }
 }

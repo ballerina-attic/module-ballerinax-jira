@@ -30,38 +30,32 @@ documentation{Checks whether the http response contains any errors.
 }
 function getValidatedResponse(http:Response|http:HttpConnectorError httpConnectorResponse)
     returns json|JiraConnectorError {
+
     JiraConnectorError e = {};
-    mime:EntityError err = {};
     json jsonResponse;
+
     //checks for any http errors
     match httpConnectorResponse {
         http:HttpConnectorError connectionError => {
-            e.^"type" = "Connection Error";
-            e.message = connectionError.message;
-            e.cause = connectionError.cause;
+            e = {^"type":"Http Client Error", message:connectionError.message,
+                cause:connectionError.cause};
             return e;
         }
         http:Response response => {
             if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
-                && response.statusCode != STATUS_CODE_NO_CONTENT) {//checks for invalid server responses
-                e = {^"type":"Server Error", message:"status " + <string>response.statusCode + ": " +
+                && response.statusCode != STATUS_CODE_NO_CONTENT) { //checks for server  error responses
+                e = {^"type":"Jira Server Error", message:"status " + <string>response.statusCode + ": " +
                         response.reasonPhrase};
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOutput => e.jiraServerErrorLog = jsonOutput;
-                    mime:EntityError errorOut => err = errorOut;
-                }
+                e.jiraServerErrorLog = response.getJsonPayload() but { http:PayloadError => null };
                 return e;
 
-            } else {//if there is no any http or server error
+            } else {//if there is no any http client or jira server error
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
-                    json jsonOutput => jsonResponse = jsonOutput;
-                    mime:EntityError errorOut => err = errorOut;
+                    json jsonOut => return jsonOut;
+                    http:PayloadError payloadError => return null;
                 }
-                return jsonResponse;
             }
         }
     }
 }
-

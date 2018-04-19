@@ -5,9 +5,9 @@ The endpoint uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/s
 view and update issues, work with jira user accounts, and more.
 ![Overview](resources/Overview.png)
 
-|Endpoint Version | Ballerina Version | Jira API Version |
+|Endpoint Version | Ballerina Version | Jira REST API Version |
 |:------------------:|:-------------------:|:-------------------:|
-|0.8.3|0.970.0-beta0|7.2.2|
+|0.8.4|0.970.0-beta1|7.2.2|
 
 ### Why do you need the REST API for Jira
 
@@ -26,16 +26,11 @@ The following sections provide information on how to use Ballerina Jira Endpoint
 
 ## Getting started
 
-
 - Install the ballerina distribution from [Ballerina Download Page](https://ballerinalang.org/downloads/).
 
-- Clone the repository by running the following command
-
-   > git clone https://github.com/wso2-ballerina/package-jira
- 
 - Import the package as a ballerina project.
 
-- Provide the Ballerina directory as project SDK
+- Provide the Ballerina directory as project SDK.
 
 ## Authentication
 
@@ -52,6 +47,12 @@ Please follow the following steps to authenticate your endpoint.
   If you currently dont have a Jira account, you can create a new Jira account from 
   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
 
+- Import the package to your ballerina project.
+```ballerina
+   import wso2/jira7;
+```
+This will download the jira7 artifacts from the `ballerina central` to your local repository.
+
 - Provide the credentials to your endpoint in the initialization step, as shown 
 in the following sample code.
 ```Ballerina
@@ -65,7 +66,7 @@ in the following sample code.
               auth:{
                   scheme:"basic",
                   username:"username",
-                  password:"passord"
+                  password:"password"
               }
           } 
       };
@@ -93,7 +94,7 @@ will returns an Endpoint error with error message,error type and cause.
             auth:{
                 scheme:"basic",
                 username:"username",
-                password:"passord"
+                password:"password"
             }
         }
    };
@@ -196,4 +197,6 @@ use the information in the following sections to perform various operations with
 - updateIssue()
 - deleteIssue()
 
+***
+Visit the [package-jira](https://github.com/wso2-ballerina/package-jira) repository for the source code.
 

@@ -5,9 +5,9 @@ The endpoint uses the [JIRA REST API version 7.2.2](https://docs.atlassian.com/s
 view and update issues, work with jira user accounts, and more.
 ![Overview](docs/resources/Overview.png)
 
-|Endpoint Version | Ballerina Version | Jira API Version |
+|Endpoint Version | Ballerina Version | Jira REST API Version |
 |:------------------:|:-------------------:|:-------------------:|
-|0.8.3|0.970.0-beta0|7.2.2|
+|0.8.4|0.970.0-beta1|7.2.2|
 
 ### Why do you need the REST API for Jira
 
@@ -65,7 +65,7 @@ in the following sample code.
               auth:{
                   scheme:"basic",
                   username:"username",
-                  password:"passord"
+                  password:"password"
               }
           } 
       };
@@ -93,7 +93,7 @@ will returns an Endpoint error with error message,error type and cause.
             auth:{
                 scheme:"basic",
                 username:"username",
-                password:"passord"
+                password:"password"
             }
         }
    };
