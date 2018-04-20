@@ -1,9 +1,9 @@
 
 ### Compatibility
 
-|Endpoint Version | Ballerina Version | Jira REST API Version |
-|:------------------:|:-------------------:|:-------------------:|
-|0.8.4|0.970.0-beta1|7.2.2|
+| Ballerina Version | Jira REST API Version |
+|:-------------------:|:-------------------:|
+|0.970.0-beta3|7.2.2|
 
 ## Running Tests
 
@@ -27,5 +27,5 @@ You can test all the endpoint actions using the `tests.bal` file, using the foll
 
     ``` 
         $ ballerina init
-        $ ballerina test jira7
+        $ ballerina test jira7 -c ballerina.conf
     ```
