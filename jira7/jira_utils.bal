@@ -46,7 +46,10 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
                 && response.statusCode != STATUS_CODE_NO_CONTENT) { //checks for server  error responses
                 e = {^"type":"Jira Server Error", message:"status " + <string>response.statusCode + ": " +
                         response.reasonPhrase};
-                e.jiraServerErrorLog = response.getJsonPayload() but { http:PayloadError => null };
+                match response.getJsonPayload(){
+                    json jsonPayload =>  e.jiraServerErrorLog = jsonPayload;
+                    http:PayloadError => e.jiraServerErrorLog = null;
+                }
                 return e;
 
             } else {//if there is no any http client or jira server error

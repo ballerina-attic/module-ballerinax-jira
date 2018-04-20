@@ -40,10 +40,9 @@ public type Client object {
     documentation{ Jira connector endpoint initialization function.
         P{{userConfig}} Jira connector endpoint configuration
     }
-    public function init (JiraConfiguration userConfig) {
+    public function init(JiraConfiguration userConfig) {
 
-        userConfig.httpClientConfig.targets = [{url:userConfig.url + JIRA_REST_API_RESOURCE +
-            JIRA_REST_API_VERSION}];
+        userConfig.httpClientConfig.url = userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
         userConfig.httpClientConfig.chunking = "NEVER";
 
         jiraConnector.jiraHttpClientEPConfig = userConfig.httpClientConfig;
@@ -57,7 +56,7 @@ public type Client object {
     documentation{Returns the Jira connector client.
         R{{JiraConnector}} The Jira connector client
     }
-    public function getClient () returns JiraConnector {
+    public function getCallerActions() returns JiraConnector {
         return jiraConnector;
     }
 };
