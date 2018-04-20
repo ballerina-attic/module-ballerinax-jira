@@ -88,30 +88,32 @@ will returns an Connector error with error message,error type and cause.
 ### Example
 * Request 
 ```ballerina
-   import wso2/jira7;
-       
-   //Creating the jira endpoint
-   endpoint jira7:Client jiraEndpoint {
-        url:"https://support-staging.wso2.com",
-        httpClientConfig:{
-            auth:{
-                scheme:"basic",
-                username:"username",
-                password:"password"
-            }
-        }
-   };
+   import wso2/jira7 as jira;
    
-   jira:JiraConnectorError jiraError = {};
-   jira:Project project = {};
-   string projectKey = "RRDEVSPRT";    
-   //Endpoint Action
-   var result = jiraEndpoint -> getProject(projectKey);
-   match result{
-       jira:Project p => project = p;
-       jira:JiraConnectorError e => jiraError = err;
-   }
-    
+   function main(string... args) { 
+     
+       //Creating the jira endpoint
+       endpoint jira:Client jiraEndpoint {
+            url:"https://support-staging.wso2.com/jira",
+            httpClientConfig:{
+                auth:{
+                    scheme:"basic",
+                    username:"username",
+                    password:"password"
+                }
+            }
+       };
+       
+       jira:JiraConnectorError jiraError = {};
+       jira:Project project = {};
+       string projectKey = "RRDEVSPRT";    
+       //Endpoint Action
+       var result = jiraEndpoint -> getProject(projectKey);
+       match result{
+           jira:Project p => project = p;
+           jira:JiraConnectorError e => jiraError = err;
+       }
+   }    
 ```
 
 * Response Object
@@ -199,5 +201,3 @@ use the information in the following sections to perform various operations with
 - createIssue()
 - updateIssue()
 - deleteIssue()
-
-
