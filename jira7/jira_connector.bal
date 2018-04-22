@@ -125,14 +125,14 @@ public function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]
     ProjectSummary[] projects = [];
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/project?expand=description", request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/project?expand=description", request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
     match jsonResponseOut {
         JiraConnectorError e => return e;
 
         json jsonResponse => {
-            var jsonResponseArrayOut = < json[]>jsonResponse;
+            var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => return errorToJiraConnectorError(err);
 
@@ -166,7 +166,7 @@ public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary pr
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + projectSummary.key, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + projectSummary.key, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -202,7 +202,7 @@ public function JiraConnector::createProject(ProjectRequest newProject) returns 
         json jsonPayload => {
             outRequest.setJsonPayload(jsonPayload);
 
-            var httpResponseOut = jiraHttpClientEP->post("/project", request=outRequest);
+            var httpResponseOut = jiraHttpClientEP -> post("/project", request = outRequest);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -238,7 +238,7 @@ public function JiraConnector::updateProject(string projectIdOrKey, ProjectReque
     jsonPayload = projectRequestToJson(update);
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->put("/project/" + projectIdOrKey, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> put("/project/" + projectIdOrKey, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -258,7 +258,7 @@ public function JiraConnector::deleteProject(string projectIdOrKey) returns bool
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + projectIdOrKey, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/project/" + projectIdOrKey, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -279,7 +279,7 @@ public function JiraConnector::getProject(string projectIdOrKey) returns Project
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + projectIdOrKey, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + projectIdOrKey, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -308,7 +308,7 @@ public function JiraConnector::getLeadUserDetailsOfProject(Project project) retu
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + project.leadName, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + project.leadName, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -345,7 +345,8 @@ public function JiraConnector::getRoleDetailsOfProject(Project project, string p
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + project.key + "/role/" + projectRoleId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/role/" + projectRoleId, request =
+        outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -386,7 +387,8 @@ public function JiraConnector::addUserToRoleOfProject(Project project, string pr
     json jsonPayload = {"user":[userName]};
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/project/" + project.key + "/role/" + projectRoleId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request =
+        outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -420,7 +422,8 @@ public function JiraConnector::addGroupToRoleOfProject(Project project, string p
     json jsonPayload = {"group":[groupName]};
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/project/" + project.key + "/role/" + projectRoleId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> post("/project/" + project.key + "/role/" + projectRoleId, request =
+        outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -451,8 +454,8 @@ public function JiraConnector::removeUserFromRoleOfProject(Project project, stri
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + project.key + "/role/" +
-            projectRoleId + "?user=" + userName, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
+            projectRoleId + "?user=" + userName, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -483,8 +486,8 @@ public function JiraConnector::removeGroupFromRoleOfProject(Project project, str
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + project.key + "/role/" +
-            projectRoleId + "?group=" + groupName, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/project/" + project.key + "/role/" +
+            projectRoleId + "?group=" + groupName, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -505,7 +508,7 @@ public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + project.key + "/statuses", request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/project/" + project.key + "/statuses", request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -513,7 +516,7 @@ public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
         JiraConnectorError e => return e;
 
         json jsonResponse => {
-            var jsonResponseArrayOut = < json[]>jsonResponse;
+            var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => return errorToJiraConnectorError(err);
 
@@ -550,7 +553,8 @@ public function JiraConnector::changeTypeOfProject(Project project, string newPr
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->put("/project/" + project.key + "/type/" + newProjectType, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> put("/project/" + project.key + "/type/" + newProjectType, request =
+        outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -578,7 +582,7 @@ public function JiraConnector::createProjectComponent(ProjectComponentRequest ne
         json jsonPayload => {
             outRequest.setJsonPayload(jsonPayload);
 
-            var httpResponseOut = jiraHttpClientEP->post("/component/", request=outRequest);
+            var httpResponseOut = jiraHttpClientEP -> post("/component/", request = outRequest);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
             match jsonResponseOut {
@@ -606,7 +610,7 @@ public function JiraConnector::getProjectComponent(string componentId) returns P
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/component/" + componentId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/component/" + componentId, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -630,7 +634,7 @@ public function JiraConnector::deleteProjectComponent(string componentId) return
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/component/" + componentId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/component/" + componentId, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -651,7 +655,8 @@ public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectC
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + projectComponent.assigneeName, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + projectComponent.assigneeName, request = outRequest)
+    ;
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -679,7 +684,7 @@ public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectCompo
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + projectComponent.leadName, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/user?username=" + projectComponent.leadName, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -705,14 +710,14 @@ public function JiraConnector::getAllProjectCategories() returns ProjectCategory
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/projectCategory", request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/projectCategory", request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
     match jsonResponseOut {
         JiraConnectorError e => return e;
 
         json jsonResponse => {
-            var jsonResponseArrayOut = < json[]>jsonResponse;
+            var jsonResponseArrayOut = <json[]>jsonResponse;
             match jsonResponseArrayOut {
                 error err => return errorToJiraConnectorError(err);
 
@@ -747,7 +752,7 @@ public function JiraConnector::getProjectCategory(string projectCategoryId) retu
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/projectCategory/" + projectCategoryId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/projectCategory/" + projectCategoryId, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -782,7 +787,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
         json jsonPayload => {
             outRequest.setJsonPayload(jsonPayload);
 
-            var httpResponseOut = jiraHttpClientEP->post("/projectCategory", request=outRequest);
+            var httpResponseOut = jiraHttpClientEP -> post("/projectCategory", request = outRequest);
             //Evaluate http response for connection and server errors
             var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -811,7 +816,7 @@ public function JiraConnector::deleteProjectCategory(string projectCategoryId) r
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/projectCategory/" + projectCategoryId, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/projectCategory/" + projectCategoryId, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -832,7 +837,7 @@ public function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraC
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->get("/issue/" + issueIdOrKey, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> get("/issue/" + issueIdOrKey, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -855,7 +860,7 @@ public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|
     json jsonPayload = issueRequestToJson(newIssue);
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/issue", request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> post("/issue", request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -882,7 +887,7 @@ public function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/issue/" + issueIdOrKey, request=outRequest);
+    var httpResponseOut = jiraHttpClientEP -> delete("/issue/" + issueIdOrKey, request = outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 

@@ -42,7 +42,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @final string ROLE_ID_ADMINISTRATORS = "10002";
-@final string ROLE_ID_CSAT_DEVELOPERS =  "10030";
+@final string ROLE_ID_CSAT_DEVELOPERS = "10030";
 @final string ROLE_ID_DEVELOPERS = "10001";
 @final string ROLE_ID_EXTERNAL_CONSULTANTS = "10011";
 @final string ROLE_ID_NOTIFICATIONS = "10010";

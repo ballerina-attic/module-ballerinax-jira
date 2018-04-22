@@ -306,7 +306,7 @@ documentation{Represents a jira issue.
     F{{project}} represent summarized details of the project which the issue is related to
     F{{customFields}} customly created fields which contain issue related information
 }
-public type Issue{
+public type Issue {
     string self;
     string id;
     string key;
@@ -337,7 +337,7 @@ documentation{Represents record of jira issue creation template.
     F{{assigneeName}} jira username of the issue assignee
     F{{dueDate}} due date of the issue
 }
-public type IssueRequest{
+public type IssueRequest {
     string key;
     string summary;
     string issueTypeId;
@@ -355,7 +355,7 @@ documentation{Represents a jira issue.
     F{{statusId}} issue status Id
     F{{issueType}} type of the jira issue
 }
-public type IssueSummary{
+public type IssueSummary {
     string self;
     string id;
     string key;
