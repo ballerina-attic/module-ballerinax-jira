@@ -9,7 +9,7 @@ It also provides auto completion and type conversions.
 
 | Ballerina Version | Jira REST API Version |
 |:-------------------:|:-------------------:|
-|0.970.0-beta4|7.2.2|
+|0.970.0-beta10|7.2.2|
 
 ## Getting started
 
