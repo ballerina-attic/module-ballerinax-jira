@@ -1,6 +1,6 @@
 # Ballerina Jira Connector
 
-allows connecting Atlassian JIRA REST API.
+Allows connecting Atlassian JIRA REST API.
 
 This Ballerina client connector uses the JIRA REST API to connect to JIRA, work with JIRA projects, view and update 
 issues, work with jira user accounts, and more. It also handles basic authentication, provides auto completion and 
