@@ -17,7 +17,6 @@
 //
 
 import ballerina/http;
-import ballerina/util;
 import ballerina/log;
 
 documentation{Represents Jira Client Connector Object
