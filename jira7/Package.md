@@ -1,72 +1,93 @@
-# Ballerina Jira Connector
+Connects to JIRA from Ballerina. 
 
-Allows connecting Atlassian JIRA REST API.
+# Package Overview
 
-This Ballerina client connector uses the JIRA REST API to connect to JIRA, work with JIRA projects, view and update 
-issues, work with jira user accounts, and more. It also handles basic authentication, provides auto completion and 
-type conversions.
-                                                                        
+This package provides a Ballerina API for the JIRA REST API. It provides the ability to work with JIRA projects, view 
+and update issues, work with JIRA user accounts, etc. It handles basic authentication and provides 
+auto completion and type conversions.
+
+**JIRA Project Operations**
+
+The `wso2/jira` package contains operations to create new JIRA projects, update or delete existing projects, and get all 
+the information using either the ID or key of the project. It also contains operations for adding or removing users and 
+groups related to a project role, viewing user account details of the project lead, viewing assignable issue types for a 
+given project, etc.
+
+**JIRA Project Category Operations**
+
+The `wso2/jira` package contains operations that get all available project categories, delete existing categories, and 
+create new project categories.
+
+**JIRA Project Component Operations**
+
+The `wso2/jira` package contains operations that get all details of a given project component, delete existing 
+components, create a new project component related to a specific project, etc.
+
+**JIRA Issue Operations**
+
+The `wso2/jira` package contains operations that get all the details of a given issue using the issue key, delete existing 
+issues, create new issues, etc.
+
 ## Compatibility
+|                    |    Version     |  
+| :-----------------:|:--------------:| 
+| Ballerina Language | 0.970.0-beta15 |
+| JIRA REST API      |    7.2.2       |  
 
-| Ballerina Version | Jira REST API Version |
-|:-------------------:|:-------------------:|
-|0.970.0-beta14|7.2.2|
+## Sample
+First, import the `wso2/jira7` package into the Ballerina project.
+```ballerina
+import wso2/jira7;
+```
+**Obtaining Credentials to Run the Sample**
 
-## Getting started
+1. Visit [Atlassian](https://id.atlassian.com/signup) and create an Atlassian Account.
+2. Obtain the following credentials and base URL.
+    * Username
+    * Password  
 
-1. Refer `https://ballerina.io/learn/getting-started/` to download Ballerina and install tools.
-
-2. Ballerina Jira connector currently provides basic authentication as the authentication method. Therefore obtain your 
-   Jira user account credentials(username and password).If you currently dont have a Jira account, you can create a new Jira account from 
-   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
-   
-   *Note -JIRA’s REST API is protected by the same restrictions which are provided via JIRAs standard web interface.
-    This means that if you do not have valid jira credentials, you are accessing JIRA anonymously. Furthermore, 
-    if you log in and do not have permission to view something in JIRA, you will not be able to view it using the 
-    Ballerina JIRA Connector as well.*
-
-3. Create a new Ballerina project by executing the following command.
-      ```shell
-        <PROJECT_ROOT_DIRECTORY>$ ballerina init`
-      ```
-  
-4. Import the jira package to your Ballerina program as follows.This will download the jira7 artifacts from the 
-`ballerina central` to your local repository.
-
-    ```ballerina
-       import wso2/jira7;
-    ```
-
-5. Provide the credentials to your endpoint in the initialization step, and use as shown 
-in the following sample code.
-
-    ```ballerina
-       import wso2/jira7 as jira;
-       
-       function main(string... args) { 
-         
-           //Creating the jira endpoint
-           endpoint jira:Client jiraEndpoint {
-                
-                httpClientConfig:{
-                    url:"https://support-staging.wso2.com/jira",
-                    auth:{
-                        scheme:"basic",
-                        username:"username",
-                        password:"password"
-                    }
-                }
-           };
-           
-           jira:JiraConnectorError jiraError = {};
-           jira:Project project = {};
-           string projectKey = "RRDEVSPRT";    
-           //Endpoint Action
-           var result = jiraEndpoint -> getProject(projectKey);
-           match result{
-               jira:Project p => project = p;
-               jira:JiraConnectorError e => jiraError = err;
-           }
-       }
-        
-    ```
+You can now enter the credentials in the HTTP client config.
+```ballerina
+endpoint jira7:Client jiraEP {
+    clientConfig:{
+        url:baseUrl
+        auth:{
+            scheme:"basic",
+            username:username,
+            password:password
+        }
+    }
+};
+```
+The `getAllProjectSummaries` function returns the project summary of all the projects.
+```ballerina
+var output = jiraEP -> getAllProjectSummaries();
+match output {
+    jira7:ProjectSummary[] projectSummaryArray => io:println(projectSummaryArray);
+    jira7:JiraConnectorError e => io:println(e);
+}
+```
+The `createProject` function creates a JIRA project with the given name.
+```ballerina
+var output = jiraEP -> createProject("TST_PROJECT");
+match output {
+    jira7:Project p => io:println(p);
+    jira7:JiraConnectorError e => io:println(e);
+}
+```
+The `createIssue` function creates an issue with the given issue details. `IssueRequest` is a structure that contains all 
+the data that is required to create the issue. 
+```ballerina
+jira7:IssueRequest newIssue = {
+    key: "TEST_ISSUE",
+    summary: "This is a test issue created for the Ballerina JIRA Connector",
+    issueTypeId: "10002",
+    projectId: ”1234”,
+    assigneeName: “username”
+};
+var output = jiraEP -> createIssue(newIssue);
+match output {
+    jira7:Issue issue => io:println(issue);
+    jira7:JiraConnectorError e => io:println(e);
+}
+```
