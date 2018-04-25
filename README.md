@@ -8,9 +8,9 @@ provides auto completion and type conversions.
 
 ### Compatibility
 
-| Ballerina Version | Jira REST API Version |
-|:-------------------:|:-------------------:|
-|0.970.0-beta14|7.2.2|
+| Ballerina Version   | Jira REST API Version |
+|:-------------------:|:---------------------:|
+|0.970.0-beta15       |7.2.2                  |
 
 
 ### Why do you need the REST API for Jira
