@@ -35,29 +35,28 @@ issues, create new issues, etc.
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
-The JIRA connector can be used to get summaries of all projects, create a project, and create an issue. First, import 
-the `wso2/jira7` package into the Ballerina project.
+First, import the `wso2/jira7` package into the Ballerina project.
 ```ballerina
 import wso2/jira7;
 ```
 **Obtaining Credentials to Run the Sample**
 
 1. Visit [Atlassian](https://id.atlassian.com/signup) and create an Atlassian Account.
-2. Obtain the following credentials from the Twilio dashboard:
+2. Obtain the following credentials and base URL.
     * Username
     * Password  
 
-You can now enter the credentials and base URL in the HTTP client config.
+You can now enter the credentials in the HTTP client config.
 ```ballerina
 endpoint jira7:Client jiraEP {
-    httpClientConfig:{
+    clientConfig:{
+        url:baseUrl
         auth:{
             scheme:"basic",
             username:username,
             password:password
         }
-    },
-    url:baseUrl
+    }
 };
 ```
 The `getAllProjectSummaries` function returns the project summary of all the projects.
