@@ -10,7 +10,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version | Jira REST API Version |
 |:-------------------:|:-------------------:|
-|0.970.0-beta10|7.2.2|
+|0.970.0-beta14|7.2.2|
 
 
 ### Why do you need the REST API for Jira
@@ -65,8 +65,8 @@ in the following sample code.
           
       //Creation of connector endpoint
       endpoint jira7:Client jiraEndpoint {
-          url:"https://support-staging.wso2.com",
           httpClientConfig:{
+              url:"https://support-staging.wso2.com/jira",
               auth:{
                   scheme:"basic",
                   username:"username",
@@ -95,8 +95,8 @@ will returns an Connector error with error message,error type and cause.
      
        //Creating the jira endpoint
        endpoint jira:Client jiraEndpoint {
-            url:"https://support-staging.wso2.com/jira",
             httpClientConfig:{
+                url:"https://support-staging.wso2.com/jira",
                 auth:{
                     scheme:"basic",
                     username:"username",
