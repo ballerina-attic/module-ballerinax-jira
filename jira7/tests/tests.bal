@@ -17,7 +17,6 @@ endpoint Client jiraConnectorEP {
             password:config:getAsString("test_password")
         }
     }
-    //url:config:getAsString("test_url")
 };
 
 @test:BeforeSuite
