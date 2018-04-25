@@ -166,7 +166,7 @@ public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary pr
 
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
-            jsonResponse.lead.name                                                             : null: null;
+                                    jsonResponse.lead.name: null: null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => return errorToJiraConnectorError(err);
@@ -279,7 +279,7 @@ public function JiraConnector::getProject(string projectIdOrKey) returns Project
 
         json jsonResponse => {
             jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
-            jsonResponse.lead.name                                                             : null : null;
+                                    jsonResponse.lead.name: null : null;
             var projectOut = <Project>jsonResponse;
             match projectOut {
                 error err => return errorToJiraConnectorError(err);
