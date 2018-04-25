@@ -1,9 +1,9 @@
 
 ### Compatibility
 
-| Ballerina Version | Jira REST API Version |
-|:-------------------:|:-------------------:|
-|0.970.0-beta14|7.2.2|
+| Ballerina Version   | Jira REST API Version |
+|:-------------------:|:---------------------:|
+|0.970.0-beta15       |7.2.2                  |
 
 ## Running Tests
 
