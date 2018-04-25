@@ -48,7 +48,7 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
                         response.reasonPhrase};
                 match response.getJsonPayload(){
                     json jsonPayload => e.jiraServerErrorLog = jsonPayload;
-                    http:PayloadError => e.jiraServerErrorLog = null;
+                    error => e.jiraServerErrorLog = null;
                 }
                 return e;
 
@@ -56,7 +56,7 @@ function getValidatedResponse(http:Response|http:HttpConnectorError httpConnecto
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
                     json jsonOut => return jsonOut;
-                    http:PayloadError payloadError => return null;
+                    error => return null;
                 }
             }
         }

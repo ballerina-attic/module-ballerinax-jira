@@ -19,12 +19,10 @@
 import ballerina/http;
 
 documentation{ Represents the Jira Client Connector Endpoint configuration.
-    F{{httpClientConfig}} Http client endpoint configuration
-    F{{url}} jira base url
+    F{{clientConfig}} Http client endpoint configuration
 }
 public type JiraConfiguration {
-    http:ClientEndpointConfig httpClientConfig;
-    string url;
+    http:ClientEndpointConfig clientConfig;
 };
 
 documentation{ Represents the Jira Client Connector Endpoint object.
@@ -35,6 +33,7 @@ public type Client object {
     public {
         JiraConfiguration jiraConfig = {};
         JiraConnector jiraConnector = new;
+        http:ClientEndpointConfig clientConfig;
     }
 
     documentation{ Jira connector endpoint initialization function.
@@ -42,15 +41,9 @@ public type Client object {
     }
     public function init(JiraConfiguration userConfig) {
 
-        userConfig.httpClientConfig.url = userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
-        userConfig.httpClientConfig.chunking = "NEVER";
-
-        jiraConnector.jiraHttpClientEPConfig = userConfig.httpClientConfig;
-        jiraConnector.jira_base_url = userConfig.url;
-        jiraConnector.jira_rest_api_ep = userConfig.url + JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
-
-        jiraConfig = {url:userConfig.url, httpClientConfig:userConfig.httpClientConfig};
-        jiraConnector.jiraHttpClient.init(userConfig.httpClientConfig);
+        userConfig.clientConfig.url += JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
+        userConfig.clientConfig.chunking = "NEVER";
+        jiraConnector.jiraHttpClient.init(userConfig.clientConfig);
     }
 
     documentation{Returns the Jira connector client.

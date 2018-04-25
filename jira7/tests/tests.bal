@@ -9,14 +9,14 @@ ProjectCategory projectCategory_test = {};
 Issue issue_test = {};
 
 endpoint Client jiraConnectorEP {
-    httpClientConfig:{
+    clientConfig:{
+        url:config:getAsString("test_url"),
         auth:{
             scheme:"basic",
             username:config:getAsString("test_username"),
             password:config:getAsString("test_password")
         }
-    },
-    url:config:getAsString("test_url")
+    }
 };
 
 @test:BeforeSuite
