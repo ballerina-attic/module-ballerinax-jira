@@ -26,19 +26,17 @@ import ballerina/mime;
 documentation{Checks whether the http response contains any errors.
     P{{ httpConnectorResponse}} response of the ballerina standard http client
     R{{^"json"}} json payload of the server response
-     R{{JiraConnectorError}} 'JiraConnectorError' type record
+    R{{JiraConnectorError}} 'JiraConnectorError' type record
 }
-function getValidatedResponse(http:Response|http:HttpConnectorError httpConnectorResponse)
-    returns json|JiraConnectorError {
+function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|JiraConnectorError {
 
     JiraConnectorError e = {};
     json jsonResponse;
 
     //checks for any http errors
     match httpConnectorResponse {
-        http:HttpConnectorError connectionError => {
-            e = {^"type":"Http Client Error", message:connectionError.message,
-                cause:connectionError.cause};
+        error err => {
+            e = {^"type":"Http Client Error", message:err.message, cause:err.cause};
             return e;
         }
         http:Response response => {
