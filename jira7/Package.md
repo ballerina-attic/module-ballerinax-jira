@@ -2,9 +2,8 @@ Connects to JIRA from Ballerina.
 
 # Package Overview
 
-This package provides a Ballerina API for the JIRA REST API. It provides the ability to work with JIRA projects, view 
-and update issues, work with JIRA user accounts, etc. It handles basic authentication and provides 
-auto completion and type conversions.
+The JIRA connector allows you to work with projects, user accounts, view and update issues through the JIRA REST 
+API. It handles basic authentication.
 
 **JIRA Project Operations**
 
@@ -31,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 | :-----------------:|:--------------:| 
-| Ballerina Language | 0.970.0-beta15 |
+| Ballerina Language | 0.970.0-rc1    |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
