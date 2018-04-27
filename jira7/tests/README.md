@@ -1,16 +1,16 @@
 
 ### Compatibility
 
-| Ballerina Version   | Jira REST API Version |
+| Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-|0.970.0-beta15       |7.2.2                  |
+|0.970.0-rc1          |7.2.2                  |
 
 ## Running Tests
 
 > **Important -** All the tests inside this package will make HTTP calls to the JIRA REST API. If the HTTP call fails, 
 then so will the test case.
 
-In order to run the jira7.tests, the user will need to have a Jira Administration User Account and valid credentials.
+In order to run the jira7.tests, the user will need to have a JIRA Administration User Account and valid credentials.
 
 You can test all the endpoint actions using the `tests.bal` file, using the following steps.
 
