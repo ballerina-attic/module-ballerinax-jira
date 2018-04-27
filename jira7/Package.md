@@ -2,8 +2,8 @@ Connects to JIRA from Ballerina.
 
 # Package Overview
 
-The JIRA connector allows you to work with projects, user accounts, view and update issues through the JIRA REST 
-API. It handles basic authentication.
+The JIRA connector allows you to view, create, update, and delete projects, project categories, project components, user 
+accounts, and issues through the JIRA REST API. It handles basic authentication.
 
 **JIRA Project Operations**
 
