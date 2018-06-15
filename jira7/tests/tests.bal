@@ -12,7 +12,7 @@ endpoint Client jiraConnectorEP {
     clientConfig:{
         url:config:getAsString("test_url"),
         auth:{
-            scheme:"basic",
+            scheme:"Basic",
             username:config:getAsString("test_username"),
             password:config:getAsString("test_password")
         }
