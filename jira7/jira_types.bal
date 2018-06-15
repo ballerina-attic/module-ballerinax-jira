@@ -17,7 +17,7 @@
 //
 
 documentation{Represents a summary of a jira project.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project Id
     F{{key}} project key
     F{{name}} project name
@@ -26,7 +26,7 @@ documentation{Represents a summary of a jira project.
     F{{projectTypeKey}} type of the project("software/business")
 }
 public type ProjectSummary {
-    string self;
+    string resource_path;
     string id;
     string key;
     string name;
@@ -36,7 +36,7 @@ public type ProjectSummary {
 };
 
 documentation{Represents a detailed jira project.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project Id
     F{{key}} project key
     F{{name}} project name
@@ -50,7 +50,7 @@ documentation{Represents a detailed jira project.
     F{{versions}} detatils of project versions
 }
 public type Project {
-    string self;
+    string resource_path;
     string id;
     string key;
     string name;
@@ -96,20 +96,20 @@ public type ProjectRequest {
 };
 
 documentation{Represents a summary of a jira project component.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project component Id
     F{{name}} project component name
     F{{description}} project component description
 }
 public type ProjectComponentSummary {
-    string self;
+    string resource_path;
     string id;
     string name;
     string description;
 };
 
 documentation{Represents a detailed jira project component.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project component Id
     F{{name}} project component name
     F{{description}} project component description
@@ -122,7 +122,7 @@ documentation{Represents a detailed jira project component.
     F{{projectId}} id of the related project
 }
 public type ProjectComponent {
-    string self;
+    string resource_path;
     string id;
     string name;
     string description;
@@ -153,13 +153,13 @@ public type ProjectComponentRequest {
 };
 
 documentation{Represents a detailed jira project category.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project category Id
     F{{name}} project category name
     F{{description}} project category description
 }
 public type ProjectCategory {
-    string self;
+    string resource_path;
     string id;
     string name;
     string description;
@@ -175,13 +175,13 @@ public type ProjectCategoryRequest {
 };
 
 documentation{Represents a jira project role (i.e. Developers;Users etc.).
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{name}} project role name
     F{{description}} project role description
     F{{actors}} the set of jira users and groups assigned to the project role
 }
 public type ProjectRole {
-    string self;
+    string resource_path;
     string name;
     string description;
     Actor[] actors;
@@ -201,20 +201,20 @@ public type Actor {
 };
 
 documentation{Represents a jira issue type status related to a jira project.)
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{name}} related issue type name
     F{{id}} related issue type id
     F{{statuses}} project status details related to the issue type
 }
 public type ProjectStatus {
-    string self;
+    string resource_path;
     string name;
     string id;
     json statuses;
 };
 
 documentation{Represents a jira user.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{key}} key of the user
     F{{name}} name of the user
     F{{displayName}} display name of the user
@@ -224,7 +224,7 @@ documentation{Represents a jira user.
     F{{timeZone}} time zone related to the user
 }
 public type User {
-    string self;
+    string resource_path;
     string key;
     string name;
     string displayName;
@@ -236,14 +236,14 @@ public type User {
 };
 
 documentation{Represents a jira issue type.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} issue type id
     F{{name}} issue type name
     F{{description}} issue type description
     F{{iconUrl}} url of the issue type icon
 }
 public type IssueType {
-    string self;
+    string resource_path;
     string id;
     string name;
     string description;
@@ -252,7 +252,7 @@ public type IssueType {
 };
 
 documentation{Represents a jira project version.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} project version id
     F{{name}} project version name
     F{{archived}} boolean field which indicates whether the version is archived
@@ -263,7 +263,7 @@ documentation{Represents a jira project version.
     F{{projectId}} id of the related project
 }
 public type ProjectVersion {
-    string self;
+    string resource_path;
     string id;
     string name;
     boolean archived;
@@ -288,7 +288,7 @@ public type AvatarUrls {
 };
 
 documentation{Represents a jira issue.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} issue Id
     F{{key}} issue key
     F{{summary}} summary of the issue
@@ -307,7 +307,7 @@ documentation{Represents a jira issue.
     F{{customFields}} customly created fields which contain issue related information
 }
 public type Issue {
-    string self;
+    string resource_path;
     string id;
     string key;
     string summary;
@@ -348,7 +348,7 @@ public type IssueRequest {
 };
 
 documentation{Represents a jira issue.
-    F{{self}} API resource url
+    F{{resource_path}} API resource url
     F{{id}} issue Id
     F{{key}} issue key
     F{{priorityId}} issue priority Id
@@ -356,7 +356,7 @@ documentation{Represents a jira issue.
     F{{issueType}} type of the jira issue
 }
 public type IssueSummary {
-    string self;
+    string resource_path;
     string id;
     string key;
     string priorityId;
