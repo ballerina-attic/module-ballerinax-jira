@@ -50,7 +50,7 @@ function jsonToProjectSummary(json source) returns ProjectSummary {
 
     ProjectSummary target = {};
 
-    target.self = source.self.toString() ;
+    target.resource_path = source.self.toString() ;
     target.id = source.id.toString() ;
     target.key = source.key.toString() ;
     target.name = source.name.toString() ;
@@ -65,7 +65,7 @@ function jsonToProjectCategory(json source) returns ProjectCategory {
 
     ProjectCategory target = {};
 
-    target.self = source.self != null ? source.self.toString()  : EMPTY_STRING;
+    target.resource_path = source.self != null ? source.self.toString()  : EMPTY_STRING;
     target.name = source.name != null ? source.name.toString()  : EMPTY_STRING;
     target.id = source.id != null ? source.id.toString()  : EMPTY_STRING;
     target.description = source.description != null ? source.description.toString()  : EMPTY_STRING;
@@ -77,7 +77,7 @@ function jsonToProjectComponent(json source) returns ProjectComponent {
 
     ProjectComponent target = {};
 
-    target.self = source.self != null ? source.self.toString()  : EMPTY_STRING;
+    target.resource_path = source.self != null ? source.self.toString()  : EMPTY_STRING;
     target.id = source.id != null ? source.id.toString()  : EMPTY_STRING;
     target.name = source.name != null ? source.name.toString()  : EMPTY_STRING;
     target.description = source.description != null ? source.description.toString()  : EMPTY_STRING;
@@ -103,7 +103,7 @@ function jsonToProjectComponent(json source) returns ProjectComponent {
 
 function jsonToIssue(json source) returns Issue {
     Issue target = {};
-    target.self = source.self.toString() ;
+    target.resource_path = source.self.toString() ;
     target.id = source.id.toString() ;
     target.key = source.key.toString() ;
 
@@ -187,7 +187,7 @@ return target;
 
 function jsonToIssueSummary(json source) returns IssueSummary {
     IssueSummary target = {};
-    target.self = source.self.toString() ;
+    target.resource_path = source.self.toString() ;
     target.id = source.id.toString() ;
     target.key = source.key.toString() ;
 
@@ -212,7 +212,7 @@ function jsonToIssueType(json source) returns IssueType {
 
     IssueType target = {};
 
-    target.self = source.self != null ? source.self.toString()  : EMPTY_STRING;
+    target.resource_path = source.self != null ? source.self.toString()  : EMPTY_STRING;
     target.id = source.id != null ? source.id.toString()  : EMPTY_STRING;
     target.name = source.name != null ? source.name.toString()  : EMPTY_STRING;
     target.description = source.description != null ? source.description.toString()  : EMPTY_STRING;

@@ -24,7 +24,7 @@ import ballerina/mime;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 documentation{Checks whether the http response contains any errors.
-    P{{ httpConnectorResponse}} response of the ballerina standard http client
+    P{{httpConnectorResponse}} response of the ballerina standard http client
     R{{^"json"}} json payload of the server response
     R{{JiraConnectorError}} 'JiraConnectorError' type record
 }
@@ -36,15 +36,15 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
     //checks for any http errors
     match httpConnectorResponse {
         error err => {
-            e = {^"type":"Http Client Error", message:err.message, cause:err.cause};
+            e = { ^"type": "Http Client Error", message: err.message, cause: err.cause };
             return e;
         }
         http:Response response => {
             if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
                 && response.statusCode != STATUS_CODE_NO_CONTENT) { //checks for server  error responses
-                e = {^"type":"Jira Server Error", message:"status " + <string>response.statusCode + ": " +
-                        response.reasonPhrase};
-                match response.getJsonPayload(){
+                e = { ^"type": "Jira Server Error", message: "status " + <string>response.statusCode + ": " +
+                        response.reasonPhrase };
+                match response.getJsonPayload() {
                     json jsonPayload => e.jiraServerErrorLog = jsonPayload;
                     error => e.jiraServerErrorLog = null;
                 }

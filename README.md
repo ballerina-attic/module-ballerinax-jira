@@ -10,7 +10,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-|0.974.1              |7.2.2                  |
+|0.975.0            |7.2.2                  |
 
 
 ### Why do you need the REST API for JIRA
