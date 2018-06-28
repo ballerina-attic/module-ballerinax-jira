@@ -10,7 +10,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-|0.975.0            |7.2.2                  |
+| 0.975.0             | 7.2.2                  |
 
 
 ### Why do you need the REST API for JIRA
@@ -59,22 +59,22 @@ Please follow the following steps to authenticate your connector.
 
 - Provide the credentials to your endpoint in the initialization step, as shown 
 in the following sample code.
-```Ballerina
 
-      import wso2/jira7;
-          
-      //Creation of connector endpoint
-      endpoint jira7:Client jiraEndpoint {
-          httpClientConfig:{
-              url:"https://support-staging.wso2.com/jira",
-              auth:{
-                  scheme:"basic",
-                  username:"username",
-                  password:"password"
-              }
-          } 
-      };
+```ballerina
+import ballerina/http;
+import wso2/jira7;
 
+//Creation of connector endpoint
+endpoint jira7:Client jiraEndpoint {
+    clientConfig:{
+        url:"https://support-staging.wso2.com/jira",
+        auth:{
+            scheme:http:BASIC_AUTH,
+            username:"username",
+            password:"password"
+        }
+    }
+};
 ```
 
 ## Working with JIRA connector actions
@@ -89,32 +89,34 @@ will returns an Connector error with error message,error type and cause.
 ### Example
 * Request 
 ```ballerina
-   import wso2/jira7 as jira;
-   
-   function main(string... args) { 
-     
-       //Creating the jira endpoint
-       endpoint jira:Client jiraEndpoint {
-            httpClientConfig:{
-                url:"https://support-staging.wso2.com/jira",
-                auth:{
-                    scheme:"basic",
-                    username:"username",
-                    password:"password"
-                }
+import ballerina/http;
+import wso2/jira7;
+
+function main(string... args) {
+
+    //Creating the jira endpoint
+    endpoint jira7:Client jiraEndpoint {
+        clientConfig:{
+            url:"https://support-staging.wso2.com/jira",
+            auth:{
+                scheme:http:BASIC_AUTH,
+                username:"username",
+                password:"password"
             }
-       };
-       
-       jira:JiraConnectorError jiraError = {};
-       jira:Project project = {};
-       string projectKey = "RRDEVSPRT";    
-       //Endpoint Action
-       var result = jiraEndpoint -> getProject(projectKey);
-       match result{
-           jira:Project p => project = p;
-           jira:JiraConnectorError e => jiraError = err;
-       }
-   }    
+        }
+    };
+
+    jira7:JiraConnectorError jiraError = {};
+    jira7:Project project = {};
+    string projectKey = "RRDEVSPRT";
+
+    //Endpoint Action
+    var result = jiraEndpoint -> getProject(projectKey);
+    match result{
+        jira7:Project p => project = p;
+        jira7:JiraConnectorError e => jiraError = err;
+    }
+}
 ```
 
 * Response Object
