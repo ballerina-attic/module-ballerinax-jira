@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wso2-ballerina/package-jira.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-jira)
+
 # Ballerina JIRA Connector
 This Ballerina client connector allows to connect to Atlassian JIRA, which provides bug tracking, issue tracking, 
 and project management functions. It uses the JIRA REST API to connect to JIRA, work with JIRA 
