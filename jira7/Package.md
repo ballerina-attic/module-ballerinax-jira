@@ -30,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    0.975.0     |
+| Ballerina Language |    0.980.0     |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
@@ -51,7 +51,7 @@ endpoint jira7:Client jiraEP {
     clientConfig:{
         url:baseUrl
         auth:{
-            scheme:"basic",
+            scheme:http:BASIC_AUTH,
             username:username,
             password:password
         }
@@ -60,7 +60,7 @@ endpoint jira7:Client jiraEP {
 ```
 The `getAllProjectSummaries` function returns the project summary of all the projects.
 ```ballerina
-var output = jiraEP -> getAllProjectSummaries();
+var output = jiraEP->getAllProjectSummaries();
 match output {
     jira7:ProjectSummary[] projectSummaryArray => io:println(projectSummaryArray);
     jira7:JiraConnectorError e => io:println(e);
@@ -68,7 +68,7 @@ match output {
 ```
 The `createProject` function creates a JIRA project with the given name.
 ```ballerina
-var output = jiraEP -> createProject("TST_PROJECT");
+var output = jiraEP->createProject("TST_PROJECT");
 match output {
     jira7:Project p => io:println(p);
     jira7:JiraConnectorError e => io:println(e);
@@ -84,7 +84,7 @@ jira7:IssueRequest newIssue = {
     projectId: ”1234”,
     assigneeName: “username”
 };
-var output = jiraEP -> createIssue(newIssue);
+var output = jiraEP->createIssue(newIssue);
 match output {
     jira7:Issue issue => io:println(issue);
     jira7:JiraConnectorError e => io:println(e);
