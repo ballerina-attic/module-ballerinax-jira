@@ -25,7 +25,7 @@ documentation{Represents a summary of a jira project.
     F{{category}} project category
     F{{projectTypeKey}} type of the project("software/business")
 }
-public type ProjectSummary {
+public type ProjectSummary record {
     string resource_path;
     string id;
     string key;
@@ -49,7 +49,7 @@ documentation{Represents a detailed jira project.
     F{{components}} summarized details about components of the project
     F{{versions}} detatils of project versions
 }
-public type Project {
+public type Project record {
     string resource_path;
     string id;
     string key;
@@ -79,7 +79,7 @@ documentation{Represents jira project creation/update template.
     F{{notificationScheme}} notification scheme id
     F{{categoryId}} project category id
 }
-public type ProjectRequest {
+public type ProjectRequest record {
     string key;
     string name;
     string projectTypeKey;
@@ -101,7 +101,7 @@ documentation{Represents a summary of a jira project component.
     F{{name}} project component name
     F{{description}} project component description
 }
-public type ProjectComponentSummary {
+public type ProjectComponentSummary record {
     string resource_path;
     string id;
     string name;
@@ -121,7 +121,7 @@ documentation{Represents a detailed jira project component.
     F{{project}} key of the related project
     F{{projectId}} id of the related project
 }
-public type ProjectComponent {
+public type ProjectComponent record {
     string resource_path;
     string id;
     string name;
@@ -143,7 +143,7 @@ documentation{Represents jira project component creation template object.
     F{{project}} key of the related project
     F{{projectId}} id of the related project
 }
-public type ProjectComponentRequest {
+public type ProjectComponentRequest record {
     string name;
     string description;
     string leadUserName;
@@ -158,7 +158,7 @@ documentation{Represents a detailed jira project category.
     F{{name}} project category name
     F{{description}} project category description
 }
-public type ProjectCategory {
+public type ProjectCategory record {
     string resource_path;
     string id;
     string name;
@@ -169,7 +169,7 @@ documentation{Represents jira project category creation template object.
     F{{name}} project category name
     F{{description}} project category description
 }
-public type ProjectCategoryRequest {
+public type ProjectCategoryRequest record {
     string name;
     string description;
 };
@@ -180,7 +180,7 @@ documentation{Represents a jira project role (i.e. Developers;Users etc.).
     F{{description}} project role description
     F{{actors}} the set of jira users and groups assigned to the project role
 }
-public type ProjectRole {
+public type ProjectRole record {
     string resource_path;
     string name;
     string description;
@@ -193,7 +193,7 @@ documentation{Represent an assignee for a given project role (An actor can be ei
     F{{displayName}} display name of the actor
     F{{^"type"}} type of the actor
 }
-public type Actor {
+public type Actor record {
     string id;
     string name;
     string displayName;
@@ -206,7 +206,7 @@ documentation{Represents a jira issue type status related to a jira project.)
     F{{id}} related issue type id
     F{{statuses}} project status details related to the issue type
 }
-public type ProjectStatus {
+public type ProjectStatus record {
     string resource_path;
     string name;
     string id;
@@ -223,7 +223,7 @@ documentation{Represents a jira user.
     F{{active}} boolean field represent whether the user is active
     F{{timeZone}} time zone related to the user
 }
-public type User {
+public type User record {
     string resource_path;
     string key;
     string name;
@@ -242,7 +242,7 @@ documentation{Represents a jira issue type.
     F{{description}} issue type description
     F{{iconUrl}} url of the issue type icon
 }
-public type IssueType {
+public type IssueType record {
     string resource_path;
     string id;
     string name;
@@ -262,7 +262,7 @@ documentation{Represents a jira project version.
     F{{userReleaseDate}} user release date of the project version
     F{{projectId}} id of the related project
 }
-public type ProjectVersion {
+public type ProjectVersion record {
     string resource_path;
     string id;
     string name;
@@ -280,7 +280,7 @@ documentation{Represents a set of avatar Urls related to a jira entity.
     F{{^"32x32"}} avatar url icon of size 32x32
     F{{^"48x48"}} avatar url icon of size 48x48
 }
-public type AvatarUrls {
+public type AvatarUrls record {
     string ^"16x16";
     string ^"24x24";
     string ^"32x32";
@@ -306,7 +306,7 @@ documentation{Represents a jira issue.
     F{{project}} represent summarized details of the project which the issue is related to
     F{{customFields}} customly created fields which contain issue related information
 }
-public type Issue {
+public type Issue record {
     string resource_path;
     string id;
     string key;
@@ -337,7 +337,7 @@ documentation{Represents record of jira issue creation template.
     F{{assigneeName}} jira username of the issue assignee
     F{{dueDate}} due date of the issue
 }
-public type IssueRequest {
+public type IssueRequest record {
     string key;
     string summary;
     string issueTypeId;
@@ -355,7 +355,7 @@ documentation{Represents a jira issue.
     F{{statusId}} issue status Id
     F{{issueType}} type of the jira issue
 }
-public type IssueSummary {
+public type IssueSummary record {
     string resource_path;
     string id;
     string key;
@@ -370,7 +370,7 @@ documentation{Represent Jira Connector based errors.
     F{{jiraServerErrorLog}} error log returned by the jira server, for "server error" type
     F{{cause}} cause for the error
 }
-public type JiraConnectorError {
+public type JiraConnectorError record {
     string message;
     error? cause;
     string ^"type";

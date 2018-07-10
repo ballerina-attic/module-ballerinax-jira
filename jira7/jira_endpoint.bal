@@ -21,7 +21,7 @@ import ballerina/http;
 documentation{ Represents the Jira Client Connector Endpoint configuration.
     F{{clientConfig}} Http client endpoint configuration
 }
-public type JiraConfiguration {
+public type JiraConfiguration record {
     http:ClientEndpointConfig clientConfig;
 };
 
@@ -30,11 +30,9 @@ documentation{ Represents the Jira Client Connector Endpoint object.
     F{{jiraConnector}} jira client connector object
 }
 public type Client object {
-    public {
-        JiraConfiguration jiraConfig = {};
-        JiraConnector jiraConnector = new;
-        http:ClientEndpointConfig clientConfig;
-    }
+    public JiraConfiguration jiraConfig = {};
+    public JiraConnector jiraConnector = new;
+    public http:ClientEndpointConfig clientConfig;
 
     documentation{ Jira connector endpoint initialization function.
         P{{userConfig}} Jira connector endpoint configuration
