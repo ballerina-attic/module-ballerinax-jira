@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.975.0             | 7.2.2                  |
+| 0.980.0             | 7.2.2                  |
 
 
 ### Why do you need the REST API for JIRA
@@ -123,7 +123,7 @@ function main(string... args) {
 
 * Response Object
 ```ballerina
-public type Project {
+public type Project record {
     string self;
     string id;
     string key;
@@ -141,7 +141,7 @@ public type Project {
 
 * Error Object
 ```ballerina
-public type JiraConnectorError {
+public type JiraConnectorError record {
     string message;
     error? cause;
     string ^"type";

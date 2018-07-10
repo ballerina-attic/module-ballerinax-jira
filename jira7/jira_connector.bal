@@ -22,9 +22,7 @@ import ballerina/log;
 documentation{Represents Jira Client Connector Object}
 public type JiraConnector object {
 
-    private {
-        http:Client jiraHttpClient = new;
-    }
+    http:Client jiraHttpClient = new;
 
     public function getAllProjectSummaries()
                         returns ProjectSummary[]|JiraConnectorError;
@@ -110,7 +108,7 @@ BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
     R{{ProjectSummary}} Array of 'ProjectSummary' objects
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
+function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     ProjectSummary[] projects = [];
@@ -150,7 +148,7 @@ permission to view it and if no any error occured.
     R{{Project}} 'Project' object
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
+function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
                                    returns Project|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -180,7 +178,7 @@ documentation{Creates a new project.Values available for the assigneeType field 
     R{{Project}} 'Project' object which contains detailed representation of the new project
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
+function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
@@ -218,7 +216,7 @@ documentation{Updates a project. Only non null values sent in 'ProjectRequest' s
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
+function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -243,7 +241,7 @@ documentation{Deletes a project.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
+function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
@@ -264,7 +262,7 @@ to view it and if no any error occured.
     R{{Project}} 'Project' type object
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
+function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -293,7 +291,7 @@ documentation{Returns jira user details of the project lead.
     R{{User}} 'User' type record containing user details of the project lead.
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
+function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -328,7 +326,7 @@ documentation{Returns detailed reprensentation of a given project role(ie:Develo
     R{{ProjectRole}} 'ProjectRole' object containing the details of the requested role
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
+function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
                                    returns ProjectRole|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -365,7 +363,7 @@ documentation{Assigns a user to a given project role.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
+function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -399,7 +397,7 @@ documentation{Assigns a group to a given project role.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
+function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -433,7 +431,7 @@ documentation{removes a given user from a given project role.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
+function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -465,7 +463,7 @@ documentation{removes a given group from a given project role.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
+function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -487,7 +485,7 @@ documentation{Gets all issue types with valid status values for a project.
     R{{ProjectStatus}} Array of 'ProjectStatus' type records
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
+function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
                                    returns ProjectStatus[]|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -531,7 +529,7 @@ documentation{Updates the type of a jira project.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
+function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
                                    returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -552,7 +550,7 @@ documentation{Creates a new project component.
     R{{ProjectComponent}} 'ProjectComponent' object which contains the created project component
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
+function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
                                    returns ProjectComponent|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -588,7 +586,7 @@ documentation{Returns detailed representation of project component.
     R{{ProjectComponent}} 'ProjectComponent' type record
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
+function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -611,7 +609,7 @@ documentation{Deletes a project component.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
+function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
@@ -631,7 +629,7 @@ documentation{Returns jira user details of the assignee of the project component
     R{{User}} 'User' object containing user details of the assignee.
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -659,7 +657,7 @@ documentation{Returns jira user details of the lead of the project component.
     R{{User}} 'User' object containing user details of the lead.
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -685,7 +683,7 @@ documentation{Returns all existing project categories.
     R{{ProjectCategory}} Array of 'ProjectCategory' objects
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
+function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -726,7 +724,7 @@ documentation{Returns a detailed representation of a project category.
     R{{ProjectCategory}} 'ProjectCategory' type records
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
+function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -752,7 +750,7 @@ documentation{Create a new project category.
     R{{ProjectCategory}} 'ProjectCategory' type records
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
+function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
                                    returns ProjectCategory|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -773,7 +771,7 @@ public function JiraConnector::createProjectCategory(ProjectCategoryRequest newC
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var ProjectCategoryOut = self.getProjectCategory(jsonResponse.id.toString());
+                    var ProjectCategoryOut = self.getProjectCategory(untaint jsonResponse.id.toString());
                     match ProjectCategoryOut {
                         ProjectCategory category => return category;
                         JiraConnectorError e => return e;
@@ -789,7 +787,7 @@ documentation{Delete a project category.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
+function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
@@ -810,7 +808,7 @@ documentation{Returns a detailed representation of a jira issue.
     R{{Issue}} 'Issue' type record
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
+function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
@@ -829,7 +827,7 @@ documentation{Creates a new jira issue.
     R{{Issue}} 'Issue' type record
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
+function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
@@ -859,7 +857,7 @@ documentation{Deletes a jira issue.
     R{{^"boolean"}} returns true if the process is successful
     R{{JiraConnectorError}} 'JiraConnectorError' record
 }
-public function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
+function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
