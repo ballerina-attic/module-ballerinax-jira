@@ -398,8 +398,6 @@ function test_deleteProjectCategory() {
     }
 }
 
-///////////////////////////////
-
 @test:Config {
     dependsOn: ["test_getProject"]
 }
@@ -450,7 +448,6 @@ function test_deleteIssue() {
         JiraConnectorError e => test:assertFail(msg = e.message);
     }
 }
-
 
 @test:AfterSuite
 function afterSuite() {

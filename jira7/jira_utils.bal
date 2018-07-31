@@ -42,7 +42,7 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
         }
         http:Response response => {
 
-            if (hasValidStatusCode(response)){ //if there is no any http connector error or jira server error
+            if (hasValidStatusCode(response)) { //if there is no any http connector error or jira server error
                 var payloadOutput = response.getJsonPayload();
                 match payloadOutput {
                     json jsonOut => return jsonOut;
