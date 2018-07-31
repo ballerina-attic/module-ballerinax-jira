@@ -30,33 +30,44 @@ documentation{Checks whether the http response contains any errors.
 }
 function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|JiraConnectorError {
 
-    JiraConnectorError e = {};
-    json jsonResponse;
-
     //checks for any http errors
     match httpConnectorResponse {
         error err => {
-            e = { ^"type": "Http Client Error", message: err.message, cause: err.cause };
+            JiraConnectorError e = {
+                ^"type": "Http Connector Error",
+                message: err.message,
+                cause: err.cause
+            };
             return e;
         }
         http:Response response => {
-            if (response.statusCode != STATUS_CODE_OK && response.statusCode != STATUS_CODE_CREATED
-                && response.statusCode != STATUS_CODE_NO_CONTENT) { //checks for server  error responses
-                e = { ^"type": "Jira Server Error", message: "status " + <string>response.statusCode + ": " +
-                        response.reasonPhrase };
+
+            if (hasValidStatusCode(response)) { //if there is no any http connector error or jira server error
+                var payloadOutput = response.getJsonPayload();
+                match payloadOutput {
+                    json jsonOut => return jsonOut;
+                    error e => {
+                        return null;
+                    }
+                }
+            } else {
+                JiraConnectorError e = {
+                    ^"type": "Jira Server Error",
+                    message: string `status {{<string>response.statusCode}}: {{response.reasonPhrase}}`
+                };
+
+                //Extracting the error response from the JSON payload of the Jira server response
                 match response.getJsonPayload() {
                     json jsonPayload => e.jiraServerErrorLog = jsonPayload;
                     error => e.jiraServerErrorLog = null;
                 }
                 return e;
-
-            } else {//if there is no any http client or jira server error
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOut => return jsonOut;
-                    error => return null;
-                }
             }
         }
     }
+}
+
+function hasValidStatusCode(http:Response response) returns boolean {
+    int statusCode = response.statusCode;
+    return statusCode == STATUS_CODE_OK || statusCode == STATUS_CODE_CREATED || statusCode == STATUS_CODE_NO_CONTENT;
 }
