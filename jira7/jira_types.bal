@@ -325,6 +325,7 @@ public type Issue record {
     IssueType issueType;
     IssueSummary parent;
     ProjectSummary project;
+    IssueComment[] comments = [];
     json[] customFields = [];
 };
 
@@ -376,3 +377,19 @@ public type JiraConnectorError record {
     string ^"type";
     json jiraServerErrorLog;
 };
+
+documentation{Represents record of jira issue comment.
+    F{{id}} issue id
+    F{{authorName}} Authors name of comment
+    F{{authorKey}} Authors key
+    F{{body}} Body of comment
+    F{{updatedDate}} Date of creation of comment
+}
+public type IssueComment record {
+    string id;
+    string authorName;
+    string authorKey;
+    string body;
+    string updatedDate;
+};
+

@@ -8,6 +8,7 @@ ProjectSummary[] projectSummaryArray_test = [];
 ProjectComponent projectComponent_test = {};
 ProjectCategory projectCategory_test = {};
 Issue issue_test = {};
+string testComment = "This is a test comment created for Ballerina Jira Connector";
 
 endpoint Client jiraConnectorEP {
     clientConfig: {
@@ -424,6 +425,23 @@ function test_createIssue() {
 @test:Config {
     dependsOn: ["test_createIssue"]
 }
+function test_addCommentToIssue() {
+    log:printInfo("ACTION : addCommentToIssue()");
+
+    IssueComment newComment = {
+        body: testComment
+    };
+
+    var output = jiraConnectorEP->addCommentToIssue(issue_test.key, newComment);
+    match output {
+        boolean => {}
+        JiraConnectorError e => test:assertFail(msg = e.message);
+    }
+}
+
+@test:Config {
+    dependsOn: ["test_createIssue", "test_addCommentToIssue"]
+}
 function test_getIssue() {
     log:printInfo("ACTION : getIssue()");
 
@@ -437,7 +455,7 @@ function test_getIssue() {
 }
 
 @test:Config {
-    dependsOn: ["test_getIssue"]
+    dependsOn: ["test_getIssue", "test_addCommentToIssue"]
 }
 function test_deleteIssue() {
     log:printInfo("ACTION : deleteIssue()");
