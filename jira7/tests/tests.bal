@@ -8,6 +8,7 @@ ProjectSummary[] projectSummaryArray_test = [];
 ProjectComponent projectComponent_test = {};
 ProjectCategory projectCategory_test = {};
 Issue issue_test = {};
+ProjectStatus project_status = {};
 
 endpoint Client jiraConnectorEP {
     clientConfig: {
@@ -242,8 +243,8 @@ function test_getAllIssueTypeStatusesOfProject() {
 
     var output = jiraConnectorEP->getAllIssueTypeStatusesOfProject(project_test);
     match output {
-        ProjectStatus[] => {}
-	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
+        ProjectStatus[] p => project_status = p[0];
+        JiraConnectorError e => test:assertFail(msg = e.message);
     }
 }
 
@@ -403,7 +404,7 @@ function test_deleteProjectCategory() {
 }
 
 @test:Config {
-    dependsOn: ["test_getProject"]
+    dependsOn: ["test_getProject", "test_getAllIssueTypeStatusesOfProject"]
 }
 function test_createIssue() {
     log:printInfo("ACTION : createIssue()");
@@ -411,7 +412,7 @@ function test_createIssue() {
     IssueRequest newIssue = {
         key: "TESTISSUE",
         summary: "This is a test issue created for Ballerina Jira Connector",
-        issueTypeId: "10002",
+        issueTypeId: project_status.id,
         projectId: project_test.id,
         assigneeName: config:getAsString("test_username")
     };
