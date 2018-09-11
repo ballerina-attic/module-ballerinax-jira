@@ -21,6 +21,11 @@ endpoint Client jiraConnectorEP {
     }
 };
 
+
+function formatJiraConnError(JiraConnectorError e) returns string {
+    return string `{{e.message}} - {{e.jiraServerErrorLog.errors.toString()}}`;
+}
+
 @test:BeforeSuite
 function connector_init() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
@@ -36,7 +41,7 @@ function test_getAllProjectSummaries() {
         ProjectSummary[] projectSummaryArray => {
             projectSummaryArray_test = projectSummaryArray;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+        JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -49,7 +54,7 @@ function test_getAllDetailsFromProjectSummary() {
     var output = jiraConnectorEP->getAllDetailsFromProjectSummary(projectSummaryArray_test[0]);
     match output {
         Project => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -80,7 +85,7 @@ function test_createProject() {
         Project p => {
             project_test = p;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -98,7 +103,7 @@ function test_updateProject() {
     var output = jiraConnectorEP->updateProject("TSTPROJECT", projectUpdate);
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -127,7 +132,7 @@ function test_deleteProject() {
     var output = jiraConnectorEP->deleteProject("TSTPROJECT");
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -143,7 +148,7 @@ function test_getProject() {
         Project p => {
             project_test = p;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -156,7 +161,7 @@ function test_getLeadUserDetailsOfProject() {
     var output = jiraConnectorEP->getLeadUserDetailsOfProject(project_test);
     match output {
         User => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -169,7 +174,7 @@ function test_getRoleDetailsOfProject() {
     var output = jiraConnectorEP->getRoleDetailsOfProject(project_test, "10002");
     match output {
         ProjectRole => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -183,7 +188,7 @@ function test_addUserToRoleOfProject() {
         config:getAsString("test_username"));
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -197,7 +202,7 @@ function test_addGroupToRoleOfProject() {
         "jira-administrators");
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -211,7 +216,7 @@ function test_removeUserFromRoleOfProject() {
         config:getAsString("test_username"));
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -226,7 +231,7 @@ function test_removeGroupFromRoleOfProject() {
         "jira-administrators");
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -252,7 +257,7 @@ function test_changeTypeOfProject() {
     var output = jiraConnectorEP->changeTypeOfProject(project_test, "software");
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -277,7 +282,7 @@ function test_createProjectComponent() {
         ProjectComponent component => {
             projectComponent_test = component;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -295,7 +300,7 @@ function test_getProjectComponent() {
         ProjectComponent component => {
             projectComponent_test = component;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -308,7 +313,7 @@ function test_getAssigneeUserDetailsOfProjectComponent() {
     var output = jiraConnectorEP->getAssigneeUserDetailsOfProjectComponent(projectComponent_test);
     match output {
         User => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -321,7 +326,7 @@ function test_getLeadUserDetailsOfProjectComponent() {
     var output = jiraConnectorEP->getLeadUserDetailsOfProjectComponent(projectComponent_test);
     match output {
         User => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -338,7 +343,7 @@ function test_deleteProjectComponent() {
     var output = jiraConnectorEP->deleteProjectComponent(projectComponent_test.id);
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -349,7 +354,7 @@ function test_getAllProjectCategories() {
     var output = jiraConnectorEP->getAllProjectCategories();
     match output {
         ProjectCategory[] => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -367,7 +372,6 @@ function test_createProjectCategory() {
         }
         JiraConnectorError e => test:assertFail(msg = string `{{e.message}} - { Please retry again after removing
          the project category:'{{newCategory.name}}' from from your jira instance}`);
-
     }
 }
 
@@ -382,7 +386,7 @@ function test_getProjectCategory() {
         ProjectCategory category => {
             projectCategory_test = category;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -395,7 +399,7 @@ function test_deleteProjectCategory() {
     var output = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -418,7 +422,7 @@ function test_createIssue() {
         Issue issue => {
             issue_test = issue;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -433,7 +437,7 @@ function test_getIssue() {
         Issue issue => {
             issue_test = issue;
         }
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -446,7 +450,7 @@ function test_deleteIssue() {
     var output = jiraConnectorEP->deleteIssue(issue_test.key);
     match output {
         boolean => {}
-        JiraConnectorError e => test:assertFail(msg = e.message);
+	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
