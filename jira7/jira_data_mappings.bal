@@ -181,8 +181,8 @@ function jsonToIssue(json source) returns Issue {
             i +=1;
         }
     }
-
-return target;
+    target.comments = jsonToIssueComments(source.fields.comment.comments);
+    return target;
 }
 
 function jsonToIssueSummary(json source) returns IssueSummary {
@@ -234,3 +234,27 @@ function issueRequestToJson(IssueRequest source) returns json {
 
     return target;
 }
+
+function jsonToIssueComments(json jcomments) returns IssueComment[] {
+
+    IssueComment[] comments = [];
+    int l = lengthof jcomments;
+    foreach (jcomment in jcomments) {
+        comments[lengthof comments] = jsonToIssueComment(jcomment);
+    }
+    return comments;
+}
+
+function jsonToIssueComment(json jcomment) returns IssueComment {
+
+    IssueComment comment = {};
+
+    comment.id = jcomment.id.toString();
+    comment.authorName = jcomment.author.name.toString();
+    comment.authorKey = jcomment.author.key.toString();
+    comment.body = jcomment.body.toString();
+    comment.updatedDate = jcomment.updated.toString();
+
+    return comment;
+}
+

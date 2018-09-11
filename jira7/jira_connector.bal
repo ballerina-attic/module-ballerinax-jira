@@ -101,6 +101,8 @@ public type JiraConnector object {
     public function deleteIssue(string issueIdOrKey)
                         returns boolean|JiraConnectorError;
 
+    public function addCommentToIssue(string issueIdOrKey, IssueComment comment)
+                        returns boolean|JiraConnectorError;
 };
 
 documentation{Returns an array of all projects summaries which are visible for the currently logged in user who has
@@ -871,3 +873,30 @@ function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraCon
         json jsonResponse => return true;
     }
 }
+
+documentation{Adds a comment to a Jira Issue.
+    P{{issueIdOrKey}} id or key of the issue
+    P{{comment}} the details of the comment to be added
+    R{{^"boolean"}} returns true if the process is successful
+    R{{JiraConnectorError}} 'JiraConnectorError' record
+}
+function JiraConnector::addCommentToIssue(string issueIdOrKey, IssueComment comment)
+            returns boolean|JiraConnectorError {
+
+    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+    http:Request commentRequest = new;
+
+    json jsonPayload = {};
+    jsonPayload.body = comment.body;
+    commentRequest.setJsonPayload(jsonPayload);
+
+    var httpResponseOut = jiraHttpClientEP->post("/issue/" + issueIdOrKey +"/comment", commentRequest);
+    //Evaluate http response for connection and server errors
+    var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
+    match jsonResponseOut {
+        JiraConnectorError e => return e;
+        json jsonResponse => return true;
+    }
+}
+
