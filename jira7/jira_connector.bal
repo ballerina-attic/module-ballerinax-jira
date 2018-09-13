@@ -835,6 +835,7 @@ function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraCon
     http:Request outRequest = new;
 
     json jsonPayload = issueRequestToJson(newIssue);
+    log:printDebug("CreateIssue payload: "+jsonPayload.toString());
     outRequest.setJsonPayload(jsonPayload);
 
     var httpResponseOut = jiraHttpClientEP->post("/issue", outRequest);

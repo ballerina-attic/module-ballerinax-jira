@@ -412,7 +412,6 @@ function test_createIssue() {
     log:printInfo("ACTION : createIssue()");
 
     IssueRequest newIssue = {
-        key: "TESTISSUE",
         summary: "This is a test issue created for Ballerina Jira Connector",
         issueTypeId: project_status.id,
         projectId: project_test.id,
@@ -421,10 +420,32 @@ function test_createIssue() {
 
     var output = jiraConnectorEP->createIssue(newIssue);
     match output {
-        Issue issue => {
-            issue_test = issue;
-        }
+        Issue issue => issue_test = issue;
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
+    }
+}
+
+@test:Config {
+    dependsOn: ["test_getProject", "test_getAllIssueTypeStatusesOfProject"]
+}
+function test_createIssueWithExtraFields() {
+    string msg = "";
+    log:printInfo("ACTION : createIssueWithExtraFields()");
+
+    IssueRequest newIssue = {
+        summary: "This is a test issue created for Ballerina Jira Connector with some extra data",
+        issueTypeId: "10004",
+        projectId: project_test.id,
+        assigneeName: config:getAsString("test_username"),
+        description: "test description"
+    };
+    newIssue.reporter = <json>{name: config:getAsString("test_username")};
+    
+    // This should fail to create issue as testField1 and testField2 do not exist on the Jira Project create form
+    var output = jiraConnectorEP->createIssue(newIssue);
+    match output {
+        JiraConnectorError e => msg = e.message;
+        Issue issue => test:assertFail(msg = "error: create issue with extra fields test should result in an error");
     }
 }
 

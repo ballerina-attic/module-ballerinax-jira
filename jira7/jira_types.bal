@@ -330,22 +330,16 @@ public type Issue record {
 };
 
 documentation{Represents record of jira issue creation template.
-    F{{key}} issue key
     F{{summary}} summary of the issue
     F{{issueTypeId}} Id of the issue type for the new issue
     F{{projectId}} Id of the project related to the new issue
-    F{{parentIssueKey}} issue key of parent of the new issue
     F{{assigneeName}} jira username of the issue assignee
-    F{{dueDate}} due date of the issue
 }
 public type IssueRequest record {
-    string key;
     string summary;
     string issueTypeId;
     string projectId;
-    string parentIssueKey;
     string assigneeName;
-    string dueDate;
 };
 
 documentation{Represents a jira issue.

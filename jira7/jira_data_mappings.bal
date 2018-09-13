@@ -225,13 +225,24 @@ function jsonToIssueType(json source) returns IssueType {
 function issueRequestToJson(IssueRequest source) returns json {
 
     json target = {fields:{}};
-
-    target.key = source.key != EMPTY_STRING ? source.key : null;
     target.fields.summary = source.summary != EMPTY_STRING ? source.summary : null;
     target.fields.issuetype = source.issueTypeId != EMPTY_STRING ? {id:source.issueTypeId} : null;
     target.fields.project = source.projectId != EMPTY_STRING ? {id:source.projectId} : null;
     target.fields.assignee = source.assigneeName != EMPTY_STRING ? {name:source.assigneeName} : null;
-
+    
+    map source_map = <map>source;
+    source_map["summary"] = null;
+    source_map["issueTypeId"] = null;
+    source_map["projectId"] = null;
+    source_map["assigneeName"] = null;
+    
+    foreach f in source_map.keys() {
+        match <json>source_map[f] {
+            () => source_map[f] = null; //do nothing
+            json j => target.fields[f] = j;
+            error e => target.fields[f] = <string>source_map[f];
+        }
+    }
     return target;
 }
 
