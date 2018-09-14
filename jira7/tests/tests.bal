@@ -429,23 +429,23 @@ function test_createIssue() {
     dependsOn: ["test_getProject", "test_getAllIssueTypeStatusesOfProject"]
 }
 function test_createIssueWithExtraFields() {
-    string msg = "";
+    // Create issue including additional fields description and reporter 
     log:printInfo("ACTION : createIssueWithExtraFields()");
 
     IssueRequest newIssue = {
-        summary: "This is a test issue created for Ballerina Jira Connector with some extra data",
-        issueTypeId: "10004",
+        summary: "This is a test issue created for Ballerina Jira Connector with description and reporter",
+        issueTypeId: project_status.id,
         projectId: project_test.id,
         assigneeName: config:getAsString("test_username"),
         description: "test description"
     };
+    // Specify the reporter field in json format
     newIssue.reporter = <json>{name: config:getAsString("test_username")};
     
-    // This should fail to create issue as testField1 and testField2 do not exist on the Jira Project create form
     var output = jiraConnectorEP->createIssue(newIssue);
     match output {
-        JiraConnectorError e => msg = e.message;
-        Issue issue => test:assertFail(msg = "error: create issue with extra fields test should result in an error");
+        Issue issue => issue_test = issue;
+        JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
 
@@ -467,7 +467,7 @@ function test_addCommentToIssue() {
 }
 
 @test:Config {
-    dependsOn: ["test_createIssue", "test_addCommentToIssue"]
+    dependsOn: ["test_createIssue", "test_addCommentToIssue", "test_createIssueWithExtraFields"]
 }
 function test_getIssue() {
     log:printInfo("ACTION : getIssue()");
@@ -482,7 +482,7 @@ function test_getIssue() {
 }
 
 @test:Config {
-    dependsOn: ["test_getIssue", "test_addCommentToIssue"]
+    dependsOn: ["test_getIssue", "test_addCommentToIssue", "test_createIssueWithExtraFields"]
 }
 function test_deleteIssue() {
     log:printInfo("ACTION : deleteIssue()");

@@ -814,7 +814,10 @@ function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnecto
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
 
-    var httpResponseOut = jiraHttpClientEP->get("/issue/" + issueIdOrKey);
+    string getParams = "/issue/" + issueIdOrKey;
+    log:printDebug("GET : " + getParams);
+
+    var httpResponseOut = jiraHttpClientEP->get(getParams);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -835,7 +838,7 @@ function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraCon
     http:Request outRequest = new;
 
     json jsonPayload = issueRequestToJson(newIssue);
-    log:printDebug("CreateIssue payload: "+jsonPayload.toString());
+    log:printDebug("CreateIssue payload: " + jsonPayload.toString());
     outRequest.setJsonPayload(jsonPayload);
 
     var httpResponseOut = jiraHttpClientEP->post("/issue", outRequest);
