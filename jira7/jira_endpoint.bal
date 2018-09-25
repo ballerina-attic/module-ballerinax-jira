@@ -18,25 +18,23 @@
 
 import ballerina/http;
 
-documentation{ Represents the Jira Client Connector Endpoint configuration.
-    F{{clientConfig}} Http client endpoint configuration
-}
+# Represents the Jira Client Connector Endpoint configuration.
+# + clientConfig - Http client endpoint configuration
 public type JiraConfiguration record {
     http:ClientEndpointConfig clientConfig;
 };
 
-documentation{ Represents the Jira Client Connector Endpoint object.
-    F{{jiraConfig}} jira client Connector endpoint configuration
-    F{{jiraConnector}} jira client connector object
-}
+# Represents the Jira Client Connector Endpoint object.
+# + jiraConfig - jira client Connector endpoint configuration
+# + jiraConnector - jira client connector object
+# + clientConfig - jira client config
 public type Client object {
     public JiraConfiguration jiraConfig = {};
     public JiraConnector jiraConnector = new;
     public http:ClientEndpointConfig clientConfig;
 
-    documentation{ Jira connector endpoint initialization function.
-        P{{userConfig}} Jira connector endpoint configuration
-    }
+    # Jira connector endpoint initialization function.
+    # + userConfig - Jira connector endpoint configuration
     public function init(JiraConfiguration userConfig) {
 
         userConfig.clientConfig.url += JIRA_REST_API_RESOURCE + JIRA_REST_API_VERSION;
@@ -44,9 +42,8 @@ public type Client object {
         jiraConnector.jiraHttpClient.init(userConfig.clientConfig);
     }
 
-    documentation{Returns the Jira connector client.
-        R{{JiraConnector}} The Jira connector client
-    }
+    # Returns the Jira connector client.
+    # + return - The Jira connector client
     public function getCallerActions() returns JiraConnector {
         return jiraConnector;
     }
