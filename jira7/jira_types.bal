@@ -16,14 +16,14 @@
 // under the License.
 //
 
-# Represents a summary of a jira project.
-# + resource_path - API resource url
-# + id - project Id
-# + key - project key
-# + name - project name
-# + description - project description
-# + category - project category
-# + projectTypeKey - type of the project("software/business")
+# Represents a summary of a Jira project.
+# + resource_path - API resource URL
+# + id - Project Id
+# + key - Project key
+# + name - Project name
+# + description - Project description
+# + category - Project category
+# + projectTypeKey - Type of the project(`software/business`)
 public type ProjectSummary record {
     string resource_path;
     string id;
@@ -34,19 +34,19 @@ public type ProjectSummary record {
     string projectTypeKey;
 };
 
-# Represents a detailed jira project.
-# + resource_path - API resource url
-# + id - project Id
-# + key - project key
-# + name - project name
-# + description - project description
-# + leadName - jira username of the project lead
-# + projectTypeKey - type of the project("software" or "business")
-# + avatarUrls - project avatar urls
-# + projectCategory - details of project category
-# + issueTypes - support issue types of the project
-# + components - summarized details about components of the project
-# + versions - detatils of project versions
+# Represents a detailed Jira project.
+# + resource_path - API resource URL
+# + id - Project Id
+# + key - Project key
+# + name - Project name
+# + description - Project description
+# + leadName - Jira username of the project lead
+# + projectTypeKey - Type of the project(`software` or `business`)
+# + avatarUrls - Project avatar URLs
+# + projectCategory - Details of project category
+# + issueTypes - Support issue types of the project
+# + components - Summarized details about components of the project
+# + versions - Detatils of project versions
 public type Project record {
     string resource_path;
     string id;
@@ -62,20 +62,20 @@ public type Project record {
     ProjectVersion[] versions;
 };
 
-# Represents jira project creation/update template.
-# + key - project key
-# + name - project name
-# + description - project description
-# + projectTypeKey - type of the project("software" or "business")
-# + projectTemplateKey - template key of the project
-# + lead - jira username of the project lead
-# + url - url for the project
-# + assigneeType - type of assignee of the project ("PROJECT_LEAD" or "UNASSIGNED")
-# + avatarId - avatar for the new project
-# + issueSecurityScheme - issue security scheme id
-# + permissionScheme - premission scheme id
-# + notificationScheme - notification scheme id
-# + categoryId - project category id
+# Represents Jira project creation/update template.
+# + key - Project key
+# + name - Project name
+# + description - Project description
+# + projectTypeKey - Type of the project(`software` or `business`)
+# + projectTemplateKey - Template key of the project
+# + lead - Jira username of the project lead
+# + url - URL for the project
+# + assigneeType - Type of assignee of the project (`PROJECT_LEAD` or `UNASSIGNED`)
+# + avatarId - Avatar for the new project
+# + issueSecurityScheme - Issue security scheme id
+# + permissionScheme - Premission scheme id
+# + notificationScheme - Notification scheme id
+# + categoryId - Project category id
 public type ProjectRequest record {
     string key;
     string name;
@@ -92,11 +92,11 @@ public type ProjectRequest record {
     string categoryId;
 };
 
-# Represents a summary of a jira project component.
-# + resource_path - API resource url
-# + id - project component Id
-# + name - project component name
-# + description - project component description
+# Represents a summary of a Jira project component.
+# + resource_path - API resource URL
+# + id - Project component Id
+# + name - Project component name
+# + description - Project component description
 public type ProjectComponentSummary record {
     string resource_path;
     string id;
@@ -104,18 +104,18 @@ public type ProjectComponentSummary record {
     string description;
 };
 
-# Represents a detailed jira project component.
-# + resource_path - API resource url
-# + id - project component Id
-# + name - project component name
-# + description - project component description
-# + leadName - jira username of project component lead
-# + assigneeName - jira username of component assignee
-# + assigneeType - type of assignee ("PROJECT_DEFAULT", "COMPONENT_LEAD", "PROJECT_LEAD" or "UNASSIGNED")
-# + realAssigneeName - jira username of the project component real assignee
-# + realAssigneeType - type of real assignee ("PROJECT_DEFAULT", "COMPONENT_LEAD", "PROJECT_LEAD" or "UNASSIGNED")
-# + project - key of the related project
-# + projectId - id of the related project
+# Represents a detailed Jira project component.
+# + resource_path - API resource URL
+# + id - Project component Id
+# + name - Project component name
+# + description - Project component description
+# + leadName - Jira username of project component lead
+# + assigneeName - Jira username of component assignee
+# + assigneeType - Type of assignee (`PROJECT_DEFAULT`, `COMPONENT_LEAD`, `PROJECT_LEAD` or `UNASSIGNED`)
+# + realAssigneeName - Jira username of the project component real assignee
+# + realAssigneeType - Type of real assignee (`PROJECT_DEFAULT`, `COMPONENT_LEAD`, `PROJECT_LEAD` or `UNASSIGNED`)
+# + project - Key of the related project
+# + projectId - Id of the related project
 public type ProjectComponent record {
     string resource_path;
     string id;
@@ -130,13 +130,13 @@ public type ProjectComponent record {
     string projectId;
 };
 
-# Represents jira project component creation template object.
-# + name - project component name
-# + description - project component description
-# + leadUserName - jira username of project component lead
-# + assigneeType - type of assignee ("PROJECT_DEFAULT", "COMPONENT_LEAD", "PROJECT_LEAD" or "UNASSIGNED")
-# + project - key of the related project
-# + projectId - id of the related project
+# Represents Jira project component creation template object.
+# + name - Project component name
+# + description - Project component description
+# + leadUserName - Jira username of project component lead
+# + assigneeType - Type of assignee (`PROJECT_DEFAULT`, `COMPONENT_LEAD`, `PROJECT_LEAD` or `UNASSIGNED`)
+# + project - Key of the related project
+# + projectId - Id of the related project
 public type ProjectComponentRequest record {
     string name;
     string description;
@@ -146,11 +146,11 @@ public type ProjectComponentRequest record {
     string projectId;
 };
 
-# Represents a detailed jira project category.
-# + resource_path - API resource url
-# + id - project category Id
-# + name - project category name
-# + description - project category description
+# Represents a detailed Jira project category.
+# + resource_path - API resource URL
+# + id - Project category Id
+# + name - Project category name
+# + description - Project category description
 public type ProjectCategory record {
     string resource_path;
     string id;
@@ -158,19 +158,19 @@ public type ProjectCategory record {
     string description;
 };
 
-# Represents jira project category creation template object.
-# + name - project category name
-# + description - project category description
+# Represents Jira project category creation template object.
+# + name - Project category name
+# + description - Project category description
 public type ProjectCategoryRequest record {
     string name;
     string description;
 };
 
-# Represents a jira project role (i.e. Developers;Users etc.).
-# + resource_path - API resource url
-# + name - project role name
-# + description - project role description
-# + actors - the set of jira users and groups assigned to the project role
+# Represents a Jira project role (i.e. Developers;Users etc.).
+# + resource_path - API resource URL
+# + name - Project role name
+# + description - Project role description
+# + actors - The set of Jira users and groups assigned to the project role
 public type ProjectRole record {
     string resource_path;
     string name;
@@ -178,11 +178,11 @@ public type ProjectRole record {
     Actor[] actors;
 };
 
-# Represent an assignee for a given project role (An actor can be either a jira user or a group).
-# + id - id of the actor(user/group)
-# + name - name of the actor
-# + displayName - display name of the actor
-# + type - type of the actor
+# Represent an assignee for a given project role (An actor can be either a Jira user or a group).
+# + id - Id of the actor(user/group)
+# + name - Name of the actor
+# + displayName - Display name of the actor
+# + type - Type of the actor
 public type Actor record {
     string id;
     string name;
@@ -190,11 +190,11 @@ public type Actor record {
     string ^"type";
 };
 
-# Represents a jira issue type status related to a jira project.).
-# + resource_path - API resource url
-# + name - related issue type name
-# + id - related issue type id
-# + statuses - project status details related to the issue type
+# Represents a Jira issue type status related to a Jira project.).
+# + resource_path - API resource URL
+# + name - Related issue type name
+# + id - Related issue type id
+# + statuses - Project status details related to the issue type
 public type ProjectStatus record {
     string resource_path;
     string name;
@@ -202,16 +202,16 @@ public type ProjectStatus record {
     json statuses;
 };
 
-# Represents a jira user.
-# + resource_path - API resource url
-# + key - key of the user
-# + name - name of the user
-# + displayName - display name of the user
-# + emailAddress - email address of the user
-# + avatarUrls - avatar urls of the user
+# Represents a Jira user.
+# + resource_path - API resource URL
+# + key - Key of the user
+# + name - Name of the user
+# + displayName - Display name of the user
+# + emailAddress - Email address of the user
+# + avatarUrls - Avatar URLs of the user
 # + active - boolean field represent whether the user is active
-# + timeZone - time zone related to the user
-# + locale - locale
+# + timeZone - Time zone related to the user
+# + locale - Locale
 public type User record {
     string resource_path;
     string key;
@@ -224,12 +224,12 @@ public type User record {
     string locale;
 };
 
-# Represents a jira issue type.
-# + resource_path - API resource url
-# + id - issue type id
-# + name - issue type name
-# + description - issue type description
-# + iconUrl - url of the issue type icon
+# Represents a Jira issue type.
+# + resource_path - API resource URL
+# + id - Issue type id
+# + name - Issue type name
+# + description - Issue type description
+# + iconUrl - URL of the issue type icon
 # + avatarId - Avatar Id
 public type IssueType record {
     string resource_path;
@@ -240,16 +240,16 @@ public type IssueType record {
     string avatarId;
 };
 
-# Represents a jira project version.
-# + resource_path - API resource url
-# + id - project version id
-# + name - project version name
+# Represents a Jira project version.
+# + resource_path - API resource URL
+# + id -Project version id
+# + name - Project version name
 # + archived - boolean field which indicates whether the version is archived
 # + released - boolean field which indicates whether the version is released
-# + releaseDate - release date of the project version
+# + releaseDate - Release date of the project version
 # + overdue - boolean field which indicates whether the version is overdue
-# + userReleaseDate - user release date of the project version
-# + projectId - id of the related project
+# + userReleaseDate - User release date of the project version
+# + projectId - Id of the related project
 public type ProjectVersion record {
     string resource_path;
     string id;
@@ -262,11 +262,11 @@ public type ProjectVersion record {
     string projectId;
 };
 
-# Represents a set of avatar Urls related to a jira entity.
-# + ^"16x16" - avatar url icon of size 16x16
-# + ^"24x24" - avatar url icon of size 24x24
-# + ^"32x32" - avatar url icon of size 32x32
-# + ^"48x48" - avatar url icon of size 48x48
+# Represents a set of avatar Urls related to a Jira entity.
+# + ^"16x16" - Avatar URL icon of size 16x16
+# + ^"24x24" - Avatar URL icon of size 24x24
+# + ^"32x32" - Avatar URL icon of size 32x32
+# + ^"48x48" - Avatar URL icon of size 48x48
 public type AvatarUrls record {
     string ^"16x16";
     string ^"24x24";
@@ -275,24 +275,24 @@ public type AvatarUrls record {
 };
 
 # Represents a jira issue.
-# + resource_path - API resource url
-# + id - issue Id
-# + key - issue key
-# + summary - summary of the issue
-# + priorityId - issue priority Id
-# + resolutionId - issue resolution Id
-# + statusId - issue status Id
-# + creatorName - jira username of the issue creator
-# + assigneeName - jira username of the issue assignee
-# + reporterName - jira username of the issue reporter
-# + createdDate - created date of the issue
-# + dueDate - due date of the issue
-# + timespent - assigned time spent for the issue
-# + issueType - type of the jira issue
-# + parent - parent issue of the issue
-# + project - represent summarized details of the project which the issue is related to
+# + resource_path - API resource URL
+# + id - Issue Id
+# + key - Issue key
+# + summary - Summary of the issue
+# + priorityId - Issue priority Id
+# + resolutionId - Issue resolution Id
+# + statusId - Issue status Id
+# + creatorName - Jira username of the issue creator
+# + assigneeName - Jira username of the issue assignee
+# + reporterName - Jira username of the issue reporter
+# + createdDate - Created date of the issue
+# + dueDate - Due date of the issue
+# + timespent - Assigned time spent for the issue
+# + issueType - Type of the jira issue
+# + parent - Parent issue of the issue
+# + project - Represent summarized details of the project which the issue is related to
 # + comments - Issue comments
-# + customFields - customly created fields which contain issue related information
+# + customFields - Customly created fields which contain issue related information
 public type Issue record {
     string resource_path;
     string id;
@@ -316,11 +316,11 @@ public type Issue record {
     json[] customFields = [];
 };
 
-# Represents record of jira issue creation template.
-# + summary - summary of the issue
+# Represents record of Jira issue creation template.
+# + summary - Summary of the issue
 # + issueTypeId - Id of the issue type for the new issue
 # + projectId - Id of the project related to the new issue
-# + assigneeName - jira username of the issue assignee
+# + assigneeName - Jira username of the issue assignee
 public type IssueRequest record {
     string summary;
     string issueTypeId;
@@ -329,12 +329,12 @@ public type IssueRequest record {
 };
 
 # Represents a jira issue.
-# + resource_path - API resource url
-# + id - issue Id
-# + key - issue key
-# + priorityId - issue priority Id
-# + statusId - issue status Id
-# + issueType - type of the jira issue
+# + resource_path - API resource URL
+# + id - Issue Id
+# + key - Issue key
+# + priorityId - Issue priority Id
+# + statusId - Issue status Id
+# + issueType - Type of the jira issue
 public type IssueSummary record {
     string resource_path;
     string id;
@@ -345,10 +345,10 @@ public type IssueSummary record {
 };
 
 # Represent Jira Connector based errors.
-# + type - type of the error (HTTP error,server error etc.)
-# + message - error message
-# + jiraServerErrorLog - error log returned by the jira server, for "server error" type
-# + cause - cause for the error
+# + type - Type of the error (HTTP error,server error etc.)
+# + message - Error message
+# + jiraServerErrorLog - Error log returned by the jira server, for "server error" type
+# + cause - Cause for the error
 public type JiraConnectorError record {
     string message;
     error? cause;
@@ -357,7 +357,7 @@ public type JiraConnectorError record {
 };
 
 # Represents record of jira issue comment.
-# + id - issue id
+# + id - Issue id
 # + authorName - Authors name of comment
 # + authorKey - Authors key
 # + body - Body of comment

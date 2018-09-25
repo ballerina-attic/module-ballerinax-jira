@@ -23,9 +23,9 @@ import ballerina/mime;
 //                                                  Functions                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# Checks whether the http response contains any errors.
-# + httpConnectorResponse - response of the ballerina standard http client
-# + return - json payload of the server response or 'JiraConnectorError' type record
+# Checks whether the HTTP response contains any errors.
+# + httpConnectorResponse - Response of the ballerina standard HTTP client
+# + return - `json` payload of the server response or `JiraConnectorError` type record
 function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|JiraConnectorError {
 
     //checks for any http errors
