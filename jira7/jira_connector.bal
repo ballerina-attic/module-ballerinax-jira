@@ -19,7 +19,7 @@
 import ballerina/http;
 import ballerina/log;
 
-documentation{Represents Jira Client Connector Object}
+# Represents Jira Client Connector Object.
 public type JiraConnector object {
 
     http:Client jiraHttpClient = new;
@@ -105,11 +105,9 @@ public type JiraConnector object {
                         returns boolean|JiraConnectorError;
 };
 
-documentation{Returns an array of all projects summaries which are visible for the currently logged in user who has
-BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
-    R{{ProjectSummary}} Array of 'ProjectSummary' objects
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns an array of all projects summaries which are visible for the currently logged in user who has
+# `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
+# + return - Array of `ProjectSummary` objects or `JiraConnectorError` record
 function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -144,12 +142,10 @@ function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraCo
     }
 }
 
-documentation{Returns detailed representation of the summarized project, if the project exists,the user has
-permission to view it and if no any error occured.
-    P{{projectSummary}} 'ProjectSummary' object
-    R{{Project}} 'Project' object
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns detailed representation of the summarized project, if the project exists,the user has
+# permission to view it and if no any error occured.
+# + projectSummary - `ProjectSummary` object
+# + return - `Project` object or `JiraConnectorError` record
 function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
                                    returns Project|JiraConnectorError {
 
@@ -175,11 +171,9 @@ function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSu
     }
 }
 
-documentation{Creates a new project.Values available for the assigneeType field are: 'PROJECT_LEAD' and 'UNASSIGNED'.
-    P{{newProject}} record which contains the mandatory fields for new project creation
-    R{{Project}} 'Project' object which contains detailed representation of the new project
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
+# + newProject - Record which contains the mandatory fields for new project creation
+# + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
 function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -211,13 +205,11 @@ function JiraConnector::createProject(ProjectRequest newProject) returns Project
     }
 }
 
-documentation{Updates a project. Only non null values sent in 'ProjectRequest' structure will
-    be updated in the project. Values available for the assigneeType field are: 'PROJECT_LEAD' and 'UNASSIGNED'.
-    P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
-    P{{update}} record which contain fields which need to be updated
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
+# Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
+# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+# + update - Record which contain fields which need to be updated
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
                                    returns boolean|JiraConnectorError {
 
@@ -238,11 +230,9 @@ function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest upda
     }
 }
 
-documentation{Deletes a project.
-    P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Deletes a project.
+# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -258,12 +248,10 @@ function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|Jir
     }
 }
 
-documentation{Returns detailed representation of a project, if the project exists,the user has permission
-to view it and if no any error occured.
-    P{{projectIdOrKey}} unique string which represents the project id or project key of a jira project
-    R{{Project}} 'Project' type object
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns detailed representation of a project, if the project exists,the user has permission
+# to view it and if no any error occured.
+# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+# + return - `Project` type object or `JiraConnectorError` record
 function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -288,11 +276,9 @@ function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraCo
     }
 }
 
-documentation{Returns jira user details of the project lead.
-    P{{project}} 'Project' type record
-    R{{User}} 'User' type record containing user details of the project lead.
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns Jira user details of the project lead.
+# + project - `Project` type record
+# + return - `User` type record containing user details of the project lead. or `JiraConnectorError` record
 function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -314,20 +300,18 @@ function JiraConnector::getLeadUserDetailsOfProject(Project project) returns Use
     }
 }
 
-documentation{Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.)
-    P{{project}} 'Project' type record
-    P{{projectRoleId}} id of the project role(
-        ROLE_ID_ADMINISTRATORS,
-        ROLE_ID_CSAT_DEVELOPERS,
-        ROLE_ID_DEVELOPERS,
-        ROLE_ID_EXTERNAL_CONSULTANTS,
-        ROLE_ID_NOTIFICATIONS,
-        ROLE_ID_OBSERVER,
-        ROLE_ID_USERS
-    )
-    R{{ProjectRole}} 'ProjectRole' object containing the details of the requested role
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
+# + project - `Project` type record
+# + projectRoleId - Id of the project role(
+#        `ROLE_ID_ADMINISTRATORS`,
+#        `ROLE_ID_CSAT_DEVELOPERS`,
+#        `ROLE_ID_DEVELOPERS`,
+#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+#        `ROLE_ID_NOTIFICATIONS`,
+#        `ROLE_ID_OBSERVER`,
+#        `ROLE_ID_USERS`
+#    )
+# + return - `ProjectRole` object containing the details of the requested role or `JiraConnectorError` record
 function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
                                    returns ProjectRole|JiraConnectorError {
 
@@ -350,21 +334,19 @@ function JiraConnector::getRoleDetailsOfProject(Project project, string projectR
     }
 }
 
-documentation{Assigns a user to a given project role.
-    P{{project}} 'Project' type record
-    P{{projectRoleId}} id of the project role(
-        ROLE_ID_ADMINISTRATORS,
-        ROLE_ID_CSAT_DEVELOPERS,
-        ROLE_ID_DEVELOPERS,
-        ROLE_ID_EXTERNAL_CONSULTANTS,
-        ROLE_ID_NOTIFICATIONS,
-        ROLE_ID_OBSERVER,
-        ROLE_ID_USERS
-    )
-    P{{userName}} jira account username of the user to be added
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Assigns a user to a given project role.
+# + project - `Project` type record
+# + projectRoleId - Id of the project role(
+#        `ROLE_ID_ADMINISTRATORS`,
+#        `ROLE_ID_CSAT_DEVELOPERS`,
+#        `ROLE_ID_DEVELOPERS`,
+#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+#        `ROLE_ID_NOTIFICATIONS`,
+#        `ROLE_ID_OBSERVER`,
+#        `ROLE_ID_USERS`
+#    )
+# + userName - Jira account username of the user to be added
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
@@ -384,21 +366,19 @@ function JiraConnector::addUserToRoleOfProject(Project project, string projectRo
     }
 }
 
-documentation{Assigns a group to a given project role.
-    P{{project}} 'Project' type record
-    P{{projectRoleId}} id of the project role(
-        ROLE_ID_ADMINISTRATORS,
-        ROLE_ID_CSAT_DEVELOPERS,
-        ROLE_ID_DEVELOPERS,
-        ROLE_ID_EXTERNAL_CONSULTANTS,
-        ROLE_ID_NOTIFICATIONS,
-        ROLE_ID_OBSERVER,
-        ROLE_ID_USERS
-    )
-    P{{groupName}} name of the group to be added
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Assigns a group to a given project role.
+# + project - `Project` type record
+# + projectRoleId - Id of the project role(
+#        `ROLE_ID_ADMINISTRATORS`,
+#        `ROLE_ID_CSAT_DEVELOPERS`,
+#        `ROLE_ID_DEVELOPERS`,
+#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+#        `ROLE_ID_NOTIFICATIONS`,
+#        `ROLE_ID_OBSERVER`,
+#        `ROLE_ID_USERS`
+#    )
+# + groupName - Name of the group to be added
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
@@ -418,21 +398,19 @@ function JiraConnector::addGroupToRoleOfProject(Project project, string projectR
     }
 }
 
-documentation{removes a given user from a given project role.
-    P{{project}} 'Project' type record
-    P{{projectRoleId}} id of the project role(
-        ROLE_ID_ADMINISTRATORS,
-        ROLE_ID_CSAT_DEVELOPERS,
-        ROLE_ID_DEVELOPERS,
-        ROLE_ID_EXTERNAL_CONSULTANTS,
-        ROLE_ID_NOTIFICATIONS,
-        ROLE_ID_OBSERVER,
-        ROLE_ID_USERS
-    )
-    P{{userName}} name of the user required to be removed
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Removes a given user from a given project role.
+# + project - `Project` type record
+# + projectRoleId - Id of the project role(
+#        `ROLE_ID_ADMINISTRATORS`,
+#        `ROLE_ID_CSAT_DEVELOPERS`,
+#        `ROLE_ID_DEVELOPERS`,
+#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+#        `ROLE_ID_NOTIFICATIONS`,
+#        `ROLE_ID_OBSERVER`,
+#        `ROLE_ID_USERS`
+#    )
+# + userName - Name of the user required to be removed
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
@@ -450,21 +428,19 @@ function JiraConnector::removeUserFromRoleOfProject(Project project, string proj
     }
 }
 
-documentation{removes a given group from a given project role.
-    P{{project}} 'Project' type record
-    P{{projectRoleId}} id of the project role(
-        ROLE_ID_ADMINISTRATORS,
-        ROLE_ID_CSAT_DEVELOPERS,
-        ROLE_ID_DEVELOPERS,
-        ROLE_ID_EXTERNAL_CONSULTANTS,
-        ROLE_ID_NOTIFICATIONS,
-        ROLE_ID_OBSERVER,
-        ROLE_ID_USERS
-    )
-    P{{groupName}} name of the group required to be removed
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Removes a given group from a given project role.
+# + project - `Project` type record
+# + projectRoleId - id of the project role(
+#        `ROLE_ID_ADMINISTRATORS`,
+#        `ROLE_ID_CSAT_DEVELOPERS`,
+#        `ROLE_ID_DEVELOPERS`,
+#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+#        `ROLE_ID_NOTIFICATIONS`,
+#        `ROLE_ID_OBSERVER`,
+#        `ROLE_ID_USERS`
+#    )
+# + groupName - Name of the group required to be removed
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
@@ -482,11 +458,9 @@ function JiraConnector::removeGroupFromRoleOfProject(Project project, string pro
     }
 }
 
-documentation{Gets all issue types with valid status values for a project.
-    P{{project}} 'Project' type record
-    R{{ProjectStatus}} Array of 'ProjectStatus' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Gets all issue types with valid status values for a project.
+# + project - `Project` type record
+# + return - Array of `ProjectStatus` type records or `JiraConnectorError` record
 function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
                                    returns ProjectStatus[]|JiraConnectorError {
 
@@ -525,12 +499,10 @@ function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
     }
 }
 
-documentation{Updates the type of a jira project.
-    P{{project}} 'Project' type record
-    P{{newProjectType}} new project type for the jira project(PROJECT_TYPE_SOFTWARE or PROJECT_TYPE_BUSINESS)
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Updates the type of a Jira project.
+# + project - `Project` type record
+# + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
                                    returns boolean|JiraConnectorError {
 
@@ -547,11 +519,9 @@ function JiraConnector::changeTypeOfProject(Project project, string newProjectTy
     }
 }
 
-documentation{Creates a new project component.
-    P{{newProjectComponent}} record which contains the mandatory fields for new project component creation
-    R{{ProjectComponent}} 'ProjectComponent' object which contains the created project component
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Creates a new project component.
+# + newProjectComponent - Record which contains the mandatory fields for new project component creation
+# + return - `ProjectComponent` object which contains the created project component or `JiraConnectorError` record
 function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
                                    returns ProjectComponent|JiraConnectorError {
 
@@ -583,11 +553,9 @@ function JiraConnector::createProjectComponent(ProjectComponentRequest newProjec
     }
 }
 
-documentation{Returns detailed representation of project component.
-    P{{componentId}} string which contains a unique id for a given component.
-    R{{ProjectComponent}} 'ProjectComponent' type record
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns detailed representation of project component.
+# + componentId - string which contains a unique id for a given component.
+# + return - `ProjectComponent` type record or `JiraConnectorError` record
 function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -606,11 +574,9 @@ function JiraConnector::getProjectComponent(string componentId) returns ProjectC
     }
 }
 
-documentation{Deletes a project component.
-    P{{componentId}} string which contains a unique id for a given component
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Deletes a project component.
+# + componentId - string which contains a unique id for a given component
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -626,11 +592,9 @@ function JiraConnector::deleteProjectComponent(string componentId) returns boole
     }
 }
 
-documentation{Returns jira user details of the assignee of the project component.
-    P{{projectComponent}} 'ProjectComponent' type record
-    R{{User}} 'User' object containing user details of the assignee.
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns jira user details of the assignee of the project component.
+# + projectComponent - `ProjectComponent` type record
+# + return - `User` object containing user details of the assignee. or `JiraConnectorError` record
 function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
@@ -654,11 +618,9 @@ function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponen
     }
 }
 
-documentation{Returns jira user details of the lead of the project component.
-    P{{projectComponent}} 'ProjectComponent' type record
-    R{{User}} 'User' object containing user details of the lead.
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns jira user details of the lead of the project component.
+# + projectComponent - `ProjectComponent` type record
+# + return - `User` object containing user details of the lead or `JiraConnectorError` record
 function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
@@ -681,10 +643,8 @@ function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent pr
     }
 }
 
-documentation{Returns all existing project categories.
-    R{{ProjectCategory}} Array of 'ProjectCategory' objects
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns all existing project categories.
+# + return - Array of `ProjectCategory` objects or `JiraConnectorError` record
 function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -721,11 +681,9 @@ function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|Jira
     }
 }
 
-documentation{Returns a detailed representation of a project category.
-    P{{projectCategoryId}} jira id of the project category
-    R{{ProjectCategory}} 'ProjectCategory' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns a detailed representation of a project category.
+# + projectCategoryId - Jira id of the project category
+# + return - `ProjectCategory` type records or `JiraConnectorError` record
 function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -747,11 +705,9 @@ function JiraConnector::getProjectCategory(string projectCategoryId) returns Pro
     }
 }
 
-documentation{Create a new project category.
-    P{{newCategory}} record which contains the mandatory fields for new project category creation
-    R{{ProjectCategory}} 'ProjectCategory' type records
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Create a new project category.
+# + newCategory - Record which contains the mandatory fields for new project category creation
+# + return - `ProjectCategory` type records or `JiraConnectorError` record
 function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
                                    returns ProjectCategory|JiraConnectorError {
 
@@ -784,11 +740,9 @@ function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory
     }
 }
 
-documentation{Delete a project category.
-    P{{projectCategoryId}} jira id of the project category
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Delete a project category.
+# + projectCategoryId - Jira id of the project category
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -805,11 +759,9 @@ function JiraConnector::deleteProjectCategory(string projectCategoryId) returns 
 }
 
 
-documentation{Returns a detailed representation of a jira issue.
-    P{{issueIdOrKey}} id or key of the required issue
-    R{{Issue}} 'Issue' type record
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Returns a detailed representation of a jira issue.
+# + issueIdOrKey - Id or key of the required issue
+# + return - `Issue` type record or `JiraConnectorError` record
 function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -827,11 +779,9 @@ function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnecto
     }
 }
 
-documentation{Creates a new jira issue.
-    P{{newIssue}} record which contains the mandatory fields for new issue creation
-    R{{Issue}} 'Issue' type record
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Creates a new jira issue.
+# + newIssue - Record which contains the mandatory fields for new issue creation
+# + return - `Issue` type record or `JiraConnectorError` record
 function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -858,11 +808,9 @@ function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraCon
     }
 }
 
-documentation{Deletes a jira issue.
-    P{{issueIdOrKey}} id or key of the issue
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Deletes a jira issue.
+# + issueIdOrKey - Id or key of the issue
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
 
     endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
@@ -878,12 +826,10 @@ function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraCon
     }
 }
 
-documentation{Adds a comment to a Jira Issue.
-    P{{issueIdOrKey}} id or key of the issue
-    P{{comment}} the details of the comment to be added
-    R{{^"boolean"}} returns true if the process is successful
-    R{{JiraConnectorError}} 'JiraConnectorError' record
-}
+# Adds a comment to a Jira Issue.
+# + issueIdOrKey - Id or key of the issue
+# + comment - The details of the comment to be added
+# + return - returns true if the process is successful or `JiraConnectorError` record
 function JiraConnector::addCommentToIssue(string issueIdOrKey, IssueComment comment)
             returns boolean|JiraConnectorError {
 
