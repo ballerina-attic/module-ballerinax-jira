@@ -205,8 +205,8 @@ function JiraConnector::createProject(ProjectRequest newProject) returns Project
     }
 }
 
-# Updates a project. Only non null values sent in `ProjectRequest` structure will
-#    be updated in the project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
+# Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
+# Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
 # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
 # + update - Record which contain fields which need to be updated
 # + return - returns true if the process is successful or `JiraConnectorError` record
