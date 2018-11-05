@@ -41,7 +41,7 @@ function test_getAllProjectSummaries() {
     var output = jiraConnectorEP->getAllProjectSummaries();
     match output {
         ProjectSummary[] projectSummaryArray => {
-            projectSummaryArray_test = projectSummaryArray;
+            projectSummaryArray_test = untaint projectSummaryArray;
         }
         JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -85,7 +85,7 @@ function test_createProject() {
     var output = jiraConnectorEP->createProject(newProject);
     match output {
         Project p => {
-            project_test = p;
+            project_test = untaint p;
         }
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -148,7 +148,7 @@ function test_getProject() {
     var output = jiraConnectorEP->getProject("TSTPROJECT");
     match output {
         Project p => {
-            project_test = p;
+            project_test = untaint p;
         }
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -245,7 +245,7 @@ function test_getAllIssueTypeStatusesOfProject() {
 
     var output = jiraConnectorEP->getAllIssueTypeStatusesOfProject(project_test);
     match output {
-        ProjectStatus[] p => project_status = p[0];
+        ProjectStatus[] p => project_status = untaint p[0];
         JiraConnectorError e => test:assertFail(msg = e.message);
     }
 }
@@ -282,7 +282,7 @@ function test_createProjectComponent() {
     var output = jiraConnectorEP->createProjectComponent(newProjectComponent);
     match output {
         ProjectComponent component => {
-            projectComponent_test = component;
+            projectComponent_test = untaint component;
         }
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -300,7 +300,7 @@ function test_getProjectComponent() {
     var output = jiraConnectorEP->getProjectComponent(projectComponent_test.id);
     match output {
         ProjectComponent component => {
-            projectComponent_test = component;
+            projectComponent_test = untaint component;
         }
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -370,7 +370,7 @@ function test_createProjectCategory() {
     var output = jiraConnectorEP->createProjectCategory(newCategory);
     match output {
         ProjectCategory category => {
-            projectCategory_test = category;
+            projectCategory_test = untaint category;
         }
         JiraConnectorError e => test:assertFail(msg = string `{{e.message}} - { Please retry again after removing
          the project category:'{{newCategory.name}}' from from your jira instance}`);
@@ -386,7 +386,7 @@ function test_getProjectCategory() {
     var output = jiraConnectorEP->getProjectCategory(projectCategory_test.id);
     match output {
         ProjectCategory category => {
-            projectCategory_test = category;
+            projectCategory_test = untaint category;
         }
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
@@ -420,7 +420,7 @@ function test_createIssue() {
 
     var output = jiraConnectorEP->createIssue(newIssue);
     match output {
-        Issue issue => issue_test = issue;
+        Issue issue => issue_test = untaint issue;
 	JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }
@@ -444,7 +444,7 @@ function test_createIssueWithExtraFields() {
     
     var output = jiraConnectorEP->createIssue(newIssue);
     match output {
-        Issue issue => issue_test = issue;
+        Issue issue => issue_test = untaint issue;
         JiraConnectorError e => test:assertFail(msg = formatJiraConnError(e));
     }
 }

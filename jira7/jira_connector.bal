@@ -194,7 +194,7 @@ function JiraConnector::createProject(ProjectRequest newProject) returns Project
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var projectOut = self.getProject(jsonResponse.key.toString());
+                    var projectOut = self.getProject(untaint jsonResponse.key.toString());
                     match projectOut {
                         Project project => return project;
                         JiraConnectorError e => return e;
@@ -542,7 +542,7 @@ function JiraConnector::createProjectComponent(ProjectComponentRequest newProjec
                 JiraConnectorError e => return e;
 
                 json jsonResponse => {
-                    var projectComponentOut = self.getProjectComponent(jsonResponse.id.toString());
+                    var projectComponentOut = self.getProjectComponent(untaint jsonResponse.id.toString());
                     match projectComponentOut {
                         ProjectComponent projectComponent => return projectComponent;
                         JiraConnectorError e => return e;
@@ -799,7 +799,7 @@ function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraCon
         JiraConnectorError e => return e;
 
         json jsonResponse => {
-            var issueOut = self.getIssue(jsonResponse.key.toString());
+            var issueOut = self.getIssue(untaint jsonResponse.key.toString());
             match issueOut {
                 Issue issue => return issue;
                 JiraConnectorError e => return e;
