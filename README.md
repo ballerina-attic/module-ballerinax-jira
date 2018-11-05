@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/package-jira.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-jira)
+[![Build Status](https://travis-ci.org/wso2-ballerina/module-jira.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-jira)
 
 # Ballerina JIRA Connector
 This Ballerina client connector allows to connect to Atlassian JIRA, which provides bug tracking, issue tracking, 
@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.982.0             | 7.2.2                  |
+| 0.983.0             | 7.2.2                  |
 
 
 ### Why do you need the REST API for JIRA
@@ -37,7 +37,7 @@ The following sections provide information on how to use Ballerina JIRA Connecto
   
   `<PROJECT_ROOT_DIRECTORY>$ ballerina init`
   
-- Import the jira package to your Ballerina program as follows.This will download the jira7 artifacts from the 
+- Import the jira module to your Ballerina program as follows.This will download the jira7 artifacts from the 
 `ballerina central` to your local repository.
 
 ```ballerina
