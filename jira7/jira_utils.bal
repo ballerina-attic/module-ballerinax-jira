@@ -33,8 +33,7 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
         error err => {
             JiraConnectorError e = {
                 ^"type": "Http Connector Error",
-                message: err.message,
-                cause: err.cause
+                message: err.message
             };
             return e;
         }

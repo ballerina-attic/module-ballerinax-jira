@@ -21,7 +21,7 @@ import ballerina/config;
 import ballerina/mime;
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
-    JiraConnectorError target = source.message != EMPTY_STRING ? {message:source.message, cause:source.cause} : {};
+    JiraConnectorError target = source.message != EMPTY_STRING ? {message:source.message} : {};
     return target;
 }
 
