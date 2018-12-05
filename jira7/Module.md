@@ -30,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    0.983.0     |
+| Ballerina Language |    0.990.0     |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
@@ -47,31 +47,35 @@ import wso2/jira7;
 
 You can now enter the credentials in the HTTP client config.
 ```ballerina
-endpoint jira7:Client jiraEP {
-    clientConfig:{
-        url:baseUrl
-        auth:{
-            scheme:http:BASIC_AUTH,
-            username:username,
-            password:password
+JiraConfiguration jiraConfig = {
+    baseUrl: config:getAsString("test_url"),
+    clientConfig: {
+        auth: {
+            scheme: http:BASIC_AUTH,
+            username: config:getAsString("test_username"),
+            password: config:getAsString("test_password")
         }
     }
 };
+
+Client jiraConnectorEP = new(jiraConfig);
 ```
 The `getAllProjectSummaries` function returns the project summary of all the projects.
 ```ballerina
 var output = jiraEP->getAllProjectSummaries();
-match output {
-    jira7:ProjectSummary[] projectSummaryArray => io:println(projectSummaryArray);
-    jira7:JiraConnectorError e => io:println(e);
+if (output is jira7:JiraConnectorError) {
+    io:println(output.message);
+} else {
+    io:println(output);
 }
 ```
 The `createProject` function creates a JIRA project with the given name.
 ```ballerina
 var output = jiraEP->createProject("TST_PROJECT");
-match output {
-    jira7:Project p => io:println(p);
-    jira7:JiraConnectorError e => io:println(e);
+if (output is jira7:Project) {
+    io:println(output);
+} else {
+    io:println(output.message);
 }
 ```
 The `createIssue` function creates an issue with the given issue details. `IssueRequest` is a structure that contains all 
@@ -85,8 +89,9 @@ jira7:IssueRequest newIssue = {
     assigneeName: “username”
 };
 var output = jiraEP->createIssue(newIssue);
-match output {
-    jira7:Issue issue => io:println(issue);
-    jira7:JiraConnectorError e => io:println(e);
+if (output is jira7:Issue) {
+    io:println(output);
+} else {
+    io:println(output.message);
 }
 ```

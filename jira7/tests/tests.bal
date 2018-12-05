@@ -450,7 +450,9 @@ function test_createIssueWithExtraFields() {
         description: "test description"
     };
     // Specify the reporter field in json format
-    newIssue.reporter = json.create({name: config:getAsString("test_username")});
+
+    anydata j = <json> {name: config:getAsString("test_username")};
+    newIssue.reporter = j;
     
     var output = jiraConnectorEP->createIssue(newIssue);
     if (output is Issue) {

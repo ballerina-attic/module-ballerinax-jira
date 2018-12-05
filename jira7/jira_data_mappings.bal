@@ -177,13 +177,13 @@ function jsonToIssue(json source) returns Issue {
 
     int i = 0;
     string[] fieldNames = source.fields.getKeys();
-    foreach (fieldName in fieldNames) {
+    foreach var fieldName in fieldNames {
         if (fieldName.hasPrefix("customfield")) {
             target.customFields[i] = {(fieldName):source.fields[fieldName]};
             i +=1;
         }
     }
-    target.comments = jsonToIssueComments(source.fields.comment.comments);
+    target.comments = jsonToIssueComments(<json[]>source.fields.comment.comments);
     return target;
 }
 
@@ -233,9 +233,9 @@ function issueRequestToJson(IssueRequest source) returns json {
     target.fields.assignee = source.assigneeName != EMPTY_STRING ? {name:source.assigneeName} : null;
 
     map<string> sourceMap = {};
-    var value = map<string>.create(source);
+    var value = map<string>.convert(source);
     if (value is error) {
-        return value;
+        log:printError(<string> value.detail().message);
     } else {
         sourceMap = value;
     }
@@ -245,8 +245,8 @@ function issueRequestToJson(IssueRequest source) returns json {
     sourceMap["projectId"] = "";
     sourceMap["assigneeName"] = "";
     
-    foreach f in sourceMap.keys() {
-        var result = json.create(sourceMap[f]);
+    foreach var f in sourceMap.keys() {
+        var result = json.convert(sourceMap[f]);
         if (result.length == 0) {
             sourceMap[f] = "";
         } else {
@@ -256,11 +256,11 @@ function issueRequestToJson(IssueRequest source) returns json {
     return target;
 }
 
-function jsonToIssueComments(json jcomments) returns IssueComment[] {
+function jsonToIssueComments(json[] jcomments) returns IssueComment[] {
 
     IssueComment[] comments = [];
     int l = jcomments.length();
-    foreach (jcomment in jcomments) {
+    foreach json jcomment in jcomments {
         comments[comments.length()] = jsonToIssueComment(jcomment);
     }
     return comments;

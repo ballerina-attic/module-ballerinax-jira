@@ -20,13 +20,12 @@ import ballerina/http;
 
 # Jira Client object.
 # + jiraConnector - JiraConnector Connector object
-# + url - The url of Jira
 public type Client client object {
 
     public JiraConnector jiraConnector;
-    public string url = "";
+
     public function __init(JiraConfiguration jiraConfig) {
-        url = <string>jiraConfig.baseUrl + <string>JIRA_REST_API_RESOURCE + <string>JIRA_REST_API_VERSION;
+        string url = <string>jiraConfig.baseUrl + <string>JIRA_REST_API_RESOURCE + <string>JIRA_REST_API_VERSION;
         jiraConfig.chunking = "NEVER";
         self.jiraConnector = new(url, jiraConfig);
     }
