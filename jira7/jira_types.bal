@@ -343,7 +343,7 @@ public type IssueSummary record {
     string key = "";
     string priorityId = "";
     string statusId = "";
-    IssueType issueType = "";
+    IssueType issueType = {};
 };
 
 # Represent Jira Connector based errors.

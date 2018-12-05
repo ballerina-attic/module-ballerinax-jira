@@ -32,7 +32,7 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
     if (httpConnectorResponse is error) {
         JiraConnectorError e = {
             ^"type": "Http Connector Error",
-            message: httpConnectorResponse.detail().message ?: ""
+            message: <string> httpConnectorResponse.detail().message
         };
         return e;
     } else {
@@ -51,7 +51,7 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
             };
             //Extracting the error response from the JSON payload of the Jira server response
             if (httpConnectorResponse.getJsonPayload() is json) {
-                e.jiraServerErrorLog = httpConnectorResponse.getJsonPayload();
+                e.jiraServerErrorLog = <json> httpConnectorResponse.getJsonPayload();
                 e.jiraServerErrorLog = null;
                 }
             return e;

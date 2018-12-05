@@ -33,48 +33,41 @@ public type JiraConnector client object {
     # Returns an array of all projects summaries which are visible for the currently logged in user who has
     # `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
     # + return - Array of `ProjectSummary` objects or `JiraConnectorError` record
-    remote function getAllProjectSummaries()
-                        returns ProjectSummary[]|JiraConnectorError;
+    remote function getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError;
 
     # Returns detailed representation of the summarized project, if the project exists,the user has
     # permission to view it and if no any error occured.
     # + projectSummary - `ProjectSummary` object
     # + return - `Project` object or `JiraConnectorError` record
-    remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
-                        returns Project|JiraConnectorError;
+    remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns Project|JiraConnectorError;
 
     # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + newProject - Record which contains the mandatory fields for new project creation
     # + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
-    remote function createProject(ProjectRequest newProject)
-                        returns Project|JiraConnectorError;
+    remote function createProject(ProjectRequest newProject) returns Project|JiraConnectorError;
 
     # Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
     # Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function updateProject(string projectIdOrKey, ProjectRequest update)
-                        returns boolean|JiraConnectorError;
+    remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function deleteProject(string projectIdOrKey)
-                        returns boolean|JiraConnectorError;
+    remote function deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError;
 
     # Returns detailed representation of a project, if the project exists,the user has permission
     # to view it and if no any error occured.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + return - `Project` type object or `JiraConnectorError` record
-    remote function getProject(string projectIdOrKey)
-                        returns Project|JiraConnectorError;
+    remote function getProject(string projectIdOrKey) returns Project|JiraConnectorError;
 
     # Returns Jira user details of the project lead.
     # + project - `Project` type record
     # + return - `User` type record containing user details of the project lead. or `JiraConnectorError` record
-    remote function getLeadUserDetailsOfProject(Project project)
-                        returns User|JiraConnectorError;
+    remote function getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError;
 
     # Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
     # + project - `Project` type record
@@ -257,7 +250,7 @@ remote function JiraConnector.getAllProjectSummaries() returns ProjectSummary[]|
             return errorToJiraConnectorError(err);
         } else {
             int i = 0;
-            foreach (jsonProject in jsonResponseArrayOut) {
+            foreach var jsonProject in jsonResponseArrayOut {
                 projects[i] = jsonToProjectSummary(jsonProject);
                 i += 1;
             }
@@ -273,17 +266,17 @@ remote function JiraConnector.getAllDetailsFromProjectSummary(ProjectSummary pro
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    if (jsonResponseOut is JiraConnectorError) {
-        return jsonResponseOut;
-    } else {
+    if (jsonResponseOut is json) {
         jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
         jsonResponseOut.lead.name : null : null;
-        var projectOut = Project.create(jsonResponseOut);
+        var projectOut = Project.convert(jsonResponseOut);
         if(projectOut is Project) {
             return projectOut;
         } else {
             return errorToJiraConnectorError(projectOut);
         }
+    } else {
+        return jsonResponseOut;
     }
 }
 
@@ -291,7 +284,7 @@ remote function JiraConnector.createProject(ProjectRequest newProject) returns P
 
     http:Request outRequest = new;
 
-    var jsonPayloadOut = json.create(newProject);
+    var jsonPayloadOut = json.convert(newProject);
     if (jsonPayloadOut is error) {
         return errorToJiraConnectorError(jsonPayloadOut);
     } else {
@@ -304,7 +297,7 @@ remote function JiraConnector.createProject(ProjectRequest newProject) returns P
         if (jsonResponseOut is JiraConnectorError) {
             return jsonResponseOut;
         } else {
-            var projectOut = self.getProject(untaint jsonResponseOut.key.toString());
+            var projectOut = self->getProject(untaint jsonResponseOut.key.toString());
             if (projectOut is Project) {
                   return projectOut;
             } else {
@@ -360,7 +353,7 @@ remote function JiraConnector.getProject(string projectIdOrKey) returns Project|
     } else {
         jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
         jsonResponseOut.lead.name : null : null;
-        var projectOut = Project.create(jsonResponseOut);
+        var projectOut = Project.convert(jsonResponseOut);
         if (projectOut is error) {
             return errorToJiraConnectorError(projectOut);
         } else {
@@ -378,7 +371,7 @@ remote function JiraConnector.getLeadUserDetailsOfProject(Project project) retur
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.create(jsonResponseOut);
+        var userOut = User.convert(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -397,7 +390,7 @@ remote function JiraConnector.getRoleDetailsOfProject(Project project, string pr
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var projectRoleOut = ProjectRole.create(jsonResponseOut);
+        var projectRoleOut = ProjectRole.convert(jsonResponseOut);
         if (projectRoleOut is error) {
             return errorToJiraConnectorError(projectRoleOut);
         } else {
@@ -488,14 +481,14 @@ remote function JiraConnector.getAllIssueTypeStatusesOfProject(Project project)
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var jsonResponseArrayOut = json[].create(jsonResponseOut);
+        var jsonResponseArrayOut = json[].convert(jsonResponseOut);
         if (jsonResponseArrayOut is error) {
             return errorToJiraConnectorError(jsonResponseArrayOut);
         } else {
             ProjectStatus[] statusArray = [];
             int i = 0;
-            foreach (status in jsonResponseArrayOut) {
-                var statusOut = ProjectStatus.create(status);
+            foreach var status in jsonResponseArrayOut {
+                var statusOut = ProjectStatus.convert(status);
                 if (statusOut is error) {
                     return errorToJiraConnectorError(statusOut);
                 } else {
@@ -529,7 +522,7 @@ remote function JiraConnector.createProjectComponent(ProjectComponentRequest new
 
     http:Request outRequest = new;
 
-    var jsonPayloadOut = json.create(newProjectComponent);
+    var jsonPayloadOut = json.convert(newProjectComponent);
     if (jsonPayloadOut is error) {
         return errorToJiraConnectorError(jsonPayloadOut);
     } else {
@@ -541,7 +534,7 @@ remote function JiraConnector.createProjectComponent(ProjectComponentRequest new
         if (jsonResponseOut is JiraConnectorError) {
             return jsonResponseOut;
         } else {
-            var projectComponentOut = self.getProjectComponent(untaint jsonResponseOut.id.toString());
+            var projectComponentOut = self->getProjectComponent(untaint jsonResponseOut.id.toString());
             if(projectComponentOut is ProjectComponent) {
                 return projectComponentOut;
             } else {
@@ -589,7 +582,7 @@ remote function JiraConnector.getAssigneeUserDetailsOfProjectComponent(ProjectCo
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.create(jsonResponseOut);
+        var userOut = User.convert(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -608,7 +601,7 @@ remote function JiraConnector.getLeadUserDetailsOfProjectComponent(ProjectCompon
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.create(jsonResponseOut);
+        var userOut = User.convert(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -625,14 +618,14 @@ remote function JiraConnector.getAllProjectCategories() returns ProjectCategory[
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var jsonResponseArrayOut = json[].create(jsonResponseOut);
+        var jsonResponseArrayOut = json[].convert(jsonResponseOut);
         if (jsonResponseArrayOut is error) {
             return errorToJiraConnectorError(jsonResponseArrayOut);
         } else {
             ProjectCategory[] projectCategories = [];
             int i = 0;
-            foreach (jsonProjectCategory in jsonResponseArrayOut) {
-                var projectCategoryOut = ProjectCategory.create(jsonProjectCategory);
+            foreach var jsonProjectCategory in jsonResponseArrayOut {
+                var projectCategoryOut = ProjectCategory.convert(jsonProjectCategory);
                 if (projectCategoryOut is error) {
                     return errorToJiraConnectorError(projectCategoryOut);
                 } else {
@@ -654,7 +647,7 @@ remote function JiraConnector.getProjectCategory(string projectCategoryId) retur
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var projectCategoryOut = ProjectCategory.create(jsonResponseOut);
+        var projectCategoryOut = ProjectCategory.convert(jsonResponseOut);
         if (projectCategoryOut is error) {
             return errorToJiraConnectorError(projectCategoryOut);
         } else {
@@ -668,7 +661,7 @@ remote function JiraConnector.createProjectCategory(ProjectCategoryRequest newCa
 
     http:Request outRequest = new;
 
-    var jsonPayloadOut = json.create(newCategory);
+    var jsonPayloadOut = json.convert(newCategory);
     if (jsonPayloadOut is error) {
         return errorToJiraConnectorError(jsonPayloadOut);
     } else {
@@ -681,7 +674,7 @@ remote function JiraConnector.createProjectCategory(ProjectCategoryRequest newCa
         if (jsonResponseOut is JiraConnectorError) {
             return jsonResponseOut;
         } else {
-            var ProjectCategoryOut = self.getProjectCategory(untaint jsonResponseOut.id.toString());
+            var ProjectCategoryOut = self->getProjectCategory(untaint jsonResponseOut.id.toString());
             if (ProjectCategoryOut is ProjectCategory) {
                 return ProjectCategoryOut;
             } else {
@@ -738,7 +731,7 @@ remote function JiraConnector.createIssue(IssueRequest newIssue) returns Issue|J
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var issueOut = self.getIssue(untaint jsonResponseOut.key.toString());
+        var issueOut = self->getIssue(untaint jsonResponseOut.key.toString());
         if (issueOut is Issue) {
             return issueOut;
         } else {
