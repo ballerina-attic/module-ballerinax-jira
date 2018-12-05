@@ -29,38 +29,32 @@ import ballerina/mime;
 function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|JiraConnectorError {
 
     //checks for any http errors
-    match httpConnectorResponse {
-        error err => {
-            JiraConnectorError e = {
-                ^"type": "Http Connector Error",
-                message: err["message"] ?: "",
-                cause: err["cause"] ?: {}
-            };
-            return e;
-        }
-        http:Response response => {
-
-            if (hasValidStatusCode(response)) { //if there is no any http connector error or jira server error
-                var payloadOutput = response.getJsonPayload();
-                match payloadOutput {
-                    json jsonOut => return jsonOut;
-                    error e => {
-                        return null;
-                    }
-                }
+    if (httpConnectorResponse is error) {
+        JiraConnectorError e = {
+            ^"type": "Http Connector Error",
+            message: httpConnectorResponse.detail().message ?: ""
+        };
+        return e;
+    } else {
+        if (hasValidStatusCode(httpConnectorResponse)) { //if there is no any http connector error or jira server error
+            var payloadOutput = httpConnectorResponse.getJsonPayload();
+            if (payloadOutput is json) {
+                return payloadOutput;
             } else {
-                JiraConnectorError e = {
-                    ^"type": "Jira Server Error",
-                    message: string `status {{<string>response.statusCode}}: {{response.reasonPhrase}}`
-                };
+                return null;
 
-                //Extracting the error response from the JSON payload of the Jira server response
-                match response.getJsonPayload() {
-                    json jsonPayload => e.jiraServerErrorLog = jsonPayload;
-                    error => e.jiraServerErrorLog = null;
-                }
-                return e;
             }
+        } else {
+            JiraConnectorError e = {
+                ^"type": "Jira Server Error",
+                message: "status" + <string>httpConnectorResponse.statusCode + ":" + httpConnectorResponse.reasonPhrase
+            };
+            //Extracting the error response from the JSON payload of the Jira server response
+            if (httpConnectorResponse.getJsonPayload() is json) {
+                e.jiraServerErrorLog = httpConnectorResponse.getJsonPayload();
+                e.jiraServerErrorLog = null;
+                }
+            return e;
         }
     }
 }

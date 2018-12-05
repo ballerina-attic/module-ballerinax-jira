@@ -19,834 +19,766 @@
 import ballerina/http;
 import ballerina/log;
 
-# Represents Jira Client Connector Object.
-public type JiraConnector object {
+# Object to initialize the connection with Jira.
+#
+# + jiraClient - The HTTP Client
+public type JiraConnector client object {
 
-    http:Client jiraHttpClient = new;
+    public http:Client jiraClient;
 
-    public function getAllProjectSummaries()
+    public function __init(string url, JiraConfiguration jiraConfig) {
+        self.jiraClient = new(url, config = jiraConfig.clientConfig);
+    }
+
+    # Returns an array of all projects summaries which are visible for the currently logged in user who has
+    # `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
+    # + return - Array of `ProjectSummary` objects or `JiraConnectorError` record
+    remote function getAllProjectSummaries()
                         returns ProjectSummary[]|JiraConnectorError;
 
-    public function getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
+    # Returns detailed representation of the summarized project, if the project exists,the user has
+    # permission to view it and if no any error occured.
+    # + projectSummary - `ProjectSummary` object
+    # + return - `Project` object or `JiraConnectorError` record
+    remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
                         returns Project|JiraConnectorError;
 
-    public function createProject(ProjectRequest newProject)
+    # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
+    # + newProject - Record which contains the mandatory fields for new project creation
+    # + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
+    remote function createProject(ProjectRequest newProject)
                         returns Project|JiraConnectorError;
 
-    public function updateProject(string projectIdOrKey, ProjectRequest update)
+    # Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
+    # Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
+    # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+    # + update - Record which contain fields which need to be updated
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function updateProject(string projectIdOrKey, ProjectRequest update)
                         returns boolean|JiraConnectorError;
 
-    public function deleteProject(string projectIdOrKey)
+    # Deletes a project.
+    # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function deleteProject(string projectIdOrKey)
                         returns boolean|JiraConnectorError;
 
-    public function getProject(string projectIdOrKey)
+    # Returns detailed representation of a project, if the project exists,the user has permission
+    # to view it and if no any error occured.
+    # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
+    # + return - `Project` type object or `JiraConnectorError` record
+    remote function getProject(string projectIdOrKey)
                         returns Project|JiraConnectorError;
 
-    public function getLeadUserDetailsOfProject(Project project)
+    # Returns Jira user details of the project lead.
+    # + project - `Project` type record
+    # + return - `User` type record containing user details of the project lead. or `JiraConnectorError` record
+    remote function getLeadUserDetailsOfProject(Project project)
                         returns User|JiraConnectorError;
 
-    public function getRoleDetailsOfProject(Project project, string projectRoleId)
+    # Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
+    # + project - `Project` type record
+    # + projectRoleId - Id of the project role(
+    #        `ROLE_ID_ADMINISTRATORS`,
+    #        `ROLE_ID_CSAT_DEVELOPERS`,
+    #        `ROLE_ID_DEVELOPERS`,
+    #        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+    #        `ROLE_ID_NOTIFICATIONS`,
+    #        `ROLE_ID_OBSERVER`,
+    #        `ROLE_ID_USERS`
+    #    )
+    # + return - `ProjectRole` object containing the details of the requested role or `JiraConnectorError` record
+    remote function getRoleDetailsOfProject(Project project, string projectRoleId)
                         returns ProjectRole|JiraConnectorError;
 
-    public function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
+    # Assigns a user to a given project role.
+    # + project - `Project` type record
+    # + projectRoleId - Id of the project role(
+    #        `ROLE_ID_ADMINISTRATORS`,
+    #        `ROLE_ID_CSAT_DEVELOPERS`,
+    #        `ROLE_ID_DEVELOPERS`,
+    #        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+    #        `ROLE_ID_NOTIFICATIONS`,
+    #        `ROLE_ID_OBSERVER`,
+    #        `ROLE_ID_USERS`
+    #    )
+    # + userName - Jira account username of the user to be added
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                         returns boolean|JiraConnectorError;
 
-    public function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
+    # Assigns a group to a given project role.
+    # + project - `Project` type record
+    # + projectRoleId - Id of the project role(
+    #        `ROLE_ID_ADMINISTRATORS`,
+    #        `ROLE_ID_CSAT_DEVELOPERS`,
+    #        `ROLE_ID_DEVELOPERS`,
+    #        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+    #        `ROLE_ID_NOTIFICATIONS`,
+    #        `ROLE_ID_OBSERVER`,
+    #        `ROLE_ID_USERS`
+    #    )
+    # + groupName - Name of the group to be added
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                         returns boolean|JiraConnectorError;
 
-    public function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
+    # Removes a given user from a given project role.
+    # + project - `Project` type record
+    # + projectRoleId - Id of the project role(
+    #        `ROLE_ID_ADMINISTRATORS`,
+    #        `ROLE_ID_CSAT_DEVELOPERS`,
+    #        `ROLE_ID_DEVELOPERS`,
+    #        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+    #        `ROLE_ID_NOTIFICATIONS`,
+    #        `ROLE_ID_OBSERVER`,
+    #        `ROLE_ID_USERS`
+    #    )
+    # + userName - Name of the user required to be removed
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                         returns boolean|JiraConnectorError;
 
-    public function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
+    # Removes a given group from a given project role.
+    # + project - `Project` type record
+    # + projectRoleId - id of the project role(
+    #        `ROLE_ID_ADMINISTRATORS`,
+    #        `ROLE_ID_CSAT_DEVELOPERS`,
+    #        `ROLE_ID_DEVELOPERS`,
+    #        `ROLE_ID_EXTERNAL_CONSULTANTS`,
+    #        `ROLE_ID_NOTIFICATIONS`,
+    #        `ROLE_ID_OBSERVER`,
+    #        `ROLE_ID_USERS`
+    #    )
+    # + groupName - Name of the group required to be removed
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                         returns boolean|JiraConnectorError;
 
-    public function getAllIssueTypeStatusesOfProject(Project project)
-                        returns ProjectStatus[]|JiraConnectorError;
+    # Gets all issue types with valid status values for a project.
+    # + project - `Project` type record
+    # + return - Array of `ProjectStatus` type records or `JiraConnectorError` record
+    remote function getAllIssueTypeStatusesOfProject(Project project) returns ProjectStatus[]|JiraConnectorError;
 
-    public function changeTypeOfProject(Project project, string newProjectType)
+    # Updates the type of a Jira project.
+    # + project - `Project` type record
+    # + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function changeTypeOfProject(Project project, string newProjectType)
                         returns boolean|JiraConnectorError;
 
-    public function createProjectComponent(ProjectComponentRequest newProjectComponent)
+    # Creates a new project component.
+    # + newProjectComponent - Record which contains the mandatory fields for new project component creation
+    # + return - `ProjectComponent` object which contains the created project component or `JiraConnectorError` record
+    remote function createProjectComponent(ProjectComponentRequest newProjectComponent)
                         returns ProjectComponent|JiraConnectorError;
 
-    public function getProjectComponent(string componentId)
+    # Returns detailed representation of project component.
+    # + componentId - string which contains a unique id for a given component.
+    # + return - `ProjectComponent` type record or `JiraConnectorError` record
+    remote function getProjectComponent(string componentId)
                         returns ProjectComponent|JiraConnectorError;
 
-    public function deleteProjectComponent(string componentId)
+    # Deletes a project component.
+    # + componentId - string which contains a unique id for a given component
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function deleteProjectComponent(string componentId)
                         returns boolean|JiraConnectorError;
 
-    public function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+    # Returns jira user details of the assignee of the project component.
+    # + projectComponent - `ProjectComponent` type record
+    # + return - `User` object containing user details of the assignee. or `JiraConnectorError` record
+    remote function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                         returns User|JiraConnectorError;
 
-    public function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+    # Returns jira user details of the lead of the project component.
+    # + projectComponent - `ProjectComponent` type record
+    # + return - `User` object containing user details of the lead or `JiraConnectorError` record
+    remote function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                         returns User|JiraConnectorError;
 
-    public function getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError;
+    # Returns all existing project categories.
+    # + return - Array of `ProjectCategory` objects or `JiraConnectorError` record
+    remote function getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError;
 
-    public function getProjectCategory(string projectCategoryId)
+    # Returns a detailed representation of a project category.
+    # + projectCategoryId - Jira id of the project category
+    # + return - `ProjectCategory` type records or `JiraConnectorError` record
+    remote function getProjectCategory(string projectCategoryId)
                         returns ProjectCategory|JiraConnectorError;
 
-    public function createProjectCategory(ProjectCategoryRequest newCategory)
+    # Create a new project category.
+    # + newCategory - Record which contains the mandatory fields for new project category creation
+    # + return - `ProjectCategory` type records or `JiraConnectorError` record
+    remote function createProjectCategory(ProjectCategoryRequest newCategory)
                         returns ProjectCategory|JiraConnectorError;
 
-    public function deleteProjectCategory(string projectCategoryId)
+    # Delete a project category.
+    # + projectCategoryId - Jira id of the project category
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function deleteProjectCategory(string projectCategoryId)
                         returns boolean|JiraConnectorError;
 
-    public function getIssue(string issueIdOrKey)
-                        returns Issue|JiraConnectorError;
+    # Returns a detailed representation of a jira issue.
+    # + issueIdOrKey - Id or key of the required issue
+    # + return - `Issue` type record or `JiraConnectorError` record
+    remote function getIssue(string issueIdOrKey) returns Issue|JiraConnectorError;
 
-    public function createIssue(IssueRequest newIssue)
-                        returns Issue|JiraConnectorError;
+    # Creates a new jira issue.
+    # + newIssue - Record which contains the mandatory fields for new issue creation
+    # + return - `Issue` type record or `JiraConnectorError` record
+    remote function createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError;
+    # Deletes a jira issue.
+    # + issueIdOrKey - Id or key of the issue
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError;
 
-    public function deleteIssue(string issueIdOrKey)
-                        returns boolean|JiraConnectorError;
-
-    public function addCommentToIssue(string issueIdOrKey, IssueComment comment)
+    # Adds a comment to a Jira Issue.
+    # + issueIdOrKey - Id or key of the issue
+    # + comment - The details of the comment to be added
+    # + return - returns true if the process is successful or `JiraConnectorError` record
+    remote function addCommentToIssue(string issueIdOrKey, IssueComment comment)
                         returns boolean|JiraConnectorError;
 };
 
-# Returns an array of all projects summaries which are visible for the currently logged in user who has
-# `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
-# + return - Array of `ProjectSummary` objects or `JiraConnectorError` record
-function JiraConnector::getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
+remote function JiraConnector.getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     ProjectSummary[] projects = [];
 
-    var httpResponseOut = jiraHttpClientEP->get("/project?expand=description");
+    var httpResponseOut = self.jiraClient->get("/project?expand=description");
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var jsonResponseArrayOut = <json[]>jsonResponse;
-            match jsonResponseArrayOut {
-                error err => return errorToJiraConnectorError(err);
-
-                json[] jsonResponseArray => {
-                    if (jsonResponseArray == null) {
-                        error err = { message: "Error: server response doesn't contain any projects." };
-                        return errorToJiraConnectorError(err);
-                    }
-
-                    int i = 0;
-                    foreach (jsonProject in jsonResponseArray) {
-                        projects[i] = jsonToProjectSummary(jsonProject);
-                        i += 1;
-                    }
-                    return projects;
-                }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var jsonResponseArrayOut = <json[]>jsonResponseOut;
+        if (jsonResponseArrayOut.length() == 0) {
+            error err = error(JIRA_ERROR_CODE, { message: "Error: server response doesn't contain any projects." });
+            return errorToJiraConnectorError(err);
+        } else {
+            int i = 0;
+            foreach (jsonProject in jsonResponseArrayOut) {
+                projects[i] = jsonToProjectSummary(jsonProject);
+                i += 1;
             }
+            return projects;
         }
     }
 }
 
-# Returns detailed representation of the summarized project, if the project exists,the user has
-# permission to view it and if no any error occured.
-# + projectSummary - `ProjectSummary` object
-# + return - `Project` object or `JiraConnectorError` record
-function JiraConnector::getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
+remote function JiraConnector.getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
                                    returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + projectSummary.key);
+    var httpResponseOut = self.jiraClient->get("/project/" + projectSummary.key);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
-            jsonResponse.lead.name                                                             : null:
-            null;
-            var projectOut = <Project>jsonResponse;
-            match projectOut {
-                error err => return errorToJiraConnectorError(err);
-                Project project => return project;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
+        jsonResponseOut.lead.name : null : null;
+        var projectOut = Project.create(jsonResponseOut);
+        if(projectOut is Project) {
+            return projectOut;
+        } else {
+            return errorToJiraConnectorError(projectOut);
         }
     }
 }
 
-# Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
-# + newProject - Record which contains the mandatory fields for new project creation
-# + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
-function JiraConnector::createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
+remote function JiraConnector.createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var jsonPayloadOut = <json>newProject;
-    match jsonPayloadOut {
-        error err => return errorToJiraConnectorError(err);
+    var jsonPayloadOut = json.create(newProject);
+    if (jsonPayloadOut is error) {
+        return errorToJiraConnectorError(jsonPayloadOut);
+    } else {
+        outRequest.setJsonPayload(jsonPayloadOut);
 
-        json jsonPayload => {
-            outRequest.setJsonPayload(jsonPayload);
+        var httpResponseOut = self.jiraClient->post("/project", outRequest);
+        //Evaluate http response for connection and server errors
+        var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-            var httpResponseOut = jiraHttpClientEP->post("/project", outRequest);
-            //Evaluate http response for connection and server errors
-            var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
-            match jsonResponseOut {
-                JiraConnectorError e => return e;
-
-                json jsonResponse => {
-                    var projectOut = self.getProject(untaint jsonResponse.key.toString());
-                    match projectOut {
-                        Project project => return project;
-                        JiraConnectorError e => return e;
-                    }
-                }
+        if (jsonResponseOut is JiraConnectorError) {
+            return jsonResponseOut;
+        } else {
+            var projectOut = self.getProject(untaint jsonResponseOut.key.toString());
+            if (projectOut is Project) {
+                  return projectOut;
+            } else {
+                return projectOut;
             }
         }
     }
 }
 
-# Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
-# Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
-# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-# + update - Record which contain fields which need to be updated
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::updateProject(string projectIdOrKey, ProjectRequest update)
+remote function JiraConnector.updateProject(string projectIdOrKey, ProjectRequest update)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
     json jsonPayload;
     jsonPayload = projectRequestToJson(update);
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->put("/project/" + projectIdOrKey, outRequest);
+    var httpResponseOut = self.jiraClient->put("/project/" + projectIdOrKey, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Deletes a project.
-# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
+remote function JiraConnector.deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + projectIdOrKey, outRequest);
+    var httpResponseOut = self.jiraClient->delete("/project/" + projectIdOrKey, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Returns detailed representation of a project, if the project exists,the user has permission
-# to view it and if no any error occured.
-# + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-# + return - `Project` type object or `JiraConnectorError` record
-function JiraConnector::getProject(string projectIdOrKey) returns Project|JiraConnectorError {
+remote function JiraConnector.getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + projectIdOrKey);
+    var httpResponseOut = self.jiraClient->get("/project/" + projectIdOrKey);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            jsonResponse.leadName = jsonResponse.lead != null ? jsonResponse.lead.name != null ?
-            jsonResponse.lead.name                                                             : null :
-            null;
-            var projectOut = <Project>jsonResponse;
-            match projectOut {
-                error err => return errorToJiraConnectorError(err);
-                Project project => return project;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
+        jsonResponseOut.lead.name : null : null;
+        var projectOut = Project.create(jsonResponseOut);
+        if (projectOut is error) {
+            return errorToJiraConnectorError(projectOut);
+        } else {
+            return projectOut;
         }
     }
 }
 
-# Returns Jira user details of the project lead.
-# + project - `Project` type record
-# + return - `User` type record containing user details of the project lead. or `JiraConnectorError` record
-function JiraConnector::getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
+remote function JiraConnector.getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + project.leadName);
+    var httpResponseOut = self.jiraClient->get("/user?username=" + project.leadName);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var userOut = <User>jsonResponse;
-            match userOut {
-                error err => return errorToJiraConnectorError(err);
-                User lead => return lead;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var userOut = User.create(jsonResponseOut);
+        if (userOut is error) {
+            return errorToJiraConnectorError(userOut);
+        } else {
+           return userOut;
         }
     }
 }
 
-# Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
-# + project - `Project` type record
-# + projectRoleId - Id of the project role(
-#        `ROLE_ID_ADMINISTRATORS`,
-#        `ROLE_ID_CSAT_DEVELOPERS`,
-#        `ROLE_ID_DEVELOPERS`,
-#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
-#        `ROLE_ID_NOTIFICATIONS`,
-#        `ROLE_ID_OBSERVER`,
-#        `ROLE_ID_USERS`
-#    )
-# + return - `ProjectRole` object containing the details of the requested role or `JiraConnectorError` record
-function JiraConnector::getRoleDetailsOfProject(Project project, string projectRoleId)
+remote function JiraConnector.getRoleDetailsOfProject(Project project, string projectRoleId)
                                    returns ProjectRole|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + project.key + "/role/" + projectRoleId);
+    var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/role/" + projectRoleId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var projectRoleOut = <ProjectRole>jsonResponse;
-            match projectRoleOut {
-                error err => return errorToJiraConnectorError(err);
-                ProjectRole projectRole => return projectRole;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var projectRoleOut = ProjectRole.create(jsonResponseOut);
+        if (projectRoleOut is error) {
+            return errorToJiraConnectorError(projectRoleOut);
+        } else {
+            return projectRoleOut;
         }
     }
 }
 
-# Assigns a user to a given project role.
-# + project - `Project` type record
-# + projectRoleId - Id of the project role(
-#        `ROLE_ID_ADMINISTRATORS`,
-#        `ROLE_ID_CSAT_DEVELOPERS`,
-#        `ROLE_ID_DEVELOPERS`,
-#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
-#        `ROLE_ID_NOTIFICATIONS`,
-#        `ROLE_ID_OBSERVER`,
-#        `ROLE_ID_USERS`
-#    )
-# + userName - Jira account username of the user to be added
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::addUserToRoleOfProject(Project project, string projectRoleId, string userName)
+remote function JiraConnector.addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
     json jsonPayload = { "user": [userName] };
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
+    var httpResponseOut = self.jiraClient->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Assigns a group to a given project role.
-# + project - `Project` type record
-# + projectRoleId - Id of the project role(
-#        `ROLE_ID_ADMINISTRATORS`,
-#        `ROLE_ID_CSAT_DEVELOPERS`,
-#        `ROLE_ID_DEVELOPERS`,
-#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
-#        `ROLE_ID_NOTIFICATIONS`,
-#        `ROLE_ID_OBSERVER`,
-#        `ROLE_ID_USERS`
-#    )
-# + groupName - Name of the group to be added
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
+remote function JiraConnector.addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
     json jsonPayload = { "group": [groupName] };
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
+    var httpResponseOut = self.jiraClient->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Removes a given user from a given project role.
-# + project - `Project` type record
-# + projectRoleId - Id of the project role(
-#        `ROLE_ID_ADMINISTRATORS`,
-#        `ROLE_ID_CSAT_DEVELOPERS`,
-#        `ROLE_ID_DEVELOPERS`,
-#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
-#        `ROLE_ID_NOTIFICATIONS`,
-#        `ROLE_ID_OBSERVER`,
-#        `ROLE_ID_USERS`
-#    )
-# + userName - Name of the user required to be removed
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
+remote function JiraConnector.removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + project.key + "/role/" +
+    var httpResponseOut = self.jiraClient->delete("/project/" + project.key + "/role/" +
             projectRoleId + "?user=" + userName, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Removes a given group from a given project role.
-# + project - `Project` type record
-# + projectRoleId - id of the project role(
-#        `ROLE_ID_ADMINISTRATORS`,
-#        `ROLE_ID_CSAT_DEVELOPERS`,
-#        `ROLE_ID_DEVELOPERS`,
-#        `ROLE_ID_EXTERNAL_CONSULTANTS`,
-#        `ROLE_ID_NOTIFICATIONS`,
-#        `ROLE_ID_OBSERVER`,
-#        `ROLE_ID_USERS`
-#    )
-# + groupName - Name of the group required to be removed
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
+remote function JiraConnector.removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/project/" + project.key + "/role/" +
+    var httpResponseOut = self.jiraClient->delete("/project/" + project.key + "/role/" +
             projectRoleId + "?group=" + groupName, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Gets all issue types with valid status values for a project.
-# + project - `Project` type record
-# + return - Array of `ProjectStatus` type records or `JiraConnectorError` record
-function JiraConnector::getAllIssueTypeStatusesOfProject(Project project)
+remote function JiraConnector.getAllIssueTypeStatusesOfProject(Project project)
                                    returns ProjectStatus[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/project/" + project.key + "/statuses");
+    var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/statuses");
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var jsonResponseArrayOut = <json[]>jsonResponse;
-            match jsonResponseArrayOut {
-                error err => return errorToJiraConnectorError(err);
-
-                json[] jsonResponseArray => {
-                    ProjectStatus[] statusArray = [];
-                    int i = 0;
-                    foreach (status in jsonResponseArray) {
-                        var statusOut = <ProjectStatus>status;
-                        match statusOut {
-                            error err => return errorToJiraConnectorError(err);
-
-                            ProjectStatus projectStatus => {
-                                statusArray[i] = projectStatus;
-                                i += 1;
-                            }
-                        }
-                    }
-                    return statusArray;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var jsonResponseArrayOut = json[].create(jsonResponseOut);
+        if (jsonResponseArrayOut is error) {
+            return errorToJiraConnectorError(jsonResponseArrayOut);
+        } else {
+            ProjectStatus[] statusArray = [];
+            int i = 0;
+            foreach (status in jsonResponseArrayOut) {
+                var statusOut = ProjectStatus.create(status);
+                if (statusOut is error) {
+                    return errorToJiraConnectorError(statusOut);
+                } else {
+                    statusArray[i] = statusOut;
+                    i += 1;
                 }
             }
+            return statusArray;
         }
     }
 }
 
-# Updates the type of a Jira project.
-# + project - `Project` type record
-# + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::changeTypeOfProject(Project project, string newProjectType)
+remote function JiraConnector.changeTypeOfProject(Project project, string newProjectType)
                                    returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->put("/project/" + project.key + "/type/" + newProjectType, outRequest);
+    var httpResponseOut = self.jiraClient->put("/project/" + project.key + "/type/" + newProjectType, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Creates a new project component.
-# + newProjectComponent - Record which contains the mandatory fields for new project component creation
-# + return - `ProjectComponent` object which contains the created project component or `JiraConnectorError` record
-function JiraConnector::createProjectComponent(ProjectComponentRequest newProjectComponent)
+remote function JiraConnector.createProjectComponent(ProjectComponentRequest newProjectComponent)
                                    returns ProjectComponent|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var jsonPayloadOut = <json>newProjectComponent;
-    match jsonPayloadOut {
-        error err => return errorToJiraConnectorError(err);
+    var jsonPayloadOut = json.create(newProjectComponent);
+    if (jsonPayloadOut is error) {
+        return errorToJiraConnectorError(jsonPayloadOut);
+    } else {
+        outRequest.setJsonPayload(jsonPayloadOut);
 
-        json jsonPayload => {
-            outRequest.setJsonPayload(jsonPayload);
-
-            var httpResponseOut = jiraHttpClientEP->post("/component/", outRequest);
-            //Evaluate http response for connection and server errors
-            var jsonResponseOut = getValidatedResponse(httpResponseOut);
-            match jsonResponseOut {
-                JiraConnectorError e => return e;
-
-                json jsonResponse => {
-                    var projectComponentOut = self.getProjectComponent(untaint jsonResponse.id.toString());
-                    match projectComponentOut {
-                        ProjectComponent projectComponent => return projectComponent;
-                        JiraConnectorError e => return e;
-                    }
-                }
+        var httpResponseOut = self.jiraClient->post("/component/", outRequest);
+        //Evaluate http response for connection and server errors
+        var jsonResponseOut = getValidatedResponse(httpResponseOut);
+        if (jsonResponseOut is JiraConnectorError) {
+            return jsonResponseOut;
+        } else {
+            var projectComponentOut = self.getProjectComponent(untaint jsonResponseOut.id.toString());
+            if(projectComponentOut is ProjectComponent) {
+                return projectComponentOut;
+            } else {
+                return projectComponentOut;
             }
         }
     }
 }
 
-# Returns detailed representation of project component.
-# + componentId - string which contains a unique id for a given component.
-# + return - `ProjectComponent` type record or `JiraConnectorError` record
-function JiraConnector::getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
+remote function JiraConnector.getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/component/" + componentId);
+    var httpResponseOut = self.jiraClient->get("/component/" + componentId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            ProjectComponent component = jsonToProjectComponent(jsonResponse);
-            return component;
-        }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        ProjectComponent component = jsonToProjectComponent(jsonResponseOut);
+        return component;
     }
 }
 
-# Deletes a project component.
-# + componentId - string which contains a unique id for a given component
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
+remote function JiraConnector.deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/component/" + componentId, outRequest);
+    var httpResponseOut = self.jiraClient->delete("/component/" + componentId, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Returns jira user details of the assignee of the project component.
-# + projectComponent - `ProjectComponent` type record
-# + return - `User` object containing user details of the assignee. or `JiraConnectorError` record
-function JiraConnector::getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+remote function JiraConnector.getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + projectComponent.assigneeName);
+    var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.assigneeName);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var userOut = <User>jsonResponse;
-            match userOut {
-                error err => return errorToJiraConnectorError(err);
-                User assignee => return assignee;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var userOut = User.create(jsonResponseOut);
+        if (userOut is error) {
+            return errorToJiraConnectorError(userOut);
+        } else {
+            return userOut;
         }
     }
 }
 
-# Returns jira user details of the lead of the project component.
-# + projectComponent - `ProjectComponent` type record
-# + return - `User` object containing user details of the lead or `JiraConnectorError` record
-function JiraConnector::getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+remote function JiraConnector.getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                    returns User|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/user?username=" + projectComponent.leadName);
+    var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.leadName);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var userOut = <User>jsonResponse;
-            match userOut {
-                error err => return errorToJiraConnectorError(err);
-                User lead => return lead;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var userOut = User.create(jsonResponseOut);
+        if (userOut is error) {
+            return errorToJiraConnectorError(userOut);
+        } else {
+            return userOut;
         }
     }
 }
 
-# Returns all existing project categories.
-# + return - Array of `ProjectCategory` objects or `JiraConnectorError` record
-function JiraConnector::getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
+remote function JiraConnector.getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/projectCategory");
+    var httpResponseOut = self.jiraClient->get("/projectCategory");
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var jsonResponseArrayOut = <json[]>jsonResponse;
-            match jsonResponseArrayOut {
-                error err => return errorToJiraConnectorError(err);
-
-                json[] jsonResponseArray => {
-                    ProjectCategory[] projectCategories = [];
-                    int i = 0;
-                    foreach (jsonProjectCategory in jsonResponseArray) {
-                        var projectCategoryOut = <ProjectCategory>jsonProjectCategory;
-                        match projectCategoryOut {
-                            error err => return errorToJiraConnectorError(err);
-
-                            ProjectCategory projectCategory => {
-                                projectCategories[i] = projectCategory;
-                                i += 1;
-                            }
-                        }
-                    }
-                    return projectCategories;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var jsonResponseArrayOut = json[].create(jsonResponseOut);
+        if (jsonResponseArrayOut is error) {
+            return errorToJiraConnectorError(jsonResponseArrayOut);
+        } else {
+            ProjectCategory[] projectCategories = [];
+            int i = 0;
+            foreach (jsonProjectCategory in jsonResponseArrayOut) {
+                var projectCategoryOut = ProjectCategory.create(jsonProjectCategory);
+                if (projectCategoryOut is error) {
+                    return errorToJiraConnectorError(projectCategoryOut);
+                } else {
+                    projectCategories[i] = projectCategoryOut;
+                    i += 1;
                 }
+                return projectCategories;
             }
         }
     }
 }
 
-# Returns a detailed representation of a project category.
-# + projectCategoryId - Jira id of the project category
-# + return - `ProjectCategory` type records or `JiraConnectorError` record
-function JiraConnector::getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
+remote function JiraConnector.getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
-
-    var httpResponseOut = jiraHttpClientEP->get("/projectCategory/" + projectCategoryId);
+    var httpResponseOut = self.jiraClient->get("/projectCategory/" + projectCategoryId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var projectCategoryOut = <ProjectCategory>jsonResponse;
-            match projectCategoryOut {
-                error err => return errorToJiraConnectorError(err);
-                ProjectCategory category => return category;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var projectCategoryOut = ProjectCategory.create(jsonResponseOut);
+        if (projectCategoryOut is error) {
+            return errorToJiraConnectorError(projectCategoryOut);
+        } else {
+            return projectCategoryOut;
         }
     }
 }
 
-# Create a new project category.
-# + newCategory - Record which contains the mandatory fields for new project category creation
-# + return - `ProjectCategory` type records or `JiraConnectorError` record
-function JiraConnector::createProjectCategory(ProjectCategoryRequest newCategory)
+remote function JiraConnector.createProjectCategory(ProjectCategoryRequest newCategory)
                                    returns ProjectCategory|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var jsonPayloadOut = <json>newCategory;
-    match jsonPayloadOut {
-        error err => return errorToJiraConnectorError(err);
+    var jsonPayloadOut = json.create(newCategory);
+    if (jsonPayloadOut is error) {
+        return errorToJiraConnectorError(jsonPayloadOut);
+    } else {
+        outRequest.setJsonPayload(jsonPayloadOut);
 
-        json jsonPayload => {
-            outRequest.setJsonPayload(jsonPayload);
+        var httpResponseOut = self.jiraClient->post("/projectCategory", outRequest);
+        //Evaluate http response for connection and server errors
+        var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-            var httpResponseOut = jiraHttpClientEP->post("/projectCategory", outRequest);
-            //Evaluate http response for connection and server errors
-            var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
-            match jsonResponseOut {
-                JiraConnectorError e => return e;
-
-                json jsonResponse => {
-                    var ProjectCategoryOut = self.getProjectCategory(untaint jsonResponse.id.toString());
-                    match ProjectCategoryOut {
-                        ProjectCategory category => return category;
-                        JiraConnectorError e => return e;
-                    }
-                }
+        if (jsonResponseOut is JiraConnectorError) {
+            return jsonResponseOut;
+        } else {
+            var ProjectCategoryOut = self.getProjectCategory(untaint jsonResponseOut.id.toString());
+            if (ProjectCategoryOut is ProjectCategory) {
+                return ProjectCategoryOut;
+            } else {
+                return ProjectCategoryOut;
             }
         }
     }
 }
 
-# Delete a project category.
-# + projectCategoryId - Jira id of the project category
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
+remote function JiraConnector.deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/projectCategory/" + projectCategoryId, outRequest);
+    var httpResponseOut = self.jiraClient->delete("/projectCategory/" + projectCategoryId, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-
-# Returns a detailed representation of a jira issue.
-# + issueIdOrKey - Id or key of the required issue
-# + return - `Issue` type record or `JiraConnectorError` record
-function JiraConnector::getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
-
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+remote function JiraConnector.getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
 
     string getParams = "/issue/" + issueIdOrKey;
     log:printDebug("GET : " + getParams);
 
-    var httpResponseOut = jiraHttpClientEP->get(getParams);
+    var httpResponseOut = self.jiraClient->get(getParams);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return jsonToIssue(jsonResponse);
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return jsonToIssue(jsonResponseOut);
     }
 }
 
-# Creates a new jira issue.
-# + newIssue - Record which contains the mandatory fields for new issue creation
-# + return - `Issue` type record or `JiraConnectorError` record
-function JiraConnector::createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
+remote function JiraConnector.createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
+
     http:Request outRequest = new;
 
     json jsonPayload = issueRequestToJson(newIssue);
     log:printDebug("CreateIssue payload: " + jsonPayload.toString());
     outRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/issue", outRequest);
+    var httpResponseOut = self.jiraClient->post("/issue", outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-
-        json jsonResponse => {
-            var issueOut = self.getIssue(untaint jsonResponse.key.toString());
-            match issueOut {
-                Issue issue => return issue;
-                JiraConnectorError e => return e;
-            }
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        var issueOut = self.getIssue(untaint jsonResponseOut.key.toString());
+        if (issueOut is Issue) {
+            return issueOut;
+        } else {
+            return issueOut;
         }
     }
 }
 
-# Deletes a jira issue.
-# + issueIdOrKey - Id or key of the issue
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
+remote function JiraConnector.deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request outRequest = new;
 
-    var httpResponseOut = jiraHttpClientEP->delete("/issue/" + issueIdOrKey, outRequest);
+    var httpResponseOut = self.jiraClient->delete("/issue/" + issueIdOrKey, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 
-# Adds a comment to a Jira Issue.
-# + issueIdOrKey - Id or key of the issue
-# + comment - The details of the comment to be added
-# + return - returns true if the process is successful or `JiraConnectorError` record
-function JiraConnector::addCommentToIssue(string issueIdOrKey, IssueComment comment)
+remote function JiraConnector.addCommentToIssue(string issueIdOrKey, IssueComment comment)
             returns boolean|JiraConnectorError {
 
-    endpoint http:Client jiraHttpClientEP = self.jiraHttpClient;
     http:Request commentRequest = new;
 
     json jsonPayload = {};
     jsonPayload.body = comment.body;
     commentRequest.setJsonPayload(jsonPayload);
 
-    var httpResponseOut = jiraHttpClientEP->post("/issue/" + issueIdOrKey +"/comment", commentRequest);
+    var httpResponseOut = self.jiraClient->post("/issue/" + issueIdOrKey +"/comment", commentRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
-    match jsonResponseOut {
-        JiraConnectorError e => return e;
-        json jsonResponse => return true;
+    if (jsonResponseOut is JiraConnectorError) {
+        return jsonResponseOut;
+    } else {
+        return true;
     }
 }
 

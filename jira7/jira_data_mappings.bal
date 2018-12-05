@@ -22,8 +22,7 @@ import ballerina/mime;
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = {
-        message: source["message"] ?: "",
-        cause: source["cause"] ?: {}
+        message: <string> source.detail().message
         };
     return target;
 }
@@ -232,18 +231,26 @@ function issueRequestToJson(IssueRequest source) returns json {
     target.fields.issuetype = source.issueTypeId != EMPTY_STRING ? {id:source.issueTypeId} : null;
     target.fields.project = source.projectId != EMPTY_STRING ? {id:source.projectId} : null;
     target.fields.assignee = source.assigneeName != EMPTY_STRING ? {name:source.assigneeName} : null;
+
+    map<string> sourceMap = {};
+    var value = map<string>.create(source);
+    if (value is error) {
+        return value;
+    } else {
+        sourceMap = value;
+    }
+
+    sourceMap["summary"] = "";
+    sourceMap["issueTypeId"] = "";
+    sourceMap["projectId"] = "";
+    sourceMap["assigneeName"] = "";
     
-    map source_map = <map>source;
-    source_map["summary"] = null;
-    source_map["issueTypeId"] = null;
-    source_map["projectId"] = null;
-    source_map["assigneeName"] = null;
-    
-    foreach f in source_map.keys() {
-        match <json>source_map[f] {
-            () => source_map[f] = null; //do nothing
-            json j => target.fields[f] = j;
-            error e => target.fields[f] = <string>source_map[f];
+    foreach f in sourceMap.keys() {
+        var result = json.create(sourceMap[f]);
+        if (result.length == 0) {
+            sourceMap[f] = "";
+        } else {
+            target.fields[f] = result;
         }
     }
     return target;
@@ -252,9 +259,9 @@ function issueRequestToJson(IssueRequest source) returns json {
 function jsonToIssueComments(json jcomments) returns IssueComment[] {
 
     IssueComment[] comments = [];
-    int l = lengthof jcomments;
+    int l = jcomments.length();
     foreach (jcomment in jcomments) {
-        comments[lengthof comments] = jsonToIssueComment(jcomment);
+        comments[comments.length()] = jsonToIssueComment(jcomment);
     }
     return comments;
 }
