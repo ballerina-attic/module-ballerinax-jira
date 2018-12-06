@@ -19,11 +19,12 @@
 import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
+import ballerina/log;
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = {
-        message: <string> source.detail().message
-        };
+        message: <string>source.detail().message
+    };
     return target;
 }
 

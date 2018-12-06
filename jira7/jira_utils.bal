@@ -53,7 +53,7 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
             if (httpConnectorResponse.getJsonPayload() is json) {
                 e.jiraServerErrorLog = <json> httpConnectorResponse.getJsonPayload();
                 e.jiraServerErrorLog = null;
-                }
+            }
             return e;
         }
     }

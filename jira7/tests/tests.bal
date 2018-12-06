@@ -308,7 +308,7 @@ function test_getProjectComponent() {
     if (output is ProjectComponent) {
         projectCategory_test = untaint output;
     } else {
-	    test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = formatJiraConnError(output));
     }
 }
 
@@ -396,7 +396,7 @@ function test_getProjectCategory() {
     if (output is ProjectCategory) {
         projectCategory_test = untaint output;
     } else {
-	    test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = formatJiraConnError(output));
     }
 }
 
@@ -490,7 +490,7 @@ function test_getIssue() {
     if (output is Issue) {
         issue_test = output;
     } else {
-	    test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = formatJiraConnError(output));
     }
 }
 
