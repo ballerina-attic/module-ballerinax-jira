@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.983.0             | 7.2.2                  |
+| 0.990.0             | 7.2.2                  |
 
 
 ### Why do you need the REST API for JIRA
@@ -67,16 +67,18 @@ import ballerina/http;
 import wso2/jira7;
 
 //Creation of connector endpoint
-endpoint jira7:Client jiraEndpoint {
-    clientConfig:{
-        url:"https://support-staging.wso2.com/jira",
-        auth:{
-            scheme:http:BASIC_AUTH,
-            username:"username",
-            password:"password"
+JiraConfiguration jiraConfig = {
+    baseUrl: config:getAsString("test_url"),
+    clientConfig: {
+        auth: {
+            scheme: http:BASIC_AUTH,
+            username: config:getAsString("test_username"),
+            password: config:getAsString("test_password")
         }
     }
 };
+
+Client jiraConnectorEP = new(jiraConfig);
 ```
 
 ## Working with JIRA connector actions
@@ -94,19 +96,21 @@ will returns an Connector error with error message,error type and cause.
 import ballerina/http;
 import wso2/jira7;
 
-function main(string... args) {
+public function main() {
 
     //Creating the jira endpoint
-    endpoint jira7:Client jiraEndpoint {
-        clientConfig:{
-            url:"https://support-staging.wso2.com/jira",
-            auth:{
-                scheme:http:BASIC_AUTH,
-                username:"username",
-                password:"password"
+    JiraConfiguration jiraConfig = {
+        baseUrl: config:getAsString("test_url"),
+        clientConfig: {
+            auth: {
+                scheme: http:BASIC_AUTH,
+                username: config:getAsString("test_username"),
+                password: config:getAsString("test_password")
             }
         }
     };
+
+    Client jiraConnectorEP = new(jiraConfig);
 
     jira7:JiraConnectorError jiraError = {};
     jira7:Project project = {};
@@ -117,6 +121,11 @@ function main(string... args) {
     match result{
         jira7:Project p => project = p;
         jira7:JiraConnectorError e => jiraError = err;
+    }
+    if (output is jira7:Project) {
+        io:println(output);
+    } else {
+        io:println(output.message);
     }
 }
 ```

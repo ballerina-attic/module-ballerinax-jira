@@ -19,12 +19,12 @@
 import ballerina/http;
 import ballerina/config;
 import ballerina/mime;
+import ballerina/log;
 
 function errorToJiraConnectorError(error source) returns JiraConnectorError {
     JiraConnectorError target = {
-        message: source["message"] ?: "",
-        cause: source["cause"] ?: {}
-        };
+        message: <string>source.detail().message
+    };
     return target;
 }
 
@@ -178,13 +178,13 @@ function jsonToIssue(json source) returns Issue {
 
     int i = 0;
     string[] fieldNames = source.fields.getKeys();
-    foreach (fieldName in fieldNames) {
+    foreach var fieldName in fieldNames {
         if (fieldName.hasPrefix("customfield")) {
             target.customFields[i] = {(fieldName):source.fields[fieldName]};
             i +=1;
         }
     }
-    target.comments = jsonToIssueComments(source.fields.comment.comments);
+    target.comments = jsonToIssueComments(<json[]>source.fields.comment.comments);
     return target;
 }
 
@@ -232,29 +232,37 @@ function issueRequestToJson(IssueRequest source) returns json {
     target.fields.issuetype = source.issueTypeId != EMPTY_STRING ? {id:source.issueTypeId} : null;
     target.fields.project = source.projectId != EMPTY_STRING ? {id:source.projectId} : null;
     target.fields.assignee = source.assigneeName != EMPTY_STRING ? {name:source.assigneeName} : null;
+
+    map<string> sourceMap = {};
+    var value = map<string>.convert(source);
+    if (value is error) {
+        log:printError(<string> value.detail().message);
+    } else {
+        sourceMap = value;
+    }
+
+    sourceMap["summary"] = "";
+    sourceMap["issueTypeId"] = "";
+    sourceMap["projectId"] = "";
+    sourceMap["assigneeName"] = "";
     
-    map source_map = <map>source;
-    source_map["summary"] = null;
-    source_map["issueTypeId"] = null;
-    source_map["projectId"] = null;
-    source_map["assigneeName"] = null;
-    
-    foreach f in source_map.keys() {
-        match <json>source_map[f] {
-            () => source_map[f] = null; //do nothing
-            json j => target.fields[f] = j;
-            error e => target.fields[f] = <string>source_map[f];
+    foreach var f in sourceMap.keys() {
+        var result = json.convert(sourceMap[f]);
+        if (result.length == 0) {
+            sourceMap[f] = "";
+        } else {
+            target.fields[f] = result;
         }
     }
     return target;
 }
 
-function jsonToIssueComments(json jcomments) returns IssueComment[] {
+function jsonToIssueComments(json[] jcomments) returns IssueComment[] {
 
     IssueComment[] comments = [];
-    int l = lengthof jcomments;
-    foreach (jcomment in jcomments) {
-        comments[lengthof comments] = jsonToIssueComment(jcomment);
+    int l = jcomments.length();
+    foreach json jcomment in jcomments {
+        comments[comments.length()] = jsonToIssueComment(jcomment);
     }
     return comments;
 }
