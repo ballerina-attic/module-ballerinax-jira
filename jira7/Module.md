@@ -47,7 +47,7 @@ import wso2/jira7;
 
 You can now enter the credentials in the HTTP client config.
 ```ballerina
-JiraConfiguration jiraConfig = {
+jira7:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("test_url"),
     clientConfig: {
         auth: {
@@ -58,7 +58,7 @@ JiraConfiguration jiraConfig = {
     }
 };
 
-Client jiraConnectorEP = new(jiraConfig);
+jira7:Client jiraConnectorEP = new(jiraConfig);
 ```
 The `getAllProjectSummaries` function returns the project summary of all the projects.
 ```ballerina
