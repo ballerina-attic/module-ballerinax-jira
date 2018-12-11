@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.990.0             | 7.2.2                  |
+| 0.990.0             | 7.2.2                 |
 
 
 ### Why do you need the REST API for JIRA
@@ -67,7 +67,7 @@ import ballerina/http;
 import wso2/jira7;
 
 //Creation of connector endpoint
-JiraConfiguration jiraConfig = {
+jira7:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("test_url"),
     clientConfig: {
         auth: {
@@ -78,7 +78,7 @@ JiraConfiguration jiraConfig = {
     }
 };
 
-Client jiraConnectorEP = new(jiraConfig);
+jira7:Client jiraConnectorEP = new(jiraConfig);
 ```
 
 ## Working with JIRA connector actions
@@ -97,9 +97,8 @@ import ballerina/http;
 import wso2/jira7;
 
 public function main() {
-
     //Creating the jira endpoint
-    JiraConfiguration jiraConfig = {
+    jira7:JiraConfiguration jiraConfig = {
         baseUrl: config:getAsString("test_url"),
         clientConfig: {
             auth: {
@@ -110,18 +109,12 @@ public function main() {
         }
     };
 
-    Client jiraConnectorEP = new(jiraConfig);
+    jira7:Client jiraConnectorEP = new(jiraConfig);
 
-    jira7:JiraConnectorError jiraError = {};
-    jira7:Project project = {};
     string projectKey = "RRDEVSPRT";
 
     //Endpoint Action
-    var result = jiraEndpoint -> getProject(projectKey);
-    match result{
-        jira7:Project p => project = p;
-        jira7:JiraConnectorError e => jiraError = err;
-    }
+    var output = jiraEndpoint->getProject(projectKey);
     if (output is jira7:Project) {
         io:println(output);
     } else {
@@ -152,7 +145,6 @@ public type Project record {
 ```ballerina
 public type JiraConnectorError record {
     string message;
-    error? cause;
     string ^"type";
     json jiraServerErrorLog;   
 }

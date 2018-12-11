@@ -31,41 +31,41 @@ public type Client client object {
     # Returns an array of all projects summaries which are visible for the currently logged in user who has
     # `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
     # + return - Array of `ProjectSummary` objects or `JiraConnectorError` record
-    remote function getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError;
+    public remote function getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError;
 
     # Returns detailed representation of the summarized project, if the project exists,the user has
     # permission to view it and if no any error occured.
     # + projectSummary - `ProjectSummary` object
     # + return - `Project` object or `JiraConnectorError` record
-    remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns Project|JiraConnectorError;
+    public remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns Project|JiraConnectorError;
 
     # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + newProject - Record which contains the mandatory fields for new project creation
     # + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
-    remote function createProject(ProjectRequest newProject) returns Project|JiraConnectorError;
+    public remote function createProject(ProjectRequest newProject) returns Project|JiraConnectorError;
 
     # Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
     # Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
+    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError;
+    public remote function deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError;
 
     # Returns detailed representation of a project, if the project exists,the user has permission
     # to view it and if no any error occured.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + return - `Project` type object or `JiraConnectorError` record
-    remote function getProject(string projectIdOrKey) returns Project|JiraConnectorError;
+    public remote function getProject(string projectIdOrKey) returns Project|JiraConnectorError;
 
     # Returns Jira user details of the project lead.
     # + project - `Project` type record
     # + return - `User` type record containing user details of the project lead. or `JiraConnectorError` record
-    remote function getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError;
+    public remote function getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError;
 
     # Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
     # + project - `Project` type record
@@ -79,8 +79,8 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + return - `ProjectRole` object containing the details of the requested role or `JiraConnectorError` record
-    remote function getRoleDetailsOfProject(Project project, string projectRoleId)
-    returns ProjectRole|JiraConnectorError;
+    public remote function getRoleDetailsOfProject(Project project, string projectRoleId)
+                               returns ProjectRole|JiraConnectorError;
 
     # Assigns a user to a given project role.
     # + project - `Project` type record
@@ -95,8 +95,8 @@ public type Client client object {
     #    )
     # + userName - Jira account username of the user to be added
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
-    returns boolean|JiraConnectorError;
+    public remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
+                               returns boolean|JiraConnectorError;
 
     # Assigns a group to a given project role.
     # + project - `Project` type record
@@ -111,8 +111,8 @@ public type Client client object {
     #    )
     # + groupName - Name of the group to be added
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
-    returns boolean|JiraConnectorError;
+    public remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
+                               returns boolean|JiraConnectorError;
 
     # Removes a given user from a given project role.
     # + project - `Project` type record
@@ -127,8 +127,8 @@ public type Client client object {
     #    )
     # + userName - Name of the user required to be removed
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
-    returns boolean|JiraConnectorError;
+    public remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
+                               returns boolean|JiraConnectorError;
 
     # Removes a given group from a given project role.
     # + project - `Project` type record
@@ -143,93 +143,89 @@ public type Client client object {
     #    )
     # + groupName - Name of the group required to be removed
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
-    returns boolean|JiraConnectorError;
+    public remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
+                               returns boolean|JiraConnectorError;
 
     # Gets all issue types with valid status values for a project.
     # + project - `Project` type record
     # + return - Array of `ProjectStatus` type records or `JiraConnectorError` record
-    remote function getAllIssueTypeStatusesOfProject(Project project) returns ProjectStatus[]|JiraConnectorError;
+    public remote function getAllIssueTypeStatusesOfProject(Project project) returns ProjectStatus[]|JiraConnectorError;
 
     # Updates the type of a Jira project.
     # + project - `Project` type record
     # + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function changeTypeOfProject(Project project, string newProjectType)
-    returns boolean|JiraConnectorError;
+    public remote function changeTypeOfProject(Project project, string newProjectType)
+                               returns boolean|JiraConnectorError;
 
     # Creates a new project component.
     # + newProjectComponent - Record which contains the mandatory fields for new project component creation
     # + return - `ProjectComponent` object which contains the created project component or `JiraConnectorError` record
-    remote function createProjectComponent(ProjectComponentRequest newProjectComponent)
-    returns ProjectComponent|JiraConnectorError;
+    public remote function createProjectComponent(ProjectComponentRequest newProjectComponent)
+                               returns ProjectComponent|JiraConnectorError;
 
     # Returns detailed representation of project component.
     # + componentId - string which contains a unique id for a given component.
     # + return - `ProjectComponent` type record or `JiraConnectorError` record
-    remote function getProjectComponent(string componentId)
-    returns ProjectComponent|JiraConnectorError;
+    public remote function getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError;
 
     # Deletes a project component.
     # + componentId - string which contains a unique id for a given component
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function deleteProjectComponent(string componentId)
-    returns boolean|JiraConnectorError;
+    public remote function deleteProjectComponent(string componentId) returns boolean|JiraConnectorError;
 
     # Returns jira user details of the assignee of the project component.
     # + projectComponent - `ProjectComponent` type record
     # + return - `User` object containing user details of the assignee. or `JiraConnectorError` record
-    remote function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
-    returns User|JiraConnectorError;
+    public remote function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+                               returns User|JiraConnectorError;
 
     # Returns jira user details of the lead of the project component.
     # + projectComponent - `ProjectComponent` type record
     # + return - `User` object containing user details of the lead or `JiraConnectorError` record
-    remote function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
-    returns User|JiraConnectorError;
+    public remote function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+                               returns User|JiraConnectorError;
 
     # Returns all existing project categories.
     # + return - Array of `ProjectCategory` objects or `JiraConnectorError` record
-    remote function getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError;
+    public remote function getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError;
 
     # Returns a detailed representation of a project category.
     # + projectCategoryId - Jira id of the project category
     # + return - `ProjectCategory` type records or `JiraConnectorError` record
-    remote function getProjectCategory(string projectCategoryId)
-    returns ProjectCategory|JiraConnectorError;
+    public remote function getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError;
 
     # Create a new project category.
     # + newCategory - Record which contains the mandatory fields for new project category creation
     # + return - `ProjectCategory` type records or `JiraConnectorError` record
-    remote function createProjectCategory(ProjectCategoryRequest newCategory)
-    returns ProjectCategory|JiraConnectorError;
+    public remote function createProjectCategory(ProjectCategoryRequest newCategory)
+                               returns ProjectCategory|JiraConnectorError;
 
     # Delete a project category.
     # + projectCategoryId - Jira id of the project category
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function deleteProjectCategory(string projectCategoryId)
-    returns boolean|JiraConnectorError;
+    public remote function deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError;
 
     # Returns a detailed representation of a jira issue.
     # + issueIdOrKey - Id or key of the required issue
     # + return - `Issue` type record or `JiraConnectorError` record
-    remote function getIssue(string issueIdOrKey) returns Issue|JiraConnectorError;
+    public remote function getIssue(string issueIdOrKey) returns Issue|JiraConnectorError;
 
     # Creates a new jira issue.
     # + newIssue - Record which contains the mandatory fields for new issue creation
     # + return - `Issue` type record or `JiraConnectorError` record
-    remote function createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError;
+    public remote function createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError;
     # Deletes a jira issue.
     # + issueIdOrKey - Id or key of the issue
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError;
+    public remote function deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError;
 
     # Adds a comment to a Jira Issue.
     # + issueIdOrKey - Id or key of the issue
     # + comment - The details of the comment to be added
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    remote function addCommentToIssue(string issueIdOrKey, IssueComment comment)
-    returns boolean|JiraConnectorError;
+    public remote function addCommentToIssue(string issueIdOrKey, IssueComment comment)
+                               returns boolean|JiraConnectorError;
 };
 
 # Represents the Jira Client Connector Endpoint configuration.
