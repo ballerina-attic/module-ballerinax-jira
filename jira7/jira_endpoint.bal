@@ -37,11 +37,13 @@ public type Client client object {
     # permission to view it and if no any error occured.
     # + projectSummary - `ProjectSummary` object
     # + return - `Project` object or `JiraConnectorError` record
-    public remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns Project|JiraConnectorError;
+    public remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
+    returns Project|JiraConnectorError;
 
     # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + newProject - Record which contains the mandatory fields for new project creation
-    # + return - `Project` object which contains detailed representation of the new project or `JiraConnectorError` record
+    # + return - `Project` object which contains detailed representation of the new project
+    # or `JiraConnectorError` record
     public remote function createProject(ProjectRequest newProject) returns Project|JiraConnectorError;
 
     # Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
@@ -49,7 +51,8 @@ public type Client client object {
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
     # + return - returns true if the process is successful or `JiraConnectorError` record
-    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|JiraConnectorError;
+    public remote function updateProject(string projectIdOrKey, ProjectRequest update)
+    returns boolean|JiraConnectorError;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
@@ -268,11 +271,10 @@ remote function Client.getAllDetailsFromProjectSummary(ProjectSummary projectSum
     var httpResponseOut = self.jiraClient->get("/project/" + projectSummary.key);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
     if (jsonResponseOut is json) {
     jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
     jsonResponseOut.lead.name : null : null;
-    var projectOut = Project.convert(jsonResponseOut);
+    var projectOut = convertJsonToProject(jsonResponseOut);
     if(projectOut is Project) {
         return projectOut;
     } else {
@@ -301,11 +303,7 @@ remote function Client.createProject(ProjectRequest newProject) returns Project|
             return jsonResponseOut;
         } else {
             var projectOut = self->getProject(untaint jsonResponseOut.key.toString());
-            if (projectOut is Project) {
-                return projectOut;
-            } else {
-                return projectOut;
-            }
+            return projectOut;
         }
     }
 }
@@ -356,7 +354,7 @@ remote function Client.getProject(string projectIdOrKey) returns Project|JiraCon
     } else {
         jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
         jsonResponseOut.lead.name : null : null;
-        var projectOut = Project.convert(jsonResponseOut);
+        var projectOut = convertJsonToProject(jsonResponseOut);
         if (projectOut is error) {
             return errorToJiraConnectorError(projectOut);
         } else {
@@ -374,7 +372,7 @@ remote function Client.getLeadUserDetailsOfProject(Project project) returns User
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.convert(jsonResponseOut);
+        var userOut = convertJsonToUser(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -393,7 +391,7 @@ remote function Client.getRoleDetailsOfProject(Project project, string projectRo
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var projectRoleOut = ProjectRole.convert(jsonResponseOut);
+        var projectRoleOut = convertJsonToProjectRole(jsonResponseOut);
         if (projectRoleOut is error) {
             return errorToJiraConnectorError(projectRoleOut);
         } else {
@@ -491,7 +489,7 @@ remote function Client.getAllIssueTypeStatusesOfProject(Project project)
             ProjectStatus[] statusArray = [];
             int i = 0;
             foreach var status in jsonResponseArrayOut {
-                var statusOut = ProjectStatus.convert(status);
+                var statusOut = convertJsonToProjectStatus(status);
                 if (statusOut is error) {
                     return errorToJiraConnectorError(statusOut);
                 } else {
@@ -552,11 +550,10 @@ remote function Client.getProjectComponent(string componentId) returns ProjectCo
     var httpResponseOut = self.jiraClient->get("/component/" + componentId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-    ProjectComponent component = jsonToProjectComponent(jsonResponseOut);
+        ProjectComponent component = jsonToProjectComponent(jsonResponseOut);
         return component;
     }
 }
@@ -585,7 +582,7 @@ remote function Client.getAssigneeUserDetailsOfProjectComponent(ProjectComponent
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.convert(jsonResponseOut);
+        var userOut = convertJsonToUser(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -604,7 +601,7 @@ remote function Client.getLeadUserDetailsOfProjectComponent(ProjectComponent pro
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var userOut = User.convert(jsonResponseOut);
+        var userOut = convertJsonToUser(jsonResponseOut);
         if (userOut is error) {
             return errorToJiraConnectorError(userOut);
         } else {
@@ -618,17 +615,19 @@ remote function Client.getAllProjectCategories() returns ProjectCategory[]|JiraC
     var httpResponseOut = self.jiraClient->get("/projectCategory");
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
+
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
         var jsonResponseArrayOut = json[].convert(jsonResponseOut);
+
         if (jsonResponseArrayOut is error) {
             return errorToJiraConnectorError(jsonResponseArrayOut);
         } else {
             ProjectCategory[] projectCategories = [];
             int i = 0;
-            foreach var jsonProjectCategory in jsonResponseArrayOut {
-                var projectCategoryOut = ProjectCategory.convert(jsonProjectCategory);
+            foreach json jsonProjectCategory in jsonResponseArrayOut {
+                var projectCategoryOut = convertJsonToProjectCategory(jsonProjectCategory);
                 if (projectCategoryOut is error) {
                     return errorToJiraConnectorError(projectCategoryOut);
                 } else {
@@ -642,7 +641,6 @@ remote function Client.getAllProjectCategories() returns ProjectCategory[]|JiraC
 }
 
 remote function Client.getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
-
     var httpResponseOut = self.jiraClient->get("/projectCategory/" + projectCategoryId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -650,7 +648,7 @@ remote function Client.getProjectCategory(string projectCategoryId) returns Proj
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
-        var projectCategoryOut = ProjectCategory.convert(jsonResponseOut);
+        var projectCategoryOut = convertJsonToProjectCategory(jsonResponseOut);
         if (projectCategoryOut is error) {
             return errorToJiraConnectorError(projectCategoryOut);
         } else {
@@ -673,16 +671,11 @@ remote function Client.createProjectCategory(ProjectCategoryRequest newCategory)
         var httpResponseOut = self.jiraClient->post("/projectCategory", outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
         if (jsonResponseOut is JiraConnectorError) {
             return jsonResponseOut;
         } else {
             var ProjectCategoryOut = self->getProjectCategory(untaint jsonResponseOut.id.toString());
-            if (ProjectCategoryOut is ProjectCategory) {
-                return ProjectCategoryOut;
-            } else {
-                return ProjectCategoryOut;
-            }
+            return ProjectCategoryOut;
         }
     }
 }
@@ -690,7 +683,6 @@ remote function Client.createProjectCategory(ProjectCategoryRequest newCategory)
 remote function Client.deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
-
     var httpResponseOut = self.jiraClient->delete("/projectCategory/" + projectCategoryId, outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -730,16 +722,11 @@ remote function Client.createIssue(IssueRequest newIssue) returns Issue|JiraConn
     var httpResponseOut = self.jiraClient->post("/issue", outRequest);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
     if (jsonResponseOut is JiraConnectorError) {
         return jsonResponseOut;
     } else {
         var issueOut = self->getIssue(untaint jsonResponseOut.key.toString());
-        if (issueOut is Issue) {
-            return issueOut;
-        } else {
-            return issueOut;
-        }
+        return issueOut;
     }
 }
 

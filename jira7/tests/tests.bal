@@ -51,7 +51,6 @@ function test_getAllProjectSummaries() {
 }
 function test_getAllDetailsFromProjectSummary() {
     log:printInfo("ACTION : getAllDetailsFromProjectSummary()");
-
     var output = jiraConnectorEP->getAllDetailsFromProjectSummary(projectSummaryArray_test[0]);
     if (output is Project) {
         project_test = {};
@@ -253,6 +252,7 @@ function test_getAllIssueTypeStatusesOfProject() {
     if (output is JiraConnectorError) {
         test:assertFail(msg = formatJiraConnError(output));
     } else {
+        project_status = untaint output[0];
         string result = "";
     }
 }
@@ -289,7 +289,7 @@ function test_createProjectComponent() {
 
     var output = jiraConnectorEP->createProjectComponent(newProjectComponent);
     if (output is ProjectComponent) {
-        projectCategory_test = untaint output;
+        projectComponent_test = untaint output;
     } else {
         test:assertFail(msg = formatJiraConnError(output));
     }
@@ -306,7 +306,7 @@ function test_getProjectComponent() {
     project_test.components[0] = sampleComponentSummary;
     var output = jiraConnectorEP->getProjectComponent(projectComponent_test.id);
     if (output is ProjectComponent) {
-        projectCategory_test = untaint output;
+        string value = "";
     } else {
         test:assertFail(msg = formatJiraConnError(output));
     }
@@ -381,8 +381,8 @@ function test_createProjectCategory() {
     if (output is ProjectCategory) {
         projectCategory_test = untaint output;
     } else {
-        test:assertFail(msg = <string>projectCategory_test.message + "Please retry again after removing
-         the project category:" + <string> newCategory.name + "from from your jira instance");
+        test:assertFail(msg = <string>output.message + " Please retry again after removing
+        the project category: " + <string> newCategory.name + " from from your jira instance");
     }
 }
 
@@ -391,7 +391,6 @@ function test_createProjectCategory() {
 }
 function test_getProjectCategory() {
     log:printInfo("ACTION : getProjectCategory()");
-
     var output = jiraConnectorEP->getProjectCategory(projectCategory_test.id);
     if (output is ProjectCategory) {
         projectCategory_test = untaint output;
@@ -439,7 +438,7 @@ function test_createIssue() {
     dependsOn: ["test_getProject", "test_getAllIssueTypeStatusesOfProject"]
 }
 function test_createIssueWithExtraFields() {
-    // Create issue including additional fields description and reporter 
+    // Create issue including additional fields description and reporter
     log:printInfo("ACTION : createIssueWithExtraFields()");
 
     IssueRequest newIssue = {
@@ -453,7 +452,7 @@ function test_createIssueWithExtraFields() {
 
     anydata j = <json> {name: config:getAsString("test_username")};
     newIssue.reporter = j;
-    
+
     var output = jiraConnectorEP->createIssue(newIssue);
     if (output is Issue) {
         issue_test = untaint output;

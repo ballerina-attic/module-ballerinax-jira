@@ -199,7 +199,7 @@ public type ProjectStatus record {
     string resource_path = "";
     string name = "";
     string id = "";
-    json statuses = {};
+    json[] statuses = [];
 };
 
 # Represents a Jira user.
