@@ -240,7 +240,7 @@ public type JiraConfiguration record {
 };
 
 
-remote function Client.getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
+public remote function Client.getAllProjectSummaries() returns ProjectSummary[]|JiraConnectorError {
 
     ProjectSummary[] projects = [];
 
@@ -265,7 +265,7 @@ remote function Client.getAllProjectSummaries() returns ProjectSummary[]|JiraCon
     }
 }
 
-remote function Client.getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
+public remote function Client.getAllDetailsFromProjectSummary(ProjectSummary projectSummary)
     returns Project|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/project/" + projectSummary.key);
@@ -285,7 +285,7 @@ remote function Client.getAllDetailsFromProjectSummary(ProjectSummary projectSum
     }
 }
 
-remote function Client.createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
+public remote function Client.createProject(ProjectRequest newProject) returns Project|JiraConnectorError {
 
     http:Request outRequest = new;
 
@@ -308,7 +308,7 @@ remote function Client.createProject(ProjectRequest newProject) returns Project|
     }
 }
 
-remote function Client.updateProject(string projectIdOrKey, ProjectRequest update)
+public remote function Client.updateProject(string projectIdOrKey, ProjectRequest update)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -328,7 +328,7 @@ remote function Client.updateProject(string projectIdOrKey, ProjectRequest updat
     }
 }
 
-remote function Client.deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
+public remote function Client.deleteProject(string projectIdOrKey) returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
 
@@ -343,7 +343,7 @@ remote function Client.deleteProject(string projectIdOrKey) returns boolean|Jira
     }
 }
 
-remote function Client.getProject(string projectIdOrKey) returns Project|JiraConnectorError {
+public remote function Client.getProject(string projectIdOrKey) returns Project|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/project/" + projectIdOrKey);
     //Evaluate http response for connection and server errors
@@ -363,7 +363,7 @@ remote function Client.getProject(string projectIdOrKey) returns Project|JiraCon
     }
 }
 
-remote function Client.getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
+public remote function Client.getLeadUserDetailsOfProject(Project project) returns User|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/user?username=" + project.leadName);
     //Evaluate http response for connection and server errors
@@ -381,7 +381,7 @@ remote function Client.getLeadUserDetailsOfProject(Project project) returns User
     }
 }
 
-remote function Client.getRoleDetailsOfProject(Project project, string projectRoleId)
+public remote function Client.getRoleDetailsOfProject(Project project, string projectRoleId)
     returns ProjectRole|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/role/" + projectRoleId);
@@ -400,7 +400,7 @@ remote function Client.getRoleDetailsOfProject(Project project, string projectRo
     }
 }
 
-remote function Client.addUserToRoleOfProject(Project project, string projectRoleId, string userName)
+public remote function Client.addUserToRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -419,7 +419,7 @@ remote function Client.addUserToRoleOfProject(Project project, string projectRol
     }
 }
 
-remote function Client.addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
+public remote function Client.addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -438,7 +438,7 @@ remote function Client.addGroupToRoleOfProject(Project project, string projectRo
     }
 }
 
-remote function Client.removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
+public remote function Client.removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -455,7 +455,7 @@ remote function Client.removeUserFromRoleOfProject(Project project, string proje
     }
 }
 
-remote function Client.removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
+public remote function Client.removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -472,7 +472,7 @@ remote function Client.removeGroupFromRoleOfProject(Project project, string proj
     }
 }
 
-remote function Client.getAllIssueTypeStatusesOfProject(Project project)
+public remote function Client.getAllIssueTypeStatusesOfProject(Project project)
     returns ProjectStatus[]|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/statuses");
@@ -502,7 +502,7 @@ remote function Client.getAllIssueTypeStatusesOfProject(Project project)
     }
 }
 
-remote function Client.changeTypeOfProject(Project project, string newProjectType)
+public remote function Client.changeTypeOfProject(Project project, string newProjectType)
     returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -518,7 +518,7 @@ remote function Client.changeTypeOfProject(Project project, string newProjectTyp
     }
 }
 
-remote function Client.createProjectComponent(ProjectComponentRequest newProjectComponent)
+public remote function Client.createProjectComponent(ProjectComponentRequest newProjectComponent)
     returns ProjectComponent|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -545,7 +545,7 @@ remote function Client.createProjectComponent(ProjectComponentRequest newProject
     }
 }
 
-remote function Client.getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
+public remote function Client.getProjectComponent(string componentId) returns ProjectComponent|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/component/" + componentId);
     //Evaluate http response for connection and server errors
@@ -558,7 +558,7 @@ remote function Client.getProjectComponent(string componentId) returns ProjectCo
     }
 }
 
-remote function Client.deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
+public remote function Client.deleteProjectComponent(string componentId) returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
 
@@ -572,7 +572,7 @@ remote function Client.deleteProjectComponent(string componentId) returns boolea
     }
 }
 
-remote function Client.getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+public remote function Client.getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.assigneeName);
@@ -591,7 +591,7 @@ remote function Client.getAssigneeUserDetailsOfProjectComponent(ProjectComponent
     }
 }
 
-remote function Client.getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
+public remote function Client.getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent)
     returns User|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.leadName);
@@ -610,7 +610,7 @@ remote function Client.getLeadUserDetailsOfProjectComponent(ProjectComponent pro
     }
 }
 
-remote function Client.getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
+public remote function Client.getAllProjectCategories() returns ProjectCategory[]|JiraConnectorError {
 
     var httpResponseOut = self.jiraClient->get("/projectCategory");
     //Evaluate http response for connection and server errors
@@ -640,7 +640,7 @@ remote function Client.getAllProjectCategories() returns ProjectCategory[]|JiraC
     }
 }
 
-remote function Client.getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
+public remote function Client.getProjectCategory(string projectCategoryId) returns ProjectCategory|JiraConnectorError {
     var httpResponseOut = self.jiraClient->get("/projectCategory/" + projectCategoryId);
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -657,7 +657,7 @@ remote function Client.getProjectCategory(string projectCategoryId) returns Proj
     }
 }
 
-remote function Client.createProjectCategory(ProjectCategoryRequest newCategory)
+public remote function Client.createProjectCategory(ProjectCategoryRequest newCategory)
     returns ProjectCategory|JiraConnectorError {
 
     http:Request outRequest = new;
@@ -680,7 +680,7 @@ remote function Client.createProjectCategory(ProjectCategoryRequest newCategory)
     }
 }
 
-remote function Client.deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
+public remote function Client.deleteProjectCategory(string projectCategoryId) returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
     var httpResponseOut = self.jiraClient->delete("/projectCategory/" + projectCategoryId, outRequest);
@@ -694,7 +694,7 @@ remote function Client.deleteProjectCategory(string projectCategoryId) returns b
     }
 }
 
-remote function Client.getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
+public remote function Client.getIssue(string issueIdOrKey) returns Issue|JiraConnectorError {
 
     string getParams = "/issue/" + issueIdOrKey;
     log:printDebug("GET : " + getParams);
@@ -711,7 +711,7 @@ remote function Client.getIssue(string issueIdOrKey) returns Issue|JiraConnector
 }
 
 
-remote function Client.createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
+public remote function Client.createIssue(IssueRequest newIssue) returns Issue|JiraConnectorError {
 
     http:Request outRequest = new;
 
@@ -730,7 +730,7 @@ remote function Client.createIssue(IssueRequest newIssue) returns Issue|JiraConn
     }
 }
 
-remote function Client.deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
+public remote function Client.deleteIssue(string issueIdOrKey) returns boolean|JiraConnectorError {
 
     http:Request outRequest = new;
 
@@ -745,7 +745,7 @@ remote function Client.deleteIssue(string issueIdOrKey) returns boolean|JiraConn
     }
 }
 
-remote function Client.addCommentToIssue(string issueIdOrKey, IssueComment comment)
+public remote function Client.addCommentToIssue(string issueIdOrKey, IssueComment comment)
     returns boolean|JiraConnectorError {
 
     http:Request commentRequest = new;

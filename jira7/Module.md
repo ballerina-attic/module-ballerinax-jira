@@ -30,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    0.990.0     |
+| Ballerina Language |    0.990.3     |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
