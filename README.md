@@ -94,11 +94,11 @@ will returns an Connector error with error message,error type and cause.
 * Request 
 
 ```ballerina
-import ballerina/io;
 import ballerina/http;
+import ballerina/io;
 import wso2/jira7;
 
-//Creating the jira endpoint
+// Create the jira client.
 jira7:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("test_url"),
     clientConfig: {

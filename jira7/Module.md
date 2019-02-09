@@ -61,17 +61,17 @@ jira7:JiraConfiguration jiraConfig = {
 jira7:Client jiraClient = new(jiraConfig);
 ```
 
-The `getAllProjectSummaries` function returns the project summary of all the projects if successful or `error` if unsuccessful.
+The `getAllProjectSummaries` remote function returns the project summary of all the projects if successful or `error` if unsuccessful.
 ```ballerina
 var response = jiraClient->getAllProjectSummaries();
-if (response is ProjectSummary[]) {
+if (response is jira7:ProjectSummary[]) {
     io:println("Project Summary: ", response);
 } else {
     io:println("Error: ", response);
 }
 ```
 
-The `createProject` function creates a JIRA project with the given name. It returns `Project` object if successful or `error` if unsuccessful.
+The `createProject` remote function creates a JIRA project with the given name. It returns `Project` object if successful or `error` if unsuccessful.
 ```ballerina
 var output = jiraClient->createProject("TST_PROJECT");
 if (output is jira7:Project) {
@@ -81,8 +81,8 @@ if (output is jira7:Project) {
 }
 ```
 
-The `createIssue` function creates an issue with the given issue details. `IssueRequest` is a object that contains all
-the data that is required to create the issue. It returns `Issue` object if successful or `error` if unsuccessful.
+The `createIssue` remote function creates an issue with the given issue details. `IssueRequest` is an object that contains all
+the data that is required to create the issue. It returns an `Issue` object if successful or `error` if unsuccessful.
 ```ballerina
 jira7:IssueRequest newIssue = {
     key: "TEST_ISSUE",
@@ -91,10 +91,10 @@ jira7:IssueRequest newIssue = {
     projectId: ”1234”,
     assigneeName: “username”
 };
-var output = jiraClient->createIssue(newIssue);
-if (output is jira7:Issue) {
-    io:println("Issue Details: ", output);
+var issueResponse = jiraClient->createIssue(newIssue);
+if (issueResponse is jira7:Issue) {
+    io:println("Issue Details: ", issueResponse);
 } else {
-    io:println("Error: ", output.message);
+    io:println("Error: ", issueResponse.message);
 }
 ```
