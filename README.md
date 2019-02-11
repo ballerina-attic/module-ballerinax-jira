@@ -116,7 +116,6 @@ public function main(string... args) {
 
     string projectKey = "RRDEVSPRT";
 
-    //Endpoint Action
     var output = jiraClient->getProject(projectKey);
     if (output is jira7:Project) {
         io:println("Project Details: ", output);
