@@ -3,7 +3,7 @@
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.990.0             | 7.2.2                 |
+| 0.990.3             | 7.2.2                 |
 
 ## Running Tests
 
@@ -21,6 +21,13 @@ You can test all the endpoint actions using the `tests.bal` file, using the foll
         test_username="place your username here"
         test_password="place your password here"
     ```
+
+    Sample configuration :
+     ```
+     test_url="http://localhost:8080/rest/api/2"
+     test_username="user1"
+     test_password="pass1"
+     ```
 
 3. Navigate to the folder `module-jira` using the terminal.
 4. Run the following commands to execute the tests.

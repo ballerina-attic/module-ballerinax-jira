@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.990.0             | 7.2.2                 |
+| 0.990.3             | 7.2.2                 |
 
 
 ### Why do you need the REST API for JIRA
@@ -92,38 +92,41 @@ will returns an Connector error with error message,error type and cause.
 
 ### Example
 * Request 
+
 ```ballerina
 import ballerina/http;
+import ballerina/io;
 import wso2/jira7;
 
-public function main() {
-    //Creating the jira endpoint
-    jira7:JiraConfiguration jiraConfig = {
-        baseUrl: config:getAsString("test_url"),
-        clientConfig: {
-            auth: {
-                scheme: http:BASIC_AUTH,
-                username: config:getAsString("test_username"),
-                password: config:getAsString("test_password")
-            }
+// Create the jira client.
+jira7:JiraConfiguration jiraConfig = {
+    baseUrl: config:getAsString("test_url"),
+    clientConfig: {
+        auth: {
+            scheme: http:BASIC_AUTH,
+            username: config:getAsString("test_username"),
+            password: config:getAsString("test_password")
         }
-    };
+    }
+};
 
-    jira7:Client jiraConnectorEP = new(jiraConfig);
+jira7:Client jiraClient = new(jiraConfig);
+
+public function main(string... args) {
 
     string projectKey = "RRDEVSPRT";
 
-    //Endpoint Action
-    var output = jiraEndpoint->getProject(projectKey);
+    var output = jiraClient->getProject(projectKey);
     if (output is jira7:Project) {
-        io:println(output);
+        io:println("Project Details: ", output);
     } else {
-        io:println(output.message);
+        io:println("Error: ", output.message);
     }
 }
 ```
 
 * Response Object
+
 ```ballerina
 public type Project record {
     string self;

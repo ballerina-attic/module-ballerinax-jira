@@ -30,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    0.990.0     |
+| Ballerina Language |    0.990.3     |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
@@ -58,28 +58,31 @@ jira7:JiraConfiguration jiraConfig = {
     }
 };
 
-jira7:Client jiraConnectorEP = new(jiraConfig);
+jira7:Client jiraClient = new(jiraConfig);
 ```
-The `getAllProjectSummaries` function returns the project summary of all the projects.
+
+The `getAllProjectSummaries` remote function returns the project summary of all the projects if successful or a `JiraConnectorError` if unsuccessful.
 ```ballerina
-var output = jiraEP->getAllProjectSummaries();
-if (output is jira7:JiraConnectorError) {
-    io:println(output.message);
+var response = jiraClient->getAllProjectSummaries();
+if (response is jira7:ProjectSummary[]) {
+    io:println("Project Summary: ", response);
 } else {
-    io:println(output);
+    io:println("Error: ", response);
 }
 ```
-The `createProject` function creates a JIRA project with the given name.
+
+The `createProject` remote function creates a JIRA project with the given name. It returns a `Project` object if successful or a `JiraConnectorError` if unsuccessful.
 ```ballerina
-var output = jiraEP->createProject("TST_PROJECT");
+var output = jiraClient->createProject("TST_PROJECT");
 if (output is jira7:Project) {
-    io:println(output);
+    io:println("Project Details: ", output);
 } else {
-    io:println(output.message);
+    io:println("Error: ", output.message);
 }
 ```
-The `createIssue` function creates an issue with the given issue details. `IssueRequest` is a structure that contains all 
-the data that is required to create the issue. 
+
+The `createIssue` remote function creates an issue with the given issue details. `IssueRequest` is an object that contains all
+the data that is required to create the issue. It returns an `Issue` object if successful or a `JiraConnectorError` if unsuccessful.
 ```ballerina
 jira7:IssueRequest newIssue = {
     key: "TEST_ISSUE",
@@ -88,10 +91,10 @@ jira7:IssueRequest newIssue = {
     projectId: ”1234”,
     assigneeName: “username”
 };
-var output = jiraEP->createIssue(newIssue);
-if (output is jira7:Issue) {
-    io:println(output);
+var issueResponse = jiraClient->createIssue(newIssue);
+if (issueResponse is jira7:Issue) {
+    io:println("Issue Details: ", issueResponse);
 } else {
-    io:println(output.message);
+    io:println("Error: ", issueResponse.message);
 }
 ```
