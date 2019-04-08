@@ -30,7 +30,7 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    0.990.3     |
+| Ballerina Language |    0.991.0     |
 | JIRA REST API      |    7.2.2       |  
 
 ## Sample
@@ -52,8 +52,10 @@ jira7:JiraConfiguration jiraConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: config:getAsString("test_username"),
-            password: config:getAsString("test_password")
+            config: {
+                username: config:getAsString("test_username"),
+                password: config:getAsString("test_password")
+            }
         }
     }
 };

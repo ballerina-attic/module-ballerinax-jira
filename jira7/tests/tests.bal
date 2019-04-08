@@ -16,8 +16,10 @@ JiraConfiguration jiraConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: config:getAsString("test_username"),
-            password: config:getAsString("test_password")
+            config: {
+                username: config:getAsString("test_username"),
+                password: config:getAsString("test_password")
+            }
         }
     }
 };
@@ -25,7 +27,7 @@ JiraConfiguration jiraConfig = {
 Client jiraConnectorEP = new(jiraConfig);
 
 function formatJiraConnError(JiraConnectorError e) returns string {
-    return string `{{e.message}} - {{e.jiraServerErrorLog.errors.toString()}}`;
+    return string `${e.message} - ${e.jiraServerErrorLog.errors.toString()}`;
 }
 
 @test:BeforeSuite
