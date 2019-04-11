@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.990.3             | 7.2.2                 |
+| 0.991.0             | 7.2.2                 |
 
 
 ### Why do you need the REST API for JIRA
@@ -72,8 +72,10 @@ jira7:JiraConfiguration jiraConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: config:getAsString("test_username"),
-            password: config:getAsString("test_password")
+            config: {
+                username: config:getAsString("test_username"),
+                password: config:getAsString("test_password")
+            }
         }
     }
 };
@@ -104,8 +106,10 @@ jira7:JiraConfiguration jiraConfig = {
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
-            username: config:getAsString("test_username"),
-            password: config:getAsString("test_password")
+            config: {
+                username: config:getAsString("test_username"),
+                password: config:getAsString("test_password")
+            }
         }
     }
 };

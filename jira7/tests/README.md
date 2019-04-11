@@ -3,7 +3,7 @@
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.990.3             | 7.2.2                 |
+| 0.991.0             | 7.2.2                 |
 
 ## Running Tests
 
