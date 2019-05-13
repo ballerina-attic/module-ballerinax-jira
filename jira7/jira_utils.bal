@@ -17,6 +17,7 @@
 //
 
 import ballerina/http;
+import ballerina/io;
 import ballerina/mime;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,16 +26,14 @@ import ballerina/mime;
 
 # Checks whether the HTTP response contains any errors.
 # + httpConnectorResponse - Response of the ballerina standard HTTP client
-# + return - `json` payload of the server response or `JiraConnectorError` type record
-function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|JiraConnectorError {
+# + return - `json` payload of the server response when successful, else returns an error
+function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|error {
 
     //checks for any http errors
     if (httpConnectorResponse is error) {
-        JiraConnectorError e = {
-            ^"type": "Http Connector Error",
-            message: <string> httpConnectorResponse.detail().message
-        };
-        return e;
+        error err = error(HTTP_ERROR_CODE, { cause: httpConnectorResponse,
+            message: "Error occurred while invoking the JIRA REST API" });
+        return err;
     } else {
         if (hasValidStatusCode(httpConnectorResponse)) { //if there is no any http connector error or jira server error
             var payloadOutput = httpConnectorResponse.getJsonPayload();
@@ -45,17 +44,11 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
 
             }
         } else {
-            JiraConnectorError e = {
-                ^"type": "Jira Server Error",
-                message: "status" + string.convert(httpConnectorResponse.statusCode) + ":" +
-                    httpConnectorResponse.reasonPhrase
-            };
-            //Extracting the error response from the JSON payload of the Jira server response
-            if (httpConnectorResponse.getJsonPayload() is json) {
-                e.jiraServerErrorLog = <json> httpConnectorResponse.getJsonPayload();
-                e.jiraServerErrorLog = null;
-            }
-            return e;
+            error err = error(JIRA_ERROR_CODE, { cause: httpConnectorResponse.getJsonPayload(),
+                message: "Status code " + io:sprintf("%s", httpConnectorResponse.statusCode) + ":"
+                    + httpConnectorResponse.reasonPhrase });
+
+            return err;
         }
     }
 }

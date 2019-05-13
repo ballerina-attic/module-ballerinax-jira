@@ -21,13 +21,6 @@ import ballerina/config;
 import ballerina/mime;
 import ballerina/log;
 
-function errorToJiraConnectorError(error source) returns JiraConnectorError {
-    JiraConnectorError target = {
-        message: <string>source.detail().message
-    };
-    return target;
-}
-
 function projectRequestToJson(ProjectRequest source) returns json {
 
     json target = {};

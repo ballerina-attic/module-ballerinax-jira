@@ -87,7 +87,7 @@ jira7:Client jiraConnectorEP = new(jiraConfig);
 
 All actions of JIRA Connector are **single-return type actions**, which will returns either response or an error.
 Response can be either a `ballerina record` or a boolean value,depending on the context.
-Error response is also a ballerina record of type`JiraConnectorError`. 
+Error response is an ballerina error.
 
 If a action was successfull, then the requested struct object or boolean `true` response will be returned or otherwise 
 will returns an Connector error with error message,error type and cause.
@@ -145,15 +145,6 @@ public type Project record {
     IssueType[] issueTypes;
     ProjectComponentSummary[] components;
     ProjectVersion[] versions;
-}
-```
-
-* Error Object
-```ballerina
-public type JiraConnectorError record {
-    string message;
-    string ^"type";
-    json jiraServerErrorLog;   
 }
 ```
 
