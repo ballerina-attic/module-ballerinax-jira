@@ -30,43 +30,43 @@ public type Client client object {
 
     # Returns an array of all projects summaries which are visible for the currently logged in user who has
     # `BROWSE`, `ADMINISTER` or `PROJECT_ADMIN` project permission.
-    # + return - Returns Array of `ProjectSummary` records when successful, else returns an error
+    # + return - An array of `ProjectSummary` records if successful, else returns an error
     public remote function getAllProjectSummaries() returns ProjectSummary[]|error;
 
     # Returns detailed representation of the summarized project, if the project exists,the user has
     # permission to view it and if no any error occured.
     # + projectSummary - `ProjectSummary` object
-    # + return - Returns `Project` record when successful, else returns an error
+    # + return - A `Project` record if successful, else returns an error
     public remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns Project|error;
 
     # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + newProject - Record which contains the mandatory fields for new project creation
-    # + return - Returns `Project` record which contains detailed representation of the new project
-    #            when successful, else returns an error
+    # + return - A `Project` record which contains detailed representation of the new project
+    #            if successful, else returns an error
     public remote function createProject(ProjectRequest newProject) returns Project|error;
 
     # Updates a project. Only non null values sent in `ProjectRequest` structure will be updated in the project.
     # Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|error;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function deleteProject(string projectIdOrKey) returns boolean|error;
 
     # Returns detailed representation of a project, if the project exists,the user has permission
     # to view it and if no any error occured.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-    # + return - Returns `Project` record when successful, else returns an error
+    # + return - A `Project` record if successful, else returns an error
     public remote function getProject(string projectIdOrKey) returns Project|error;
 
     # Returns Jira user details of the project lead.
     # + project - `Project` type record
-    # + return - Returns `User` record containing user details of the project lead
-    #            when successful, else returns an error
+    # + return - A `User` record containing user details of the project lead
+    #            if successful, else returns an error
     public remote function getLeadUserDetailsOfProject(Project project) returns User|error;
 
     # Returns detailed reprensentation of a given project role(ie:Developers,Administrators etc.).
@@ -80,7 +80,7 @@ public type Client client object {
     #        `ROLE_ID_OBSERVER`,
     #        `ROLE_ID_USERS`
     #    )
-    # + return - Returns `ProjectRole` record containing the details of the requested role when successful, else
+    # + return - A `ProjectRole` record containing the details of the requested role if successful, else
     #            returns an error
     public remote function getRoleDetailsOfProject(Project project, string projectRoleId) returns ProjectRole|error;
 
@@ -96,7 +96,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + userName - Jira account username of the user to be added
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                                returns boolean|error;
 
@@ -112,7 +112,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + groupName - Name of the group to be added
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                                returns boolean|error;
 
@@ -128,7 +128,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + userName - Name of the user required to be removed
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                                returns boolean|error;
 
@@ -144,87 +144,87 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + groupName - Name of the group required to be removed
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                                returns boolean|error;
 
     # Gets all issue types with valid status values for a project.
     # + project - `Project` type record
-    # + return - Returns Array of `ProjectStatus` record when successful, else returns an error
+    # + return - An Array of `ProjectStatus` record if successful, else returns an error
     public remote function getAllIssueTypeStatusesOfProject(Project project) returns ProjectStatus[]|error;
 
     # Updates the type of a Jira project.
     # + project - `Project` type record
     # + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function changeTypeOfProject(Project project, string newProjectType)
                                returns boolean|error;
 
     # Creates a new project component.
     # + newProjectComponent - Record which contains the mandatory fields for new project component creation
-    # + return - Returns `ProjectComponent` record which contains the created project component when successful,
+    # + return - A `ProjectComponent` record which contains the created project component if successful,
     #            else returns an error
     public remote function createProjectComponent(ProjectComponentRequest newProjectComponent)
                                returns ProjectComponent|error;
 
     # Returns detailed representation of project component.
     # + componentId - string which contains a unique id for a given component.
-    # + return - Returns `ProjectComponent` record when successful, else returns an error
+    # + return - A `ProjectComponent` record if successful, else returns an error
     public remote function getProjectComponent(string componentId) returns ProjectComponent|error;
 
     # Deletes a project component.
     # + componentId - string which contains a unique id for a given component
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function deleteProjectComponent(string componentId) returns boolean|error;
 
     # Returns jira user details of the assignee of the project component.
     # + projectComponent - `ProjectComponent` type record
-    # + return - Returns `User` record containing user details of the assignee when successful, else returns an error
+    # + return - A `User` record containing user details of the assignee if successful, else returns an error
     public remote function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                returns User|error;
 
     # Returns jira user details of the lead of the project component.
     # + projectComponent - `ProjectComponent` type record
-    # + return - Returns `User` record containing user details of the lead when successful, else returns an error
+    # + return - A `User` record containing user details of the lead if successful, else returns an error
     public remote function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent) returns User|error;
 
     # Returns all existing project categories.
-    # + return - Returns Array of `ProjectCategory` objects when successful, else returns an error
+    # + return - An Array of `ProjectCategory` objects if successful, else returns an error
     public remote function getAllProjectCategories() returns ProjectCategory[]|error;
 
     # Returns a detailed representation of a project category.
     # + projectCategoryId - Jira id of the project category
-    # + return -  Returns `ProjectCategory` record when successful, else returns an error
+    # + return -  A `ProjectCategory` record if successful, else returns an error
     public remote function getProjectCategory(string projectCategoryId) returns ProjectCategory|error;
 
     # Create a new project category.
     # + newCategory - Record which contains the mandatory fields for new project category creation
-    # + return - Returns `ProjectCategory` record when successful, else returns an error
+    # + return - A `ProjectCategory` record if successful, else returns an error
     public remote function createProjectCategory(ProjectCategoryRequest newCategory) returns ProjectCategory|error;
 
     # Delete a project category.
     # + projectCategoryId - Jira id of the project category
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function deleteProjectCategory(string projectCategoryId) returns boolean|error;
 
     # Returns a detailed representation of a jira issue.
     # + issueIdOrKey - Id or key of the required issue
-    # + return -  Returns `Issue` record when successful, else returns an error
+    # + return -  A `Issue` record if successful, else returns an error
     public remote function getIssue(string issueIdOrKey) returns Issue|error;
 
     # Creates a new jira issue.
     # + newIssue - Record which contains the mandatory fields for new issue creation
-    # + return - Returns `Issue` record when successful, else returns an error
+    # + return - A `Issue` record if successful, else returns an error
     public remote function createIssue(IssueRequest newIssue) returns Issue|error;
     # Deletes a jira issue.
     # + issueIdOrKey - Id or key of the issue
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function deleteIssue(string issueIdOrKey) returns boolean|error;
 
     # Adds a comment to a Jira Issue.
     # + issueIdOrKey - Id or key of the issue
     # + comment - The details of the comment to be added
-    # + return - Returns true when the process is successful, else returns an error
+    # + return - true if the process is successful, else returns an error
     public remote function addCommentToIssue(string issueIdOrKey, IssueComment comment) returns boolean|error;
 };
 
@@ -268,16 +268,9 @@ public remote function Client.getAllDetailsFromProjectSummary(ProjectSummary pro
     //Evaluate http response for connection and server errors
     var jsonResponseOut = getValidatedResponse(httpResponseOut);
     if (jsonResponseOut is json) {
-    jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
-    jsonResponseOut.lead.name : null : null;
-    var projectOut = convertJsonToProject(jsonResponseOut);
-    if(projectOut is Project) {
-        return projectOut;
-    } else {
-        error err = error(CONVERSION_ERROR_CODE, { cause: projectOut,
-            message: "Error occurred while doing json conversion." });
-        return err;
-    }
+        jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
+        jsonResponseOut.lead.name : null : null;
+        return convertJsonToProject(jsonResponseOut);
     } else {
         return jsonResponseOut;
     }
