@@ -16,6 +16,8 @@
 // under the License.
 //
 
+public type TRUE true;
+
 # Represents a summary of a Jira project.
 # + resource_path - API resource URL
 # + id - Project Id

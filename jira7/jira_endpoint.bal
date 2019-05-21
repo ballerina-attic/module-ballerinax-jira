@@ -50,12 +50,12 @@ public type Client client object {
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
     # + return - true if the process is successful, else returns an error
-    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|error;
+    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns TRUE|error;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + return - true if the process is successful, else returns an error
-    public remote function deleteProject(string projectIdOrKey) returns boolean|error;
+    public remote function deleteProject(string projectIdOrKey) returns TRUE|error;
 
     # Returns detailed representation of a project, if the project exists,the user has permission
     # to view it and if no any error occured.
@@ -98,7 +98,7 @@ public type Client client object {
     # + userName - Jira account username of the user to be added
     # + return - true if the process is successful, else returns an error
     public remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
-                               returns boolean|error;
+                               returns TRUE|error;
 
     # Assigns a group to a given project role.
     # + project - `Project` type record
@@ -114,7 +114,7 @@ public type Client client object {
     # + groupName - Name of the group to be added
     # + return - true if the process is successful, else returns an error
     public remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
-                               returns boolean|error;
+                               returns TRUE|error;
 
     # Removes a given user from a given project role.
     # + project - `Project` type record
@@ -130,7 +130,7 @@ public type Client client object {
     # + userName - Name of the user required to be removed
     # + return - true if the process is successful, else returns an error
     public remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
-                               returns boolean|error;
+                               returns TRUE|error;
 
     # Removes a given group from a given project role.
     # + project - `Project` type record
@@ -146,7 +146,7 @@ public type Client client object {
     # + groupName - Name of the group required to be removed
     # + return - true if the process is successful, else returns an error
     public remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
-                               returns boolean|error;
+                               returns TRUE|error;
 
     # Gets all issue types with valid status values for a project.
     # + project - `Project` type record
@@ -158,7 +158,7 @@ public type Client client object {
     # + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
     # + return - true if the process is successful, else returns an error
     public remote function changeTypeOfProject(Project project, string newProjectType)
-                               returns boolean|error;
+                               returns TRUE|error;
 
     # Creates a new project component.
     # + newProjectComponent - Record which contains the mandatory fields for new project component creation
@@ -175,7 +175,7 @@ public type Client client object {
     # Deletes a project component.
     # + componentId - string which contains a unique id for a given component
     # + return - true if the process is successful, else returns an error
-    public remote function deleteProjectComponent(string componentId) returns boolean|error;
+    public remote function deleteProjectComponent(string componentId) returns TRUE|error;
 
     # Returns jira user details of the assignee of the project component.
     # + projectComponent - `ProjectComponent` type record
@@ -205,7 +205,7 @@ public type Client client object {
     # Delete a project category.
     # + projectCategoryId - Jira id of the project category
     # + return - true if the process is successful, else returns an error
-    public remote function deleteProjectCategory(string projectCategoryId) returns boolean|error;
+    public remote function deleteProjectCategory(string projectCategoryId) returns TRUE|error;
 
     # Returns a detailed representation of a jira issue.
     # + issueIdOrKey - Id or key of the required issue
@@ -219,13 +219,13 @@ public type Client client object {
     # Deletes a jira issue.
     # + issueIdOrKey - Id or key of the issue
     # + return - true if the process is successful, else returns an error
-    public remote function deleteIssue(string issueIdOrKey) returns boolean|error;
+    public remote function deleteIssue(string issueIdOrKey) returns TRUE|error;
 
     # Adds a comment to a Jira Issue.
     # + issueIdOrKey - Id or key of the issue
     # + comment - The details of the comment to be added
     # + return - true if the process is successful, else returns an error
-    public remote function addCommentToIssue(string issueIdOrKey, IssueComment comment) returns boolean|error;
+    public remote function addCommentToIssue(string issueIdOrKey, IssueComment comment) returns TRUE|error;
 };
 
 # Represents the Jira Client Connector Endpoint configuration.
@@ -301,7 +301,7 @@ public remote function Client.createProject(ProjectRequest newProject) returns P
     }
 }
 
-public remote function Client.updateProject(string projectIdOrKey, ProjectRequest update) returns boolean|error {
+public remote function Client.updateProject(string projectIdOrKey, ProjectRequest update) returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -320,7 +320,7 @@ public remote function Client.updateProject(string projectIdOrKey, ProjectReques
     }
 }
 
-public remote function Client.deleteProject(string projectIdOrKey) returns boolean|error {
+public remote function Client.deleteProject(string projectIdOrKey) returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -399,7 +399,7 @@ public remote function Client.getRoleDetailsOfProject(Project project, string pr
 }
 
 public remote function Client.addUserToRoleOfProject(Project project, string projectRoleId, string userName)
-    returns boolean|error {
+    returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -418,7 +418,7 @@ public remote function Client.addUserToRoleOfProject(Project project, string pro
 }
 
 public remote function Client.addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
-    returns boolean|error {
+    returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -437,7 +437,7 @@ public remote function Client.addGroupToRoleOfProject(Project project, string pr
 }
 
 public remote function Client.removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
-    returns boolean|error {
+    returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -454,7 +454,7 @@ public remote function Client.removeUserFromRoleOfProject(Project project, strin
 }
 
 public remote function Client.removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
-    returns boolean|error {
+    returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -503,7 +503,7 @@ public remote function Client.getAllIssueTypeStatusesOfProject(Project project) 
     }
 }
 
-public remote function Client.changeTypeOfProject(Project project, string newProjectType) returns boolean|error {
+public remote function Client.changeTypeOfProject(Project project, string newProjectType) returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -560,7 +560,7 @@ public remote function Client.getProjectComponent(string componentId) returns Pr
     }
 }
 
-public remote function Client.deleteProjectComponent(string componentId) returns boolean|error {
+public remote function Client.deleteProjectComponent(string componentId) returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -693,7 +693,7 @@ public remote function Client.createProjectCategory(ProjectCategoryRequest newCa
     }
 }
 
-public remote function Client.deleteProjectCategory(string projectCategoryId) returns boolean|error {
+public remote function Client.deleteProjectCategory(string projectCategoryId) returns TRUE|error {
 
     http:Request outRequest = new;
     var httpResponseOut = self.jiraClient->delete("/projectCategory/" + projectCategoryId, outRequest);
@@ -743,7 +743,7 @@ public remote function Client.createIssue(IssueRequest newIssue) returns Issue|e
     }
 }
 
-public remote function Client.deleteIssue(string issueIdOrKey) returns boolean|error {
+public remote function Client.deleteIssue(string issueIdOrKey) returns TRUE|error {
 
     http:Request outRequest = new;
 
@@ -758,7 +758,7 @@ public remote function Client.deleteIssue(string issueIdOrKey) returns boolean|e
     }
 }
 
-public remote function Client.addCommentToIssue(string issueIdOrKey, IssueComment comment) returns boolean|error {
+public remote function Client.addCommentToIssue(string issueIdOrKey, IssueComment comment) returns TRUE|error {
 
     http:Request commentRequest = new;
 
