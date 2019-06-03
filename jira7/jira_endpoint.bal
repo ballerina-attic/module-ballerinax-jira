@@ -41,7 +41,7 @@ public type Client client object {
 
     # Creates a new project. Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + newProject - Record which contains the mandatory fields for new project creation
-    # + return - A `Project` record which contains detailed representation of the new project
+    # + return - A `Project` record which contains a detailed representation of the new project
     #            if successful, else returns an error
     public remote function createProject(ProjectRequest newProject) returns Project|error;
 
@@ -49,12 +49,12 @@ public type Client client object {
     # Values available for the assigneeType field are: `PROJECT_LEAD` and `UNASSIGNED`.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns error?;
 
     # Deletes a project.
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function deleteProject(string projectIdOrKey) returns error?;
 
     # Returns detailed representation of a project, if the project exists,the user has permission
@@ -96,7 +96,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + userName - Jira account username of the user to be added
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function addUserToRoleOfProject(Project project, string projectRoleId, string userName)
                                returns error?;
 
@@ -112,7 +112,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + groupName - Name of the group to be added
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function addGroupToRoleOfProject(Project project, string projectRoleId, string groupName)
                                returns error?;
 
@@ -128,7 +128,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + userName - Name of the user required to be removed
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function removeUserFromRoleOfProject(Project project, string projectRoleId, string userName)
                                returns error?;
 
@@ -144,7 +144,7 @@ public type Client client object {
     #        `ROLE_ID_USERS`
     #    )
     # + groupName - Name of the group required to be removed
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function removeGroupFromRoleOfProject(Project project, string projectRoleId, string groupName)
                                returns error?;
 
@@ -156,7 +156,7 @@ public type Client client object {
     # Updates the type of a Jira project.
     # + project - `Project` type record
     # + newProjectType - New project type for the jira project(`PROJECT_TYPE_SOFTWARE` or `PROJECT_TYPE_BUSINESS`)
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function changeTypeOfProject(Project project, string newProjectType) returns error?;
 
     # Creates a new project component.
@@ -173,7 +173,7 @@ public type Client client object {
 
     # Deletes a project component.
     # + componentId - string which contains a unique id for a given component
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function deleteProjectComponent(string componentId) returns error?;
 
     # Returns jira user details of the assignee of the project component.
@@ -203,7 +203,7 @@ public type Client client object {
 
     # Delete a project category.
     # + projectCategoryId - Jira id of the project category
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function deleteProjectCategory(string projectCategoryId) returns error?;
 
     # Returns a detailed representation of a jira issue.
@@ -217,13 +217,13 @@ public type Client client object {
     public remote function createIssue(IssueRequest newIssue) returns Issue|error;
     # Deletes a jira issue.
     # + issueIdOrKey - Id or key of the issue
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function deleteIssue(string issueIdOrKey) returns error?;
 
     # Adds a comment to a Jira Issue.
     # + issueIdOrKey - Id or key of the issue
     # + comment - The details of the comment to be added
-    # + return - true if the process is successful, else returns an error
+    # + return - If the process is un successful, returns an error
     public remote function addCommentToIssue(string issueIdOrKey, IssueComment comment) returns error?;
 };
 
