@@ -150,7 +150,7 @@ public type Client client object {
 
     # Gets all issue types with valid status values for a project.
     # + project - `Project` type record
-    # + return - An array of `ProjectStatus` record if successful, else returns an error
+    # + return - An array of `ProjectStatus` records if successful, else returns an error
     public remote function getAllIssueTypeStatusesOfProject(Project project) returns ProjectStatus[]|error;
 
     # Updates the type of a Jira project.
@@ -161,7 +161,7 @@ public type Client client object {
 
     # Creates a new project component.
     # + newProjectComponent - Record which contains the mandatory fields for new project component creation
-    # + return - A `ProjectComponent` record which contains the created project component if successful,
+    # + return - A `ProjectComponent` record which represents the created project component if successful,
     #            else returns an error
     public remote function createProjectComponent(ProjectComponentRequest newProjectComponent)
                                returns ProjectComponent|error;
@@ -265,14 +265,10 @@ public remote function Client.getAllDetailsFromProjectSummary(ProjectSummary pro
 
     var httpResponseOut = self.jiraClient->get("/project/" + projectSummary.key);
     //Evaluate http response for connection and server errors
-    var jsonResponseOut = getValidatedResponse(httpResponseOut);
-    if (jsonResponseOut is json) {
-        jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
-        jsonResponseOut.lead.name : null : null;
-        return convertJsonToProject(jsonResponseOut);
-    } else {
-        return jsonResponseOut;
-    }
+    json jsonResponseOut = check getValidatedResponse(httpResponseOut);
+    jsonResponseOut.leadName = jsonResponseOut.lead != null ? jsonResponseOut.lead.name != null ?
+    jsonResponseOut.lead.name : null : null;
+    return convertJsonToProject(jsonResponseOut);
 }
 
 public remote function Client.createProject(ProjectRequest newProject) returns Project|error {
@@ -310,11 +306,7 @@ public remote function Client.updateProject(string projectIdOrKey, ProjectReques
 
     var httpResponseOut = self.jiraClient->put("/project/" + projectIdOrKey, outRequest);
     //Evaluate http response for connection and server errors
-    var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
-    if (jsonResponseOut is error) {
-        return jsonResponseOut;
-    }
+    json jsonResponseOut = check getValidatedResponse(httpResponseOut);
 }
 
 public remote function Client.deleteProject(string projectIdOrKey) returns error? {

@@ -510,7 +510,7 @@ function afterSuite() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
     var projectDeleted = jiraConnectorEP->deleteProject("TSTPROJECT");
     if (projectDeleted is error) {
-        log:printInfo(projectDeleted);
+        log:printInfo(<string>projectDeleted.detail().message);
     }
     var projectCategoryDeleted = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
 }
