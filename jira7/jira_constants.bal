@@ -20,39 +20,42 @@
 //                                      Configuration Constants                                                       //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-final string JIRA_REST_API_RESOURCE = "/rest/api/";
-final string JIRA_AUTH_RESOURCE = "/rest/auth/1/session/";
-final string JIRA_REST_API_VERSION = "2";
+const string JIRA_REST_API_RESOURCE = "/rest/api/";
+const string JIRA_AUTH_RESOURCE = "/rest/auth/1/session/";
+const string JIRA_REST_API_VERSION = "2";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          HTTP Status Codes                                                         //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-final int STATUS_CODE_OK = 200;
-final int STATUS_CODE_CREATED = 201;
-final int STATUS_CODE_NO_CONTENT = 204;
-final int STATUS_CODE_NOTFOUND = 404;
-final int STATUS_CODE_INTERNAL_ERROR = 500;
-final int STATUS_CODE_BAD_REQUEST = 400;
-final int STATUS_CODE_UNAUTHORIZED = 401;
-final int Status_CODE_CONFLICT = 409;
+const int STATUS_CODE_OK = 200;
+const int STATUS_CODE_CREATED = 201;
+const int STATUS_CODE_NO_CONTENT = 204;
+const int STATUS_CODE_NOTFOUND = 404;
+const int STATUS_CODE_INTERNAL_ERROR = 500;
+const int STATUS_CODE_BAD_REQUEST = 400;
+const int STATUS_CODE_UNAUTHORIZED = 401;
+const int Status_CODE_CONFLICT = 409;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Other Jira Constants                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-final string ROLE_ID_ADMINISTRATORS = "10002";
-final string ROLE_ID_CSAT_DEVELOPERS = "10030";
-final string ROLE_ID_DEVELOPERS = "10001";
-final string ROLE_ID_EXTERNAL_CONSULTANTS = "10011";
-final string ROLE_ID_NOTIFICATIONS = "10010";
-final string ROLE_ID_OBSERVER = "10020";
-final string ROLE_ID_USERS = "10000";
+const string ROLE_ID_ADMINISTRATORS = "10002";
+const string ROLE_ID_CSAT_DEVELOPERS = "10030";
+const string ROLE_ID_DEVELOPERS = "10001";
+const string ROLE_ID_EXTERNAL_CONSULTANTS = "10011";
+const string ROLE_ID_NOTIFICATIONS = "10010";
+const string ROLE_ID_OBSERVER = "10020";
+const string ROLE_ID_USERS = "10000";
 
-final string PROJECT_TYPE_SOFTWARE = "software";
-final string PROJECT_TYPE_BUSINESS = "business";
+const string PROJECT_TYPE_SOFTWARE = "software";
+const string PROJECT_TYPE_BUSINESS = "business";
 
-final string EMPTY_STRING = "";
+const string EMPTY_STRING = "";
 
 // Error Codes
-final string JIRA_ERROR_CODE = "(wso2/jira)JiraError";
+const string JIRA_ERROR_CODE = "(wso2/jira)JiraError";
+const string CONVERSION_ERROR_CODE = "(wso2/jira)ConversionError";
+const string HTTP_ERROR_CODE = "(wso2/jira)HTTPError";
+

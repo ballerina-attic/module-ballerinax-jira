@@ -346,16 +346,6 @@ public type IssueSummary record {
     IssueType issueType = {};
 };
 
-# Represent Jira Connector based errors.
-# + type - Type of the error (HTTP error,server error etc.)
-# + message - Error message
-# + jiraServerErrorLog - Error log returned by the jira server, for "server error" type
-public type JiraConnectorError record {
-    string message = "";
-    string ^"type" = "";
-    json jiraServerErrorLog = {};
-};
-
 # Represents record of jira issue comment.
 # + id - Issue id
 # + authorName - Authors name of comment

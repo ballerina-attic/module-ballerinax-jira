@@ -26,14 +26,10 @@ JiraConfiguration jiraConfig = {
 
 Client jiraConnectorEP = new(jiraConfig);
 
-function formatJiraConnError(JiraConnectorError e) returns string {
-    return string `${e.message} - ${e.jiraServerErrorLog.errors.toString()}`;
-}
-
 @test:BeforeSuite
 function connector_init() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
-    _ = jiraConnectorEP->deleteProject("TSTPROJECT");
+    var projectDeleted = jiraConnectorEP->deleteProject("TSTPROJECT");
 }
 
 @test:Config
@@ -41,8 +37,8 @@ function test_getAllProjectSummaries() {
     log:printInfo("ACTION : getAllProjectSummaries()");
 
     var output = jiraConnectorEP->getAllProjectSummaries();
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         projectSummaryArray_test = untaint output;
     }
@@ -57,7 +53,7 @@ function test_getAllDetailsFromProjectSummary() {
     if (output is Project) {
         project_test = {};
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -87,7 +83,7 @@ function test_createProject() {
     if (output is Project) {
         project_test = untaint output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -103,8 +99,8 @@ function test_updateProject() {
     };
 
     var output = jiraConnectorEP->updateProject("TSTPROJECT", projectUpdate);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
        string result = "";
     }
@@ -133,8 +129,8 @@ function test_deleteProject() {
     log:printInfo("ACTION : deleteProject()");
 
     var output = jiraConnectorEP->deleteProject("TSTPROJECT");
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -151,7 +147,7 @@ function test_getProject() {
     if (output is Project) {
         project_test = untaint output;
     } else {
-	    test:assertFail(msg = formatJiraConnError(output));
+	    test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -162,8 +158,8 @@ function test_getLeadUserDetailsOfProject() {
     log:printInfo("ACTION : getLeadUserDetailsOfProject()");
 
     var output = jiraConnectorEP->getLeadUserDetailsOfProject(project_test);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -176,8 +172,8 @@ function test_getRoleDetailsOfProject() {
     log:printInfo("ACTION : getRoleDetailsOfProject()");
 
     var output = jiraConnectorEP->getRoleDetailsOfProject(project_test, "10002");
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -191,8 +187,8 @@ function test_addUserToRoleOfProject() {
 
     var output = jiraConnectorEP->addUserToRoleOfProject(project_test, "10002",
         config:getAsString("test_username"));
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -206,8 +202,8 @@ function test_addGroupToRoleOfProject() {
 
     var output = jiraConnectorEP->addGroupToRoleOfProject(project_test, "10002",
         "jira-administrators");
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -221,8 +217,8 @@ function test_removeUserFromRoleOfProject() {
 
     var output = jiraConnectorEP->removeUserFromRoleOfProject(project_test, "10002",
         config:getAsString("test_username"));
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -237,8 +233,8 @@ function test_removeGroupFromRoleOfProject() {
 
     var output = jiraConnectorEP->removeGroupFromRoleOfProject(project_test, "10002",
         "jira-administrators");
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -251,8 +247,8 @@ function test_getAllIssueTypeStatusesOfProject() {
     log:printInfo("ACTION : getAllIssueTypeStatusesOfProject()");
 
     var output = jiraConnectorEP->getAllIssueTypeStatusesOfProject(project_test);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         project_status = untaint output[0];
         string result = "";
@@ -266,8 +262,8 @@ function test_changeTypeOfProject() {
     log:printInfo("ACTION : changeTypeOfProject()");
 
     var output = jiraConnectorEP->changeTypeOfProject(project_test, "software");
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -293,7 +289,7 @@ function test_createProjectComponent() {
     if (output is ProjectComponent) {
         projectComponent_test = untaint output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -310,7 +306,7 @@ function test_getProjectComponent() {
     if (output is ProjectComponent) {
         string value = "";
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -321,8 +317,8 @@ function test_getAssigneeUserDetailsOfProjectComponent() {
     log:printInfo("ACTION : getAssigneeUserDetailsOfProjectComponent()");
 
     var output = jiraConnectorEP->getAssigneeUserDetailsOfProjectComponent(projectComponent_test);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -335,8 +331,8 @@ function test_getLeadUserDetailsOfProjectComponent() {
     log:printInfo("ACTION : getLeadUserDetailsOfProjectComponent()");
 
     var output = jiraConnectorEP->getLeadUserDetailsOfProjectComponent(projectComponent_test);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -353,8 +349,8 @@ function test_deleteProjectComponent() {
     log:printInfo("ACTION : deleteProjectComponent()");
 
     var output = jiraConnectorEP->deleteProjectComponent(projectComponent_test.id);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -365,8 +361,8 @@ function test_getAllProjectCategories() {
     log:printInfo("ACTION : getAllProjectCategories()");
 
     var output = jiraConnectorEP->getAllProjectCategories();
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -383,7 +379,7 @@ function test_createProjectCategory() {
     if (output is ProjectCategory) {
         projectCategory_test = untaint output;
     } else {
-        test:assertFail(msg = <string>output.message + " Please retry again after removing
+        test:assertFail(msg = <string>output.detail().message + " Please retry again after removing
         the project category: " + <string> newCategory.name + " from from your jira instance");
     }
 }
@@ -397,7 +393,7 @@ function test_getProjectCategory() {
     if (output is ProjectCategory) {
         projectCategory_test = untaint output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -408,8 +404,8 @@ function test_deleteProjectCategory() {
     log:printInfo("ACTION : deleteProjectCategory()");
 
     var output = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -432,7 +428,7 @@ function test_createIssue() {
     if (output is Issue) {
         issue_test = untaint output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -459,7 +455,7 @@ function test_createIssueWithExtraFields() {
     if (output is Issue) {
         issue_test = untaint output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -474,8 +470,8 @@ function test_addCommentToIssue() {
     };
 
     var output = jiraConnectorEP->addCommentToIssue(issue_test.key, newComment);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -491,7 +487,7 @@ function test_getIssue() {
     if (output is Issue) {
         issue_test = output;
     } else {
-        test:assertFail(msg = formatJiraConnError(output));
+        test:assertFail(msg = <string>output.detail().message);
     }
 }
 
@@ -502,8 +498,8 @@ function test_deleteIssue() {
     log:printInfo("ACTION : deleteIssue()");
 
     var output = jiraConnectorEP->deleteIssue(issue_test.key);
-    if (output is JiraConnectorError) {
-        test:assertFail(msg = formatJiraConnError(output));
+    if (output is error) {
+        test:assertFail(msg = <string>output.detail().message);
     } else {
         string result = "";
     }
@@ -512,6 +508,9 @@ function test_deleteIssue() {
 @test:AfterSuite
 function afterSuite() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
-    _ = jiraConnectorEP->deleteProject("TSTPROJECT");
-    _ = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
+    var projectDeleted = jiraConnectorEP->deleteProject("TSTPROJECT");
+    if (projectDeleted is error) {
+        log:printInfo(<string>projectDeleted.detail().message);
+    }
+    var projectCategoryDeleted = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
 }
