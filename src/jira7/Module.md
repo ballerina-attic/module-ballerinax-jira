@@ -30,8 +30,8 @@ issues, create new issues, etc.
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    1.0.0     |
-| JIRA REST API      |    7.2.2       |  
+| Ballerina Language |    1.0.0       |
+| JIRA REST API      |    7.13.0      |  
 
 ## Sample
 First, import the `wso2/jira7` module into the Ballerina project.
@@ -48,13 +48,13 @@ import wso2/jira7;
 You can now enter the credentials in the HTTP client config.
 ```ballerina
 jira7:JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("test_url"),
+    baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
             config: {
-                username: config:getAsString("test_username"),
-                password: config:getAsString("test_password")
+                username: config:getAsString("JIRA_USERNAME"),
+                password: config:getAsString("JIRA_PASSWORD")
             }
         }
     }

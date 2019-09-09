@@ -1,7 +1,7 @@
 [project]
 org-name = "wso2"
-version = "0.8.19"
+version = "0.8.20"
 authors = ["WSO2"]
 repository = "https://github.com/wso2-ballerina/module-jira"
 keywords = ["ballerina", "jira","jira7"]
-license = "Apache-2.0"
+license = ["Apache-2.0"]

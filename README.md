@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 0.991.0             | 7.2.2                 |
+| 1.0.0               | 7.13.0                |
 
 
 ### Why do you need the REST API for JIRA
@@ -60,7 +60,7 @@ Please follow the following steps to authenticate your connector.
   [JIRA Sign-Up Page](https://id.atlassian.com/signup?application=mac&tenant=&continue=https%3A%2F%2Fmy.atlassian.com).
 
 - Provide the credentials to your endpoint in the initialization step, as shown 
-in the following sample code.
+in the following sample code. A sample JIRA_URL would be "http://localhost:8080/rest/api/2"
 
 ```ballerina
 import ballerina/http;
@@ -68,13 +68,13 @@ import wso2/jira7;
 
 //Creation of connector endpoint
 jira7:JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("test_url"),
+    baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
             scheme: http:BASIC_AUTH,
             config: {
-                username: config:getAsString("test_username"),
-                password: config:getAsString("test_password")
+                username: config:getAsString("JIRA_USERNAME"),
+                password: config:getAsString("JIRA_PASSWORD")
             }
         }
     }

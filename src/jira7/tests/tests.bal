@@ -1,6 +1,7 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
+import ballerina/auth;
 import ballerina/config;
 
 Project project_test = {};
@@ -11,15 +12,17 @@ Issue issue_test = {};
 string testComment = "This is a test comment created for Ballerina Jira Connector";
 ProjectStatus project_status = {};
 
+auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
+    username: config:getAsString("JIRA_USERNAME"),
+    password: config:getAsString("JIRA_PASSWORD")
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
 JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("test_url"),
+    baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
-            scheme: http:BASIC_AUTH,
-            config: {
-                username: config:getAsString("test_username"),
-                password: config:getAsString("test_password")
-            }
+            authHandler: outboundBasicAuthHandler
         }
     }
 };
@@ -32,15 +35,17 @@ function connector_init() {
     var projectDeleted = jiraConnectorEP->deleteProject("TSTPROJECT");
 }
 
-@test:Config
+@test:Config {
+    dependsOn: ["test_createProject"]
+}
 function test_getAllProjectSummaries() {
     log:printInfo("ACTION : getAllProjectSummaries()");
 
     var output = jiraConnectorEP->getAllProjectSummaries();
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
-        projectSummaryArray_test = untaint output;
+        projectSummaryArray_test = <@untainted> output;
     }
 }
 
@@ -53,7 +58,7 @@ function test_getAllDetailsFromProjectSummary() {
     if (output is Project) {
         project_test = {};
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -70,20 +75,20 @@ function test_createProject() {
         projectTypeKey: "software",
         projectTemplateKey: "com.pyxis.greenhopper.jira:basic-software-development-template",
         description: "Example Project description",
-        lead: config:getAsString("test_username"),
-        url: "http://atlassian.com",
+        lead: config:getAsString("JIRA_USERNAME"),
+        url: config:getAsString("JIRA_URL"),
         assigneeType: "PROJECT_LEAD",
         avatarId: "10000",
-        permissionScheme: "10000",
+        permissionScheme: "0",
         notificationScheme: "10000",
         categoryId: projectCategory_test.id
     };
 
     var output = jiraConnectorEP->createProject(newProject);
     if (output is Project) {
-        project_test = untaint output;
+        project_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -94,13 +99,13 @@ function test_updateProject() {
     log:printInfo("ACTION : updateProject()");
 
     ProjectRequest projectUpdate = {
-        lead: config:getAsString("test_username"),
+        lead: config:getAsString("JIRA_USERNAME"),
         projectTypeKey: "business"
     };
 
     var output = jiraConnectorEP->updateProject("TSTPROJECT", projectUpdate);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
        string result = "";
     }
@@ -109,6 +114,8 @@ function test_updateProject() {
 @test:Config {
     dependsOn: ["test_createProject",
     "test_updateProject",
+    "test_getAllProjectSummaries",
+    "test_getAllDetailsFromProjectSummary",
     "test_getLeadUserDetailsOfProject",
     "test_getRoleDetailsOfProject",
     "test_addUserToRoleOfProject",
@@ -130,7 +137,7 @@ function test_deleteProject() {
 
     var output = jiraConnectorEP->deleteProject("TSTPROJECT");
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -145,9 +152,9 @@ function test_getProject() {
 
     var output = jiraConnectorEP->getProject("TSTPROJECT");
     if (output is Project) {
-        project_test = untaint output;
+        project_test = <@untainted> output;
     } else {
-	    test:assertFail(msg = <string>output.detail().message);
+	    test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -159,7 +166,7 @@ function test_getLeadUserDetailsOfProject() {
 
     var output = jiraConnectorEP->getLeadUserDetailsOfProject(project_test);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -173,7 +180,7 @@ function test_getRoleDetailsOfProject() {
 
     var output = jiraConnectorEP->getRoleDetailsOfProject(project_test, "10002");
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -186,9 +193,9 @@ function test_addUserToRoleOfProject() {
     log:printInfo("ACTION : addUserToRoleOfProject()");
 
     var output = jiraConnectorEP->addUserToRoleOfProject(project_test, "10002",
-        config:getAsString("test_username"));
+        config:getAsString("JIRA_USERNAME"));
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -203,7 +210,7 @@ function test_addGroupToRoleOfProject() {
     var output = jiraConnectorEP->addGroupToRoleOfProject(project_test, "10002",
         "jira-administrators");
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -216,9 +223,9 @@ function test_removeUserFromRoleOfProject() {
     log:printInfo("ACTION : removeUserFromRoleOfProject()");
 
     var output = jiraConnectorEP->removeUserFromRoleOfProject(project_test, "10002",
-        config:getAsString("test_username"));
+        config:getAsString("JIRA_USERNAME"));
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -234,7 +241,7 @@ function test_removeGroupFromRoleOfProject() {
     var output = jiraConnectorEP->removeGroupFromRoleOfProject(project_test, "10002",
         "jira-administrators");
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -248,9 +255,9 @@ function test_getAllIssueTypeStatusesOfProject() {
 
     var output = jiraConnectorEP->getAllIssueTypeStatusesOfProject(project_test);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
-        project_status = untaint output[0];
+        project_status = <@untainted> output[0];
         string result = "";
     }
 }
@@ -263,7 +270,7 @@ function test_changeTypeOfProject() {
 
     var output = jiraConnectorEP->changeTypeOfProject(project_test, "software");
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -279,7 +286,7 @@ function test_createProjectComponent() {
     {
         name: "Test-ProjectComponent",
         description: "Test component created by ballerina jira connector.",
-        leadUserName: <string>config:getAsString("test_username"),
+        leadUserName: config:getAsString("JIRA_USERNAME"),
         assigneeType: "PROJECT_LEAD",
         project: project_test.key,
         projectId: project_test.id
@@ -287,9 +294,9 @@ function test_createProjectComponent() {
 
     var output = jiraConnectorEP->createProjectComponent(newProjectComponent);
     if (output is ProjectComponent) {
-        projectComponent_test = untaint output;
+        projectComponent_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -306,7 +313,7 @@ function test_getProjectComponent() {
     if (output is ProjectComponent) {
         string value = "";
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -318,7 +325,7 @@ function test_getAssigneeUserDetailsOfProjectComponent() {
 
     var output = jiraConnectorEP->getAssigneeUserDetailsOfProjectComponent(projectComponent_test);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -332,7 +339,7 @@ function test_getLeadUserDetailsOfProjectComponent() {
 
     var output = jiraConnectorEP->getLeadUserDetailsOfProjectComponent(projectComponent_test);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -350,25 +357,25 @@ function test_deleteProjectComponent() {
 
     var output = jiraConnectorEP->deleteProjectComponent(projectComponent_test.id);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
 }
 
-@test:Config
+@test:Config {}
 function test_getAllProjectCategories() {
     log:printInfo("ACTION : getAllProjectCategories()");
 
     var output = jiraConnectorEP->getAllProjectCategories();
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
 }
 
-@test:Config
+@test:Config {}
 function test_createProjectCategory() {
     log:printInfo("ACTION : createProjectCategory()");
 
@@ -377,9 +384,9 @@ function test_createProjectCategory() {
 
     var output = jiraConnectorEP->createProjectCategory(newCategory);
     if (output is ProjectCategory) {
-        projectCategory_test = untaint output;
+        projectCategory_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message + " Please retry again after removing
+        test:assertFail(msg = <string>output.detail()?.message + " Please retry again after removing
         the project category: " + <string> newCategory.name + " from from your jira instance");
     }
 }
@@ -391,9 +398,9 @@ function test_getProjectCategory() {
     log:printInfo("ACTION : getProjectCategory()");
     var output = jiraConnectorEP->getProjectCategory(projectCategory_test.id);
     if (output is ProjectCategory) {
-        projectCategory_test = untaint output;
+        projectCategory_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -405,7 +412,7 @@ function test_deleteProjectCategory() {
 
     var output = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -421,14 +428,14 @@ function test_createIssue() {
         summary: "This is a test issue created for Ballerina Jira Connector",
         issueTypeId: project_status.id,
         projectId: project_test.id,
-        assigneeName: config:getAsString("test_username")
+        assigneeName: config:getAsString("JIRA_USERNAME")
     };
 
     var output = jiraConnectorEP->createIssue(newIssue);
     if (output is Issue) {
-        issue_test = untaint output;
+        issue_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -443,19 +450,20 @@ function test_createIssueWithExtraFields() {
         summary: "This is a test issue created for Ballerina Jira Connector with description and reporter",
         issueTypeId: project_status.id,
         projectId: project_test.id,
-        assigneeName: config:getAsString("test_username"),
-        description: "test description"
+        assigneeName: config:getAsString("JIRA_USERNAME")
+        
     };
+    newIssue["description"] = "test description";
     // Specify the reporter field in json format
 
-    anydata j = <json> {name: config:getAsString("test_username")};
-    newIssue.reporter = j;
+    anydata j = <json> {name: config:getAsString("JIRA_USERNAME")};
+    newIssue["reporter"] = j;
 
     var output = jiraConnectorEP->createIssue(newIssue);
     if (output is Issue) {
-        issue_test = untaint output;
+        issue_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -471,7 +479,7 @@ function test_addCommentToIssue() {
 
     var output = jiraConnectorEP->addCommentToIssue(issue_test.key, newComment);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -487,7 +495,7 @@ function test_getIssue() {
     if (output is Issue) {
         issue_test = output;
     } else {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     }
 }
 
@@ -499,7 +507,7 @@ function test_deleteIssue() {
 
     var output = jiraConnectorEP->deleteIssue(issue_test.key);
     if (output is error) {
-        test:assertFail(msg = <string>output.detail().message);
+        test:assertFail(msg = <string>output.detail()?.message);
     } else {
         string result = "";
     }
@@ -510,7 +518,7 @@ function afterSuite() {
     //To avoid test failure of 'test_createProject()', if a project already exists with the same name.
     var projectDeleted = jiraConnectorEP->deleteProject("TSTPROJECT");
     if (projectDeleted is error) {
-        log:printInfo(<string>projectDeleted.detail().message);
+        log:printInfo(<string>projectDeleted.detail()?.message);
     }
     var projectCategoryDeleted = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
 }

@@ -187,7 +187,7 @@ public type Actor record {
     string id = "";
     string name = "";
     string displayName = "";
-    string ^"type" = "";
+    string 'type = "";
 };
 
 # Represents a Jira issue type status related to a Jira project.).
@@ -263,15 +263,15 @@ public type ProjectVersion record {
 };
 
 # Represents a set of avatar Urls related to a Jira entity.
-# + ^"16x16" - Avatar URL icon of size 16x16
-# + ^"24x24" - Avatar URL icon of size 24x24
-# + ^"32x32" - Avatar URL icon of size 32x32
-# + ^"48x48" - Avatar URL icon of size 48x48
+# + '16x16 - Avatar URL icon of size 16x16
+# + '24x24 - Avatar URL icon of size 24x24
+# + '32x32 - Avatar URL icon of size 32x32
+# + '48x48 - Avatar URL icon of size 48x48
 public type AvatarUrls record {
-    string ^"16x16" = "";
-    string ^"24x24" = "";
-    string ^"32x32" = "";
-    string ^"48x48" = "";
+    string '16x16 = "";
+    string '24x24 = "";
+    string '32x32 = "";
+    string '48x48 = "";
 };
 
 # Represents a jira issue.
@@ -289,7 +289,6 @@ public type AvatarUrls record {
 # + dueDate - Due date of the issue
 # + timespent - Assigned time spent for the issue
 # + issueType - Type of the jira issue
-# + parent - Parent issue of the issue
 # + project - Represent summarized details of the project which the issue is related to
 # + comments - Issue comments
 # + customFields - Customly created fields which contain issue related information
@@ -312,7 +311,6 @@ public type Issue record {
     string resolutionDate = "";
     string aggregatetimespent = "";
     IssueType issueType = {};
-    IssueSummary parent = {};
     ProjectSummary project = {};
     IssueComment[] comments = [];
     json[] customFields = [];

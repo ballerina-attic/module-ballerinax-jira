@@ -18,7 +18,6 @@
 
 import ballerina/http;
 import ballerina/io;
-import ballerina/mime;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Functions                                                         //
@@ -27,12 +26,12 @@ import ballerina/mime;
 # Checks whether the HTTP response contains any errors.
 # + httpConnectorResponse - Response of the ballerina standard HTTP client
 # + return - `json` payload of the server response when successful, else returns an error
-function getValidatedResponse(http:Response|error httpConnectorResponse) returns json|error {
+function getValidatedResponse(http:Response|error httpConnectorResponse) returns @tainted json|error {
 
     //checks for any http errors
     if (httpConnectorResponse is error) {
-        error err = error(HTTP_ERROR_CODE, { cause: httpConnectorResponse,
-            message: "Error occurred while invoking the JIRA REST API" });
+        error err = error(HTTP_ERROR_CODE, cause = httpConnectorResponse,
+            message = "Error occurred while invoking the JIRA REST API" );
         return err;
     } else {
         if (hasValidStatusCode(httpConnectorResponse)) { //if there is no any http connector error or jira server error
@@ -44,9 +43,10 @@ function getValidatedResponse(http:Response|error httpConnectorResponse) returns
 
             }
         } else {
-            error err = error(JIRA_ERROR_CODE, { cause: httpConnectorResponse.getJsonPayload(),
-                message: "Status code " + io:sprintf("%s", httpConnectorResponse.statusCode) + ":"
-                    + httpConnectorResponse.reasonPhrase });
+            
+            error err = error(JIRA_ERROR_CODE, 
+                message = "Status code " + io:sprintf("%s", httpConnectorResponse.statusCode) + ":"
+                    + httpConnectorResponse.reasonPhrase );
 
             return err;
         }
