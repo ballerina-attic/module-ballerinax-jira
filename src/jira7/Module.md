@@ -34,9 +34,13 @@ issues, create new issues, etc.
 | JIRA REST API      |    7.13.0      |  
 
 ## Sample
-First, import the `wso2/jira7` module into the Ballerina project.
+First, import the `wso2/jira7` module into the Ballerina project and other modules.
 ```ballerina
 import wso2/jira7;
+import ballerina/http;
+import wso2/jira7;
+import ballerina/auth;
+import ballerina/config;
 ```
 **Obtaining Credentials to Run the Sample**
 
@@ -65,6 +69,57 @@ jira7:JiraConfiguration jiraConfig = {
 };
 
 jira7:Client jiraClient = new(jiraConfig);
+
+```
+
+**Executing Sample**
+* Request 
+
+```ballerina
+import ballerina/http;
+import wso2/jira7;
+import ballerina/auth;
+import ballerina/config;
+import ballerina/io;
+
+// Create the OutboundBasicAuthProvider
+auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
+username: config:getAsString("JIRA_USERNAME"),
+password: config:getAsString("JIRA_PASSWORD")
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+//Creation of connector endpoint
+jira7:JiraConfiguration jiraConfig = {
+    baseUrl: config:getAsString("JIRA_URL"),
+    clientConfig: {
+        auth: {
+        authHandler: outboundBasicAuthHandler
+    }
+}
+};
+
+jira7:Client jiraConnectorEP = new(jiraConfig);
+
+public function main(string... args) {
+
+    jira7:ProjectCategoryRequest newCategory = { name: "Test-Project Category", description: "new category created from balleirna jira connector" };
+    var output = jiraConnectorEP->createProjectCategory(newCategory);
+
+    io:println(output.toString());
+
+}
+```
+
+* Response Object
+
+```ballerina
+{
+  "self": "http://localhost:8080/rest/api/2/projectCategory/10010",
+  "id": "10010",
+  "description": "new category created from balleirna jira connector",
+  "name": "Test-Project Category"
+}
 ```
 
 The `getAllProjectSummaries` remote function returns the project summary of all the projects if successful or an `error` if unsuccessful.
