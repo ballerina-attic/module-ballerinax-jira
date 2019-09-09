@@ -65,22 +65,29 @@ in the following sample code. A sample JIRA_URL would be "http://localhost:8080/
 ```ballerina
 import ballerina/http;
 import wso2/jira7;
+import ballerina/auth;
+import ballerina/config;
 
+
+// Create the OutboundBasicAuthProvider
+auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
+username: config:getAsString("JIRA_USERNAME"),
+password: config:getAsString("JIRA_PASSWORD")
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
 //Creation of connector endpoint
 jira7:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
-            scheme: http:BASIC_AUTH,
-            config: {
-                username: config:getAsString("JIRA_USERNAME"),
-                password: config:getAsString("JIRA_PASSWORD")
-            }
-        }
+        authHandler: outboundBasicAuthHandler
     }
+}
 };
 
 jira7:Client jiraConnectorEP = new(jiraConfig);
+
 ```
 
 ## Working with JIRA connector actions
@@ -95,54 +102,48 @@ will returns an Connector error with error message,error type and cause.
 
 ```ballerina
 import ballerina/http;
-import ballerina/io;
 import wso2/jira7;
+import ballerina/auth;
+import ballerina/config;
+import ballerina/io;
 
-// Create the jira client.
+// Create the OutboundBasicAuthProvider
+auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
+username: config:getAsString("JIRA_USERNAME"),
+password: config:getAsString("JIRA_PASSWORD")
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+//Creation of connector endpoint
 jira7:JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("test_url"),
+    baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
-            scheme: http:BASIC_AUTH,
-            config: {
-                username: config:getAsString("test_username"),
-                password: config:getAsString("test_password")
-            }
-        }
+        authHandler: outboundBasicAuthHandler
     }
+}
 };
 
-jira7:Client jiraClient = new(jiraConfig);
+jira7:Client jiraConnectorEP = new(jiraConfig);
 
 public function main(string... args) {
 
-    string projectKey = "RRDEVSPRT";
+    jira7:ProjectCategoryRequest newCategory = { name: "Test-Project Category", description: "new category created from balleirna jira connector" };
+    var output = jiraConnectorEP->createProjectCategory(newCategory);
 
-    var output = jiraClient->getProject(projectKey);
-    if (output is jira7:Project) {
-        io:println("Project Details: ", output);
-    } else {
-        io:println("Error: ", output.message);
-    }
+    io:println(output.toString());
+
 }
 ```
 
 * Response Object
 
 ```ballerina
-public type Project record {
-    string self;
-    string id;
-    string key;
-    string name;
-    string description;
-    string leadName;
-    string projectTypeKey;
-    AvatarUrls avatarUrls;
-    ProjectCategory projectCategory;
-    IssueType[] issueTypes;
-    ProjectComponentSummary[] components;
-    ProjectVersion[] versions;
+{
+  "self": "http://localhost:8080/rest/api/2/projectCategory/10010",
+  "id": "10010",
+  "description": "new category created from balleirna jira connector",
+  "name": "Test-Project Category"
 }
 ```
 

@@ -47,17 +47,21 @@ import wso2/jira7;
 
 You can now enter the credentials in the HTTP client config.
 ```ballerina
+// Create the OutboundBasicAuthProvider
+auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
+username: config:getAsString("JIRA_USERNAME"),
+password: config:getAsString("JIRA_PASSWORD")
+});
+
+http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
+//Creation of connector endpoint
 jira7:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
-            scheme: http:BASIC_AUTH,
-            config: {
-                username: config:getAsString("JIRA_USERNAME"),
-                password: config:getAsString("JIRA_PASSWORD")
-            }
-        }
+        authHandler: outboundBasicAuthHandler
     }
+}
 };
 
 jira7:Client jiraClient = new(jiraConfig);
