@@ -106,7 +106,7 @@ public type Client client object {
     # + projectIdOrKey - Unique string which represents the project id or project key of a Jira project
     # + update - Record which contain fields which need to be updated
     # + return - An `error` if the process is unsuccessful
-    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns error? {
+    public remote function updateProject(string projectIdOrKey, ProjectRequest update) returns @tainted error? {
 
         http:Request outRequest = new;
 
