@@ -386,8 +386,8 @@ function test_createProjectCategory() {
     if (output is ProjectCategory) {
         projectCategory_test = <@untainted> output;
     } else {
-        test:assertFail(msg = <string>output.detail()?.message + " Please retry again after removing
-        the project category: " + <string> newCategory.name + " from from your jira instance");
+        test:assertFail(msg = <string>output.detail()?.message + " Please retry again after removing the project " +
+        "category: " + <string> newCategory.name + " from from your jira instance");
     }
 }
 
@@ -451,7 +451,6 @@ function test_createIssueWithExtraFields() {
         issueTypeId: project_status.id,
         projectId: project_test.id,
         assigneeName: config:getAsString("JIRA_USERNAME")
-        
     };
     newIssue["description"] = "test description";
     // Specify the reporter field in json format
