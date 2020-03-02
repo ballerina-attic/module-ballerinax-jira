@@ -3,18 +3,19 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+    build:
 
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Ballerina Build
-      uses: ballerina-platform/ballerina-action/@master
-      with:
-        args: 
-          build -a -c
-        env:
-            URL: ${{ secrets.URL }}
-            JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
-            JIRA_PASS: ${{ secrets.JIRA_PASS }}
+        steps:
+            -   uses: actions/checkout@v2
+            -   name: Ballerina Build
+                uses: ballerina-platform/ballerina-action/@master
+                with:
+                    args:
+                        build -a -c
+                    env:
+                        URL: ${{ secrets.URL }}
+                        JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+                        JIRA_PASS: ${{ secrets.JIRA_PASS }}
+
