@@ -18,3 +18,4 @@ jobs:
                         URL: ${{ secrets.URL }}
                         JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
                         JIRA_PASS: ${{ secrets.JIRA_PASS }}
+
