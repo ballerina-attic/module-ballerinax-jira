@@ -1,6 +1,6 @@
-name: CI
+name: Deployment
 
-on: [push]
+on: [release]
 
 jobs:
     build:
@@ -18,3 +18,11 @@ jobs:
                   JIRA_URL: ${{ secrets.JIRA_URL }}
                   JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
                   JIRA_PASS: ${{ secrets.JIRA_PASS }}
+            - name: Ballerina Push
+              uses: ballerina-platform/ballerina-action/@master
+              with:
+                  args:
+                      push -a
+              env:
+                  BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+                  

@@ -9,7 +9,7 @@ ProjectSummary[] projectSummaryArray_test = [];
 ProjectComponent projectComponent_test = {};
 ProjectCategory projectCategory_test = {};
 Issue issue_test = {};
-string testComment = "This is a test comment created for Ballerina Jira Connector";
+string testComment = "This is a test comment created for Ballerina Jira Connector.";
 ProjectStatus project_status = {};
 
 auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new ({
@@ -76,7 +76,7 @@ function test_createProject() {
         projectTemplateKey: "com.pyxis.greenhopper.jira:basic-software-development-template",
         description: "Example Project description",
         lead: system:getEnv("JIRA_USERNAME"),
-        url: "https://staging-support.wso2.com/jira/rest/api/2",
+        url: system:getEnv("JIRA_URL"),
         assigneeType: "PROJECT_LEAD",
         avatarId: "10000",
         permissionScheme: "0",
