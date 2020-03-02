@@ -13,4 +13,8 @@ jobs:
       uses: ballerina-platform/ballerina-action/@master
       with:
         args: 
-          build -a -c --skip-tests
+          build -a -c
+        env:
+            URL: ${{ secrets.URL }}
+            JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+            JIRA_PASS: ${{ secrets.JIRA_PASS }}
