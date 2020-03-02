@@ -15,6 +15,6 @@ jobs:
                   args:
                       build -a -c
               env:
-                  URL: ${{ secrets.URL }}
+                  JIRA_URL: ${{ secrets.JIRA_URL }}
                   JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
                   JIRA_PASS: ${{ secrets.JIRA_PASS }}

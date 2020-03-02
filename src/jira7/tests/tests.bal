@@ -19,7 +19,7 @@ auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new ({
 
 http:BasicAuthHandler outboundBasicAuthHandler = new (outboundBasicAuthProvider);
 JiraConfiguration jiraConfig = {
-    baseUrl: system:getEnv("URL"),
+    baseUrl: system:getEnv("JIRA_URL"),
     clientConfig: {
         auth: {
             authHandler: outboundBasicAuthHandler
