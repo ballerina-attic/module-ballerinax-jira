@@ -16,7 +16,7 @@
 // under the License.
 //
 
-import ballerinax/java;
+import ballerina/java;
 
 function projectRequestToJson(ProjectRequest request) returns json {
 

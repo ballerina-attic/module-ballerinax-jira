@@ -55,7 +55,7 @@ const string PROJECT_TYPE_BUSINESS = "business";
 const string EMPTY_STRING = "";
 
 // Error Codes
-const string JIRA_ERROR_CODE = "(wso2/jira)JiraError";
-const string CONVERSION_ERROR_CODE = "(wso2/jira)ConversionError";
-const string HTTP_ERROR_CODE = "(wso2/jira)HTTPError";
+const string JIRA_ERROR_CODE = "(ballerina/jira7)JiraError";
+const string CONVERSION_ERROR_CODE = "(ballerina/jira7)ConversionError";
+const string HTTP_ERROR_CODE = "(ballerina/jira7)HTTPError";
 
