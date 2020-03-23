@@ -7,38 +7,37 @@ accounts, and issues through the JIRA REST API. It handles basic authentication.
 
 **JIRA Project Operations**
 
-The `wso2/jira` module contains operations to create new JIRA projects, update or delete existing projects, and get all 
+The `ballerina/jira7` module contains operations to create new JIRA projects, update or delete existing projects, and get all 
 the information using either the ID or key of the project. It also contains operations for adding or removing users and 
 groups related to a project role, viewing user account details of the project lead, viewing assignable issue types for a 
 given project, etc.
 
 **JIRA Project Category Operations**
 
-The `wso2/jira` module contains operations that get all available project categories, delete existing categories, and 
+The `ballerina/jira7` module contains operations that get all available project categories, delete existing categories, and 
 create new project categories.
 
 **JIRA Project Component Operations**
 
-The `wso2/jira` module contains operations that get all details of a given project component, delete existing 
+The `ballerina/jira7` module contains operations that get all details of a given project component, delete existing 
 components, create a new project component related to a specific project, etc.
 
 **JIRA Issue Operations**
 
-The `wso2/jira` module contains operations that get all the details of a given issue using the issue key, delete existing 
+The `ballerina/jira7` module contains operations that get all the details of a given issue using the issue key, delete existing 
 issues, create new issues, etc.
 
 ## Compatibility
 |                    |    Version     |  
 |:------------------:|:--------------:|
-| Ballerina Language |    1.0.0       |
+| Ballerina Language |    1.2.0       |
 | JIRA REST API      |    7.13.0      |  
 
 ## Sample
-First, import the `wso2/jira7` module into the Ballerina project and other modules.
+First, import the `ballerina/jira7` module into the Ballerina project and other modules.
 ```ballerina
-import wso2/jira7;
+import ballerina/jira7;
 import ballerina/http;
-import wso2/jira7;
 import ballerina/auth;
 import ballerina/config;
 ```
@@ -77,7 +76,7 @@ jira7:Client jiraClient = new(jiraConfig);
 
 ```ballerina
 import ballerina/http;
-import wso2/jira7;
+import ballerina/jira7;
 import ballerina/auth;
 import ballerina/config;
 import ballerina/io;

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/module-jira.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-jira)
+[![Build Status](https://travis-ci.org/ballerina-platform/module-jira.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-jira)
 
 # Ballerina JIRA Connector
 This Ballerina client connector allows to connect to Atlassian JIRA, which provides bug tracking, issue tracking, 
@@ -12,7 +12,7 @@ provides auto completion and type conversions.
 
 | Ballerina Version   | JIRA REST API Version |
 |:-------------------:|:---------------------:|
-| 1.0.0               | 7.13.0                |
+|       1.2.0         |       7.13.0          |
 
 
 ### Why do you need the REST API for JIRA
@@ -41,7 +41,7 @@ The following sections provide information on how to use Ballerina JIRA Connecto
 `ballerina central` to your local repository.
 
 ```ballerina
-   import wso2/jira7;
+   import ballerina/jira7;
 ```
 
 ## Authentication
@@ -64,7 +64,7 @@ in the following sample code. A sample JIRA_URL would be "http://localhost:8080/
 
 ```ballerina
 import ballerina/http;
-import wso2/jira7;
+import ballerina/jira7;
 import ballerina/auth;
 import ballerina/config;
 
@@ -102,7 +102,7 @@ will returns an Connector error with error message,error type and cause.
 
 ```ballerina
 import ballerina/http;
-import wso2/jira7;
+import ballerina/jira7;
 import ballerina/auth;
 import ballerina/config;
 import ballerina/io;

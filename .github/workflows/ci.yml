@@ -18,3 +18,4 @@ jobs:
                   JIRA_URL: ${{ secrets.JIRA_URL }}
                   JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
                   JIRA_PASS: ${{ secrets.JIRA_PASS }}
+                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
