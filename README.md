@@ -37,11 +37,11 @@ The following sections provide information on how to use Ballerina JIRA Connecto
   
   `<PROJECT_ROOT_DIRECTORY>$ ballerina init`
   
-- Import the jira module to your Ballerina program as follows.This will download the jira7 artifacts from the 
+- Import the jira module to your Ballerina program as follows.This will download the jira artifacts from the 
 `ballerina central` to your local repository.
 
 ```ballerina
-   import ballerina/jira7;
+   import ballerina/jira;
 ```
 
 ## Authentication
@@ -64,7 +64,7 @@ in the following sample code. A sample JIRA_URL would be "http://localhost:8080/
 
 ```ballerina
 import ballerina/http;
-import ballerina/jira7;
+import ballerina/jira;
 import ballerina/auth;
 import ballerina/config;
 
@@ -77,7 +77,7 @@ password: config:getAsString("JIRA_PASSWORD")
 
 http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
 //Creation of connector endpoint
-jira7:JiraConfiguration jiraConfig = {
+jira:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
@@ -86,7 +86,7 @@ jira7:JiraConfiguration jiraConfig = {
 }
 };
 
-jira7:Client jiraConnectorEP = new(jiraConfig);
+jira:Client jiraConnectorEP = new(jiraConfig);
 
 ```
 
@@ -102,7 +102,7 @@ will returns an Connector error with error message,error type and cause.
 
 ```ballerina
 import ballerina/http;
-import ballerina/jira7;
+import ballerina/jira;
 import ballerina/auth;
 import ballerina/config;
 import ballerina/io;
@@ -115,7 +115,7 @@ password: config:getAsString("JIRA_PASSWORD")
 
 http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
 //Creation of connector endpoint
-jira7:JiraConfiguration jiraConfig = {
+jira:JiraConfiguration jiraConfig = {
     baseUrl: config:getAsString("JIRA_URL"),
     clientConfig: {
         auth: {
@@ -124,11 +124,11 @@ jira7:JiraConfiguration jiraConfig = {
 }
 };
 
-jira7:Client jiraConnectorEP = new(jiraConfig);
+jira:Client jiraConnectorEP = new(jiraConfig);
 
 public function main(string... args) {
 
-    jira7:ProjectCategoryRequest newCategory = { name: "Test-Project Category", description: "new category created from balleirna jira connector" };
+    jira:ProjectCategoryRequest newCategory = { name: "Test-Project Category", description: "new category created from balleirna jira connector" };
     var output = jiraConnectorEP->createProjectCategory(newCategory);
 
     io:println(output.toString());
