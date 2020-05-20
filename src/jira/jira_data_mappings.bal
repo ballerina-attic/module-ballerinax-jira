@@ -43,7 +43,7 @@ function jsonToProjectSummary(json request) returns ProjectSummary {
 
     ProjectSummary target = {};
 
-    target.resource_path = request.self.toString() ;
+    target.resourcePath = request.self.toString() ;
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
     target.name = request.name.toString() ;
@@ -58,7 +58,7 @@ function jsonToProjectCategory(json request) returns ProjectCategory {
 
     ProjectCategory target = {};
 
-    target.resource_path = request.self != null ? request.self.toString()  : EMPTY_STRING;
+    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
     target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
     target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
     target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
@@ -70,7 +70,7 @@ function jsonToProjectComponent(json request) returns ProjectComponent {
 
     ProjectComponent target = {};
 
-    target.resource_path = request.self != null ? request.self.toString()  : EMPTY_STRING;
+    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
     target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
     target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
     target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
@@ -96,7 +96,7 @@ function jsonToProjectComponent(json request) returns ProjectComponent {
 
 function jsonToIssue(json request) returns Issue|error {
     Issue target = {};
-    target.resource_path = request.self.toString() ;
+    target.resourcePath = request.self.toString() ;
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
 
@@ -192,7 +192,7 @@ function startsWith(handle originalText, handle str) returns boolean = @java:Met
 
 function jsonToIssueSummary(json request) returns IssueSummary|error {
     IssueSummary target = {};
-    target.resource_path = request.self.toString() ;
+    target.resourcePath = request.self.toString() ;
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
 
@@ -217,7 +217,7 @@ function jsonToIssueType(json request) returns IssueType {
 
     IssueType target = {};
 
-    target.resource_path = request.self != null ? request.self.toString()  : EMPTY_STRING;
+    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
     target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
     target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
     target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
@@ -272,7 +272,7 @@ function convertProjectCategoryRequestToJson(ProjectCategoryRequest sourceGroupS
 
 function convertJsonToProjectCategory(json sourceGroupStruct) returns ProjectCategory|error {
     ProjectCategory targetProjectCategory = {};
-    targetProjectCategory.resource_path = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
+    targetProjectCategory.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
     targetProjectCategory.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
     targetProjectCategory.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
     targetProjectCategory.description = sourceGroupStruct.description != null
@@ -282,7 +282,7 @@ function convertJsonToProjectCategory(json sourceGroupStruct) returns ProjectCat
 
 function convertJsonToProject(json sourceGroupStruct) returns Project|error {
     Project targetProject = {};
-    targetProject.resource_path = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
+    targetProject.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
     targetProject.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
     targetProject.key = sourceGroupStruct.key != null ? sourceGroupStruct.key.toString() : "";
     targetProject.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
@@ -298,7 +298,7 @@ function convertJsonToProject(json sourceGroupStruct) returns Project|error {
     ? sourceGroupStruct.avatarUrls.'24x24.toString() : "";
     targetProject.avatarUrls.'16x16 = sourceGroupStruct.avatarUrls.'16x16 != null
     ? sourceGroupStruct.avatarUrls.'16x16.toString() : "";
-    targetProject.projectCategory.resource_path = sourceGroupStruct.projectCategory.self != null
+    targetProject.projectCategory.resourcePath = sourceGroupStruct.projectCategory.self != null
     ? sourceGroupStruct.projectCategory.self.toString() : "";
     targetProject.projectCategory.id = sourceGroupStruct.projectCategory.id != null
     ? sourceGroupStruct.projectCategory.id.toString() : "";
@@ -313,7 +313,7 @@ function convertJsonToProject(json sourceGroupStruct) returns Project|error {
 
 function convertJsonToProjectStatus(json sourceGroupStruct) returns ProjectStatus|error {
     ProjectStatus targetProjectStatus = {};
-    targetProjectStatus.resource_path = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
+    targetProjectStatus.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
     targetProjectStatus.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
     targetProjectStatus.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
     targetProjectStatus.statuses = <json[]>sourceGroupStruct.statuses;
@@ -322,7 +322,7 @@ function convertJsonToProjectStatus(json sourceGroupStruct) returns ProjectStatu
 
 function convertJsonToUser(json sourceGroupStruct) returns User|error {
     User targetUser = {};
-    targetUser.resource_path = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
+    targetUser.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
     targetUser.key = sourceGroupStruct.key != null ? sourceGroupStruct.key.toString() : "";
     targetUser.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
     targetUser.displayName = sourceGroupStruct.displayName != null ? sourceGroupStruct.displayName.toString() : "";
@@ -346,7 +346,7 @@ function convertToIssueTypes(json[] issueTypes) returns IssueType[] {
 
 function convertToIssueType(json issueType) returns IssueType {
     IssueType issueTypes = {};
-    issueTypes.resource_path = issueType.self != null ? issueType.self.toString() : "";
+    issueTypes.resourcePath = issueType.self != null ? issueType.self.toString() : "";
     issueTypes.id = issueType.id != null ? issueType.id.toString() : "";
     issueTypes.name = issueType.name != null ? issueType.name.toString() : "";
     issueTypes.description = issueType.description != null ? issueType.description.toString() : "";
@@ -385,7 +385,7 @@ function convertToVersions(json[] versions) returns ProjectVersion[] {
 
 function convertToVersion(json value) returns ProjectVersion {
     ProjectVersion versions = {};
-    versions.resource_path = value.self != null ? value.self.toString() : "";
+    versions.resourcePath = value.self != null ? value.self.toString() : "";
     versions.id = value.id != null ? value.id.toString() : "";
     versions.name = value.name != null ? value.name.toString() : "";
     versions.archived = value.archived != null ? <boolean>value.archived : false;
@@ -399,7 +399,7 @@ function convertToVersion(json value) returns ProjectVersion {
 
 function convertJsonToProjectRole(json sourceGroupStruct) returns ProjectRole|error {
     ProjectRole targetProjectRole = {};
-    targetProjectRole.resource_path = <string>sourceGroupStruct.self;
+    targetProjectRole.resourcePath = <string>sourceGroupStruct.self;
     targetProjectRole.name = <string>sourceGroupStruct.name;
     targetProjectRole.description = <string>sourceGroupStruct.description;
     targetProjectRole.actors = convertToActors(<json[]>sourceGroupStruct.actors);
