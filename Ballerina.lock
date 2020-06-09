@@ -1,4 +1,9 @@
 org_name = "ballerinax"
-version = "0.9.3"
+version = "0.10.0"
 lockfile_version = "1.0.0"
-ballerina_version = "1.2.0"
+ballerina_version = "1.2.4"
+
+[[imports."ballerinax/jira:0.10.0"]]
+org_name = "ballerinax"
+name = "jira.commons"
+version = "0.1.0"
