@@ -22,19 +22,19 @@ function projectRequestToJson(ProjectRequest request) returns json {
 
     map<json> target = {};
 
-    target["key"] = request.key != EMPTY_STRING ? request.key : null;
-    target["name"] = request.name != EMPTY_STRING ? request.name : null;
-    target["projectTypeKey"] = request.projectTypeKey != EMPTY_STRING ? request.projectTypeKey : null;
-    target["projectTemplateKey"] = request.projectTemplateKey != EMPTY_STRING ? request.projectTemplateKey : null;
-    target["description"] = request.description != EMPTY_STRING ? request.description : null;
-    target["lead"] = request.lead != EMPTY_STRING ? request.lead : null;
-    target["url"] = request.url != EMPTY_STRING ? request.url : null;
-    target["assigneeType"] = request.assigneeType != EMPTY_STRING ? request.assigneeType : null;
-    target["avatarId"] = request.avatarId != EMPTY_STRING ? request.avatarId : null;
-    target["issueSecurityScheme"] = request.issueSecurityScheme != EMPTY_STRING ? request.issueSecurityScheme : null;
-    target["permissionScheme"] = request.permissionScheme != EMPTY_STRING ? request.permissionScheme : null;
-    target["notificationScheme"] = request.notificationScheme != EMPTY_STRING ? request.notificationScheme : null;
-    target["categoryId"] = request.categoryId != EMPTY_STRING ? request.categoryId : null;
+    target["key"] = request?.key != EMPTY_STRING ? request?.key : null;
+    target["name"] = request?.name != EMPTY_STRING ? request?.name : null;
+    target["projectTypeKey"] = request?.projectTypeKey != EMPTY_STRING ? request?.projectTypeKey : null;
+    target["projectTemplateKey"] = request?.projectTemplateKey != EMPTY_STRING ? request?.projectTemplateKey : null;
+    target["description"] = request?.description != EMPTY_STRING ? request?.description : null;
+    target["lead"] = request?.lead != EMPTY_STRING ? request?.lead : null;
+    target["url"] = request?.url != EMPTY_STRING ? request?.url : null;
+    target["assigneeType"] = request?.assigneeType != EMPTY_STRING ? request?.assigneeType : null;
+    target["avatarId"] = request?.avatarId != EMPTY_STRING ? request?.avatarId : null;
+    target["issueSecurityScheme"] = request?.issueSecurityScheme != EMPTY_STRING ? request?.issueSecurityScheme : null;
+    target["permissionScheme"] = request?.permissionScheme != EMPTY_STRING ? request?.permissionScheme : null;
+    target["notificationScheme"] = request?.notificationScheme != EMPTY_STRING ? request?.notificationScheme : null;
+    target["categoryId"] = request?.categoryId != EMPTY_STRING ? request?.categoryId : null;
 
     return target;
 }
@@ -231,10 +231,10 @@ function issueRequestToJson(IssueRequest request) returns json {
 
     map<json> target = {fields:{}};
     map<json> fieldJson = <map<json>>target["fields"];
-    fieldJson["summary"] = request.summary != EMPTY_STRING ? request.summary : null;
-    fieldJson["issuetype"] = request.issueTypeId != EMPTY_STRING ? {id:request.issueTypeId} : null;
-    fieldJson["project"] = request.projectId != EMPTY_STRING ? {id:request.projectId} : null;
-    fieldJson["assignee"] = request.assigneeName != EMPTY_STRING ? {name:request.assigneeName} : null;
+    fieldJson["summary"] = request?.summary != EMPTY_STRING ? request?.summary : null;
+    fieldJson["issuetype"] = request?.issueTypeId != EMPTY_STRING ? {id:request?.issueTypeId} : null;
+    fieldJson["project"] = request?.projectId != EMPTY_STRING ? {id:request?.projectId} : null;
+    fieldJson["assignee"] = request?.assigneeName != EMPTY_STRING ? {name:request?.assigneeName} : null;
 
     return target;
 }
@@ -265,8 +265,8 @@ function jsonToIssueComment(json jcomment) returns IssueComment {
 function convertProjectCategoryRequestToJson(ProjectCategoryRequest sourceGroupStruct) returns json|error {
     json targetJsonObject = {};
     map<json> targetJsonObjectMap = <map<json>> targetJsonObject;
-    targetJsonObjectMap["name"] = <string>sourceGroupStruct.name;
-    targetJsonObjectMap["description"] = <string>sourceGroupStruct.description;
+    targetJsonObjectMap["name"] = <string>sourceGroupStruct?.name;
+    targetJsonObjectMap["description"] = <string>sourceGroupStruct?.description;
     return targetJsonObject;
 }
 

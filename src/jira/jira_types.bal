@@ -34,6 +34,8 @@ public type IssueRequest commons:IssueRequest;
 public type ProjectVersion commons:ProjectVersion;
 public type ProjectStatus commons:ProjectStatus;
 public type ProjectCategoryRequest commons:ProjectCategoryRequest;
+public type Configuration commons:Configuration;
+public type BasicAuthConfiguration commons:BasicAuthConfiguration;
 
 # Represents a Jira project role (i.e. Developers;Users etc.).
 # + resourcePath - API resource URL

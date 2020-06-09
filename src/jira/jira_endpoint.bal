@@ -18,6 +18,8 @@
 
 import ballerina/http;
 import ballerina/log;
+import ballerina/oauth2;
+import ballerina/auth;
 
 # Jira Client object.
 # + jiraClient - The HTTP Client
@@ -25,8 +27,31 @@ public type Client client object {
 
     http:Client jiraClient;
 
-    public function __init(JiraConfiguration jiraConfig) {
-        self.jiraClient = new(jiraConfig.baseUrl, config = jiraConfig.clientConfig);
+    public function __init(Configuration jiraConfig) {
+        string baseUrl = jiraConfig.baseUrl + API_PATH;
+        http:ClientConfiguration clientConfig;
+        BasicAuthConfiguration|oauth2:DirectTokenConfig authConfig = jiraConfig.authConfig;
+        if (authConfig is BasicAuthConfiguration) {
+            auth:OutboundBasicAuthProvider basicAuthProvider = new ({
+                username: authConfig.username,
+                password: authConfig.apiToken
+            });
+            http:BasicAuthHandler outboundBasicAuthHandler = new (basicAuthProvider);
+            clientConfig = {
+                auth: {
+                    authHandler: outboundBasicAuthHandler
+                }
+            };
+        } else {
+            oauth2:OutboundOAuth2Provider oauth2Provider = new (authConfig);
+            http:BearerAuthHandler bearerHandler = new (oauth2Provider);
+            clientConfig = {
+                auth: {
+                    authHandler: bearerHandler
+                }
+            };
+        }
+        self.jiraClient = new (baseUrl, config = clientConfig);
     }
 
     # Returns an array of all projects summaries which are visible for the currently logged in user who has
@@ -63,7 +88,7 @@ public type Client client object {
     # + return - A `Project` record if successful, else returns an error
     public remote function getAllDetailsFromProjectSummary(ProjectSummary projectSummary) returns @tainted Project|error  {
 
-        var httpResponseOut = self.jiraClient->get("/project/" + projectSummary.key);
+        var httpResponseOut = self.jiraClient->get("/project/" + projectSummary?.key.toString());
         //Evaluate http response for connection and server errors
         json jsonResponseOut = check getValidatedResponse(httpResponseOut);
         map<json> jsonResponseOutMap = <map<json>>jsonResponseOut;
@@ -169,7 +194,7 @@ public type Client client object {
     #            if successful, else returns an error
     public remote function getLeadUserDetailsOfProject(Project project) returns @tainted User|error {
 
-        var httpResponseOut = self.jiraClient->get("/user?username=" + project.leadName);
+        var httpResponseOut = self.jiraClient->get("/user?username=" + project?.leadName.toString());
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -202,7 +227,7 @@ public type Client client object {
     #            returns an error
     public remote function getRoleDetailsOfProject(Project project, string projectRoleId) returns @tainted ProjectRole|error {
 
-        var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/role/" + projectRoleId);
+        var httpResponseOut = self.jiraClient->get("/project/" + project?.key.toString() + "/role/" + projectRoleId);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -241,7 +266,8 @@ public type Client client object {
         json jsonPayload = { "user": [userName] };
         outRequest.setJsonPayload(jsonPayload);
 
-        var httpResponseOut = self.jiraClient->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
+        var httpResponseOut = self.jiraClient->post("/project/" + project?.key.toString() + "/role/" + projectRoleId,
+        outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -271,7 +297,8 @@ public type Client client object {
         json jsonPayload = { "group": [groupName] };
         outRequest.setJsonPayload(jsonPayload);
 
-        var httpResponseOut = self.jiraClient->post("/project/" + project.key + "/role/" + projectRoleId, outRequest);
+        var httpResponseOut = self.jiraClient->post("/project/" + project?.key.toString() + "/role/" + projectRoleId,
+        outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -298,7 +325,7 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var httpResponseOut = self.jiraClient->delete("/project/" + project.key + "/role/" +
+        var httpResponseOut = self.jiraClient->delete("/project/" + project?.key.toString() + "/role/" +
         projectRoleId + "?user=" + userName, outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -326,7 +353,7 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var httpResponseOut = self.jiraClient->delete("/project/" + project.key + "/role/" +
+        var httpResponseOut = self.jiraClient->delete("/project/" + project?.key.toString() + "/role/" +
         projectRoleId + "?group=" + groupName, outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
@@ -341,7 +368,7 @@ public type Client client object {
     # + return - An array of `ProjectStatus` records if successful, else returns an error
     public remote function getAllIssueTypeStatusesOfProject(Project project) returns @tainted ProjectStatus[]|error {
 
-        var httpResponseOut = self.jiraClient->get("/project/" + project.key + "/statuses");
+        var httpResponseOut = self.jiraClient->get("/project/" + project?.key.toString() + "/statuses");
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -380,7 +407,8 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var httpResponseOut = self.jiraClient->put("/project/" + project.key + "/type/" + newProjectType, outRequest);
+        var httpResponseOut = self.jiraClient->put("/project/" + project?.key.toString() + "/type/" + newProjectType,
+        outRequest);
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -459,7 +487,7 @@ public type Client client object {
     public remote function getAssigneeUserDetailsOfProjectComponent(ProjectComponent projectComponent)
                                returns @tainted User|error {
 
-        var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.assigneeName);
+        var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent?.assigneeName.toString());
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -482,7 +510,7 @@ public type Client client object {
     # + return - A `User` record containing user details of the lead if successful, else returns an error
     public remote function getLeadUserDetailsOfProjectComponent(ProjectComponent projectComponent) returns @tainted User|error {
 
-        var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent.leadName);
+        var httpResponseOut = self.jiraClient->get("/user?username=" + projectComponent?.leadName.toString());
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
 
@@ -507,7 +535,6 @@ public type Client client object {
         var httpResponseOut = self.jiraClient->get("/projectCategory");
         //Evaluate http response for connection and server errors
         var jsonResponseOut = getValidatedResponse(httpResponseOut);
-
         if (jsonResponseOut is error) {
             return jsonResponseOut;
         } else {
@@ -671,7 +698,7 @@ public type Client client object {
 
         http:Request commentRequest = new;
         map<json> jsonPayload = {};
-        jsonPayload["body"] = comment.body;
+        jsonPayload["body"] = comment?.body;
         commentRequest.setJsonPayload(jsonPayload);
 
         var httpResponseOut = self.jiraClient->post("/issue/" + issueIdOrKey +"/comment", commentRequest);
@@ -690,4 +717,4 @@ public type Client client object {
 public type JiraConfiguration record {
     string baseUrl;
     http:ClientConfiguration clientConfig;
-}; 
+};
