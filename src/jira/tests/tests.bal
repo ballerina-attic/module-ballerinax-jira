@@ -1,5 +1,4 @@
-import ballerina/auth;
-import ballerina/http;
+import ballerina/config;
 import ballerina/log;
 import ballerina/system;
 import ballerina/test;
@@ -12,19 +11,21 @@ Issue issue_test = {};
 string testComment = "This is a test comment created for Ballerina Jira Connector.";
 ProjectStatus project_status = {};
 
-auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new ({
-    username: system:getEnv("JIRA_USERNAME"),
-    password: system:getEnv("JIRA_PASS")
-});
+string USERNAME = system:getEnv("JIRA_USERNAME") == "" ? config:getAsString("USERNAME") :
+    system:getEnv("JIRA_USERNAME");
+string API_TOKEN = system:getEnv("JIRA_API_TOKEN") == "" ? config:getAsString("JIRA_API_TOKEN") :
+    system:getEnv("JIRA_API_TOKEN");
+string BASE_URL = system:getEnv("JIRA_URL") == "" ? config:getAsString("BASE_URL") :
+    system:getEnv("JIRA_URL");
 
-http:BasicAuthHandler outboundBasicAuthHandler = new (outboundBasicAuthProvider);
-JiraConfiguration jiraConfig = {
-    baseUrl: system:getEnv("JIRA_URL"),
-    clientConfig: {
-        auth: {
-            authHandler: outboundBasicAuthHandler
-        }
-    }
+BasicAuthConfiguration basicAuth = {
+    username: USERNAME,
+    apiToken: API_TOKEN
+};
+
+Configuration jiraConfig = {
+    baseUrl: BASE_URL,
+    authConfig: basicAuth
 };
 
 Client jiraConnectorEP = new (jiraConfig);
@@ -75,13 +76,13 @@ function test_createProject() {
         projectTypeKey: "software",
         projectTemplateKey: "com.pyxis.greenhopper.jira:basic-software-development-template",
         description: "Example Project description",
-        lead: system:getEnv("JIRA_USERNAME"),
-        url: system:getEnv("JIRA_URL"),
+        lead: USERNAME,
+        url: BASE_URL,
         assigneeType: "PROJECT_LEAD",
         avatarId: "10000",
         permissionScheme: "0",
         notificationScheme: "10000",
-        categoryId: projectCategory_test.id
+        categoryId: projectCategory_test?.id.toString()
     };
 
     var output = jiraConnectorEP->createProject(newProject);
@@ -99,7 +100,7 @@ function test_updateProject() {
     log:printInfo("ACTION : updateProject()");
 
     ProjectRequest projectUpdate = {
-        lead: system:getEnv("JIRA_USERNAME"),
+        lead: USERNAME,
         projectTypeKey: "business"
     };
 
@@ -194,7 +195,7 @@ function test_addUserToRoleOfProject() {
     log:printInfo("ACTION : addUserToRoleOfProject()");
 
     var output = jiraConnectorEP->addUserToRoleOfProject(project_test, "10002",
-    system:getEnv("JIRA_USERNAME"));
+    USERNAME);
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -224,7 +225,7 @@ function test_removeUserFromRoleOfProject() {
     log:printInfo("ACTION : removeUserFromRoleOfProject()");
 
     var output = jiraConnectorEP->removeUserFromRoleOfProject(project_test, "10002",
-    system:getEnv("JIRA_USERNAME"));
+    USERNAME);
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -287,10 +288,10 @@ function test_createProjectComponent() {
     {
         name: "Test-ProjectComponent",
         description: "Test component created by ballerina jira connector.",
-        leadUserName: system:getEnv("JIRA_USERNAME"),
+        leadUserName: USERNAME,
         assigneeType: "PROJECT_LEAD",
-        project: project_test.key,
-        projectId: project_test.id
+        project: project_test?.key.toString(),
+        projectId: project_test?.id.toString()
     };
 
     var output = jiraConnectorEP->createProjectComponent(newProjectComponent);
@@ -310,7 +311,7 @@ function test_getProjectComponent() {
     ProjectComponentSummary sampleComponentSummary = {id: "10001"};
 
     project_test.components[0] = sampleComponentSummary;
-    var output = jiraConnectorEP->getProjectComponent(projectComponent_test.id);
+    var output = jiraConnectorEP->getProjectComponent(projectComponent_test?.id.toString());
     if (output is ProjectComponent) {
         string value = "";
     } else {
@@ -357,7 +358,7 @@ function test_getLeadUserDetailsOfProjectComponent() {
 function test_deleteProjectComponent() {
     log:printInfo("ACTION : deleteProjectComponent()");
 
-    var output = jiraConnectorEP->deleteProjectComponent(projectComponent_test.id);
+    var output = jiraConnectorEP->deleteProjectComponent(projectComponent_test?.id.toString());
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -391,7 +392,7 @@ function test_createProjectCategory() {
         projectCategory_test = <@untainted>output;
     } else {
         test:assertFail(msg = <string>output.detail()?.message + " Please retry again after removing the project " +
-        "category: " + <string>newCategory.name + " from from your jira instance");
+        "category: " + <string>newCategory?.name + " from from your jira instance");
     }
 }
 
@@ -400,7 +401,7 @@ function test_createProjectCategory() {
 }
 function test_getProjectCategory() {
     log:printInfo("ACTION : getProjectCategory()");
-    var output = jiraConnectorEP->getProjectCategory(projectCategory_test.id);
+    var output = jiraConnectorEP->getProjectCategory(projectCategory_test?.id.toString());
     if (output is ProjectCategory) {
         projectCategory_test = <@untainted>output;
     } else {
@@ -414,7 +415,7 @@ function test_getProjectCategory() {
 function test_deleteProjectCategory() {
     log:printInfo("ACTION : deleteProjectCategory()");
 
-    var output = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
+    var output = jiraConnectorEP->deleteProjectCategory(projectCategory_test?.id.toString());
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -430,9 +431,9 @@ function test_createIssue() {
 
     IssueRequest newIssue = {
         summary: "This is a test issue created for Ballerina Jira Connector",
-        issueTypeId: project_status.id,
-        projectId: project_test.id,
-        assigneeName: system:getEnv("JIRA_USERNAME")
+        issueTypeId: project_status?.id.toString(),
+        projectId: project_test?.id.toString(),
+        assigneeName: USERNAME
     };
 
     var output = jiraConnectorEP->createIssue(newIssue);
@@ -452,14 +453,14 @@ function test_createIssueWithExtraFields() {
 
     IssueRequest newIssue = {
         summary: "This is a test issue created for Ballerina Jira Connector with description and reporter",
-        issueTypeId: project_status.id,
-        projectId: project_test.id,
-        assigneeName: system:getEnv("JIRA_USERNAME")
+        issueTypeId: project_status?.id.toString(),
+        projectId: project_test?.id.toString(),
+        assigneeName: USERNAME
     };
     newIssue["description"] = "test description";
     // Specify the reporter field in json format
 
-    anydata j = <json>{name: system:getEnv("JIRA_USERNAME")};
+    anydata j = <json>{name: USERNAME};
     newIssue["reporter"] = j;
 
     var output = jiraConnectorEP->createIssue(newIssue);
@@ -480,7 +481,7 @@ function test_addCommentToIssue() {
         body: testComment
     };
 
-    var output = jiraConnectorEP->addCommentToIssue(issue_test.key, newComment);
+    var output = jiraConnectorEP->addCommentToIssue(issue_test?.key.toString(), newComment);
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -494,7 +495,7 @@ function test_addCommentToIssue() {
 function test_getIssue() {
     log:printInfo("ACTION : getIssue()");
 
-    var output = jiraConnectorEP->getIssue(issue_test.key);
+    var output = jiraConnectorEP->getIssue(issue_test?.key.toString());
     if (output is Issue) {
         issue_test = output;
     } else {
@@ -508,7 +509,7 @@ function test_getIssue() {
 function test_deleteIssue() {
     log:printInfo("ACTION : deleteIssue()");
 
-    var output = jiraConnectorEP->deleteIssue(issue_test.key);
+    var output = jiraConnectorEP->deleteIssue(issue_test?.key.toString());
     if (output is error) {
         test:assertFail(msg = <string>output.detail()?.message);
     } else {
@@ -523,5 +524,5 @@ function afterSuite() {
     if (projectDeleted is error) {
         log:printInfo(<string>projectDeleted.detail()?.message);
     }
-    var projectCategoryDeleted = jiraConnectorEP->deleteProjectCategory(projectCategory_test.id);
+    var projectCategoryDeleted = jiraConnectorEP->deleteProjectCategory(projectCategory_test?.id.toString());
 }

@@ -23,6 +23,7 @@
 const string JIRA_REST_API_RESOURCE = "/rest/api/";
 const string JIRA_AUTH_RESOURCE = "/rest/auth/1/session/";
 const string JIRA_REST_API_VERSION = "2";
+const string API_PATH = "/rest/api/2";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          HTTP Status Codes                                                         //
