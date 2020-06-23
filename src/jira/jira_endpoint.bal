@@ -110,9 +110,7 @@ public type Client client object {
 
         var jsonPayloadOut = newProject.cloneWithType(json);
         if (jsonPayloadOut is error) {
-            error err = error(CONVERSION_ERROR_CODE, cause = jsonPayloadOut,
-                message = "Error occurred while doing json conversion." );
-            return err;
+            return error(CONVERSION_ERROR_CODE + ": Error occurred while doing json conversion." , jsonPayloadOut);
         } else {
             outRequest.setJsonPayload(jsonPayloadOut);
 
@@ -540,8 +538,6 @@ public type Client client object {
         if (jsonResponseOut is error) {
             return jsonResponseOut;
         } else {
-
-
             var jsonResponseArrayOut = jsonResponseOut.cloneWithType(jsonArr);
 
             if (jsonResponseArrayOut is error) {
@@ -601,8 +597,7 @@ public type Client client object {
 
         var jsonPayloadOut = newCategory.cloneWithType(json);
         if (jsonPayloadOut is error) {
-            error err = error(CONVERSION_ERROR_CODE + ": Error occurred while doing json conversion.", jsonPayloadOut);
-            return err;
+            return error(CONVERSION_ERROR_CODE + ": Error occurred while doing json conversion.", jsonPayloadOut);
         } else {
             outRequest.setJsonPayload(jsonPayloadOut);
 
