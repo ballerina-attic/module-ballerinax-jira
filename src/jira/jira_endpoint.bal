@@ -21,13 +21,15 @@ import ballerina/log;
 import ballerina/oauth2;
 import ballerina/auth;
 
+type jsonArr json[];
+
 # Jira Client object.
 # + jiraClient - The HTTP Client
 public type Client client object {
 
     http:Client jiraClient;
 
-    public function __init(Configuration jiraConfig) {
+    public function init(Configuration jiraConfig) {
         string baseUrl = jiraConfig.baseUrl + API_PATH;
         http:ClientConfiguration clientConfig;
         BasicAuthConfiguration|oauth2:DirectTokenConfig authConfig = jiraConfig.authConfig;
@@ -106,7 +108,7 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var jsonPayloadOut = json.constructFrom(newProject);
+        var jsonPayloadOut = newProject.cloneWithType(json);
         if (jsonPayloadOut is error) {
             error err = error(CONVERSION_ERROR_CODE, cause = jsonPayloadOut,
                 message = "Error occurred while doing json conversion." );
@@ -375,7 +377,7 @@ public type Client client object {
         if (jsonResponseOut is error) {
             return jsonResponseOut;
         } else {
-            var jsonResponseArrayOut = json[].constructFrom(jsonResponseOut);
+            var jsonResponseArrayOut = jsonResponseOut.cloneWithType(jsonArr);
             if (jsonResponseArrayOut is error) {
                 error err = error(CONVERSION_ERROR_CODE, cause = jsonResponseArrayOut,
                     message = "Error occurred while doing json array conversion." );
@@ -426,7 +428,7 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var jsonPayloadOut = json.constructFrom(newProjectComponent);
+        var jsonPayloadOut = newProjectComponent.cloneWithType(json);
         if (jsonPayloadOut is error) {
             error err = error(CONVERSION_ERROR_CODE, cause = jsonPayloadOut,
                 message = "Error occurred while doing json conversion.");
@@ -538,7 +540,9 @@ public type Client client object {
         if (jsonResponseOut is error) {
             return jsonResponseOut;
         } else {
-            var jsonResponseArrayOut = json[].constructFrom(jsonResponseOut);
+
+
+            var jsonResponseArrayOut = jsonResponseOut.cloneWithType(jsonArr);
 
             if (jsonResponseArrayOut is error) {
                 error err = error(CONVERSION_ERROR_CODE, cause = jsonResponseArrayOut,
@@ -595,10 +599,9 @@ public type Client client object {
 
         http:Request outRequest = new;
 
-        var jsonPayloadOut = json.constructFrom(newCategory);
+        var jsonPayloadOut = newCategory.cloneWithType(json);
         if (jsonPayloadOut is error) {
-            error err = error(CONVERSION_ERROR_CODE, cause = jsonPayloadOut,
-                message = "Error occurred while doing json conversion.");
+            error err = error(CONVERSION_ERROR_CODE + ": Error occurred while doing json conversion.", jsonPayloadOut);
             return err;
         } else {
             outRequest.setJsonPayload(jsonPayloadOut);
