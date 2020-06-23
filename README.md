@@ -10,9 +10,9 @@ provides auto completion and type conversions.
 
 ### Compatibility
 
-| Ballerina Version   | JIRA REST API Version |
-|:-------------------:|:---------------------:|
-|       1.2.0         |       7.13.0          |
+| Ballerina Version      | JIRA REST API Version |
+|:----------------------:|:---------------------:|
+|  Swan Lake Preview1    |       7.13.0          |
 
 
 ### Why do you need the REST API for JIRA
@@ -68,22 +68,18 @@ import ballerina/jira;
 import ballerina/auth;
 import ballerina/config;
 
+string USERNAME = config:getAsString("USERNAME");
+string API_TOKEN = config:getAsString("JIRA_API_TOKEN");
+string BASE_URL = config:getAsString("BASE_URL");
 
-// Create the OutboundBasicAuthProvider
-auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
-username: config:getAsString("JIRA_USERNAME"),
-password: config:getAsString("JIRA_PASSWORD")
-});
+jira:BasicAuthConfiguration basicAuth = {
+    username: USERNAME,
+    apiToken: API_TOKEN
+};
 
-http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
-//Creation of connector endpoint
-jira:JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("JIRA_URL"),
-    clientConfig: {
-        auth: {
-        authHandler: outboundBasicAuthHandler
-    }
-}
+jira:Configuration jiraConfig = {
+    baseUrl: BASE_URL,
+    authConfig: basicAuth
 };
 
 jira:Client jiraConnectorEP = new(jiraConfig);
@@ -107,21 +103,18 @@ import ballerina/auth;
 import ballerina/config;
 import ballerina/io;
 
-// Create the OutboundBasicAuthProvider
-auth:OutboundBasicAuthProvider outboundBasicAuthProvider = new({
-username: config:getAsString("JIRA_USERNAME"),
-password: config:getAsString("JIRA_PASSWORD")
-});
+string USERNAME = config:getAsString("USERNAME");
+string API_TOKEN = config:getAsString("JIRA_API_TOKEN");
+string BASE_URL = config:getAsString("BASE_URL");
 
-http:BasicAuthHandler outboundBasicAuthHandler = new(outboundBasicAuthProvider);
-//Creation of connector endpoint
-jira:JiraConfiguration jiraConfig = {
-    baseUrl: config:getAsString("JIRA_URL"),
-    clientConfig: {
-        auth: {
-        authHandler: outboundBasicAuthHandler
-    }
-}
+jira:BasicAuthConfiguration basicAuth = {
+    username: USERNAME,
+    apiToken: API_TOKEN
+};
+
+jira:Configuration jiraConfig = {
+    baseUrl: BASE_URL,
+    authConfig: basicAuth
 };
 
 jira:Client jiraConnectorEP = new(jiraConfig);
