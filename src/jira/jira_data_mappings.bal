@@ -45,7 +45,7 @@ function jsonToProjectSummary(json request) returns ProjectSummary {
     target.description = validateJsonValue(request.description);
     target.projectTypeKey = request.projectTypeKey.toString() ;
     if (request.projectCategory != ()) {
-        target.category = request.projectCategory.name.toString();
+        target.category = validateJsonValue(request.projectCategory.name);
     } else {
         target.category = EMPTY_STRING;
     }
