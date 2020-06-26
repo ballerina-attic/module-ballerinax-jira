@@ -19,78 +19,77 @@
 import ballerina/java;
 
 function projectRequestToJson(ProjectRequest request) returns json {
-
     map<json> target = {};
-
-    target["key"] = request?.key != EMPTY_STRING ? request?.key : null;
-    target["name"] = request?.name != EMPTY_STRING ? request?.name : null;
-    target["projectTypeKey"] = request?.projectTypeKey != EMPTY_STRING ? request?.projectTypeKey : null;
-    target["projectTemplateKey"] = request?.projectTemplateKey != EMPTY_STRING ? request?.projectTemplateKey : null;
-    target["description"] = request?.description != EMPTY_STRING ? request?.description : null;
-    target["lead"] = request?.lead != EMPTY_STRING ? request?.lead : null;
-    target["url"] = request?.url != EMPTY_STRING ? request?.url : null;
-    target["assigneeType"] = request?.assigneeType != EMPTY_STRING ? request?.assigneeType : null;
-    target["avatarId"] = request?.avatarId != EMPTY_STRING ? request?.avatarId : null;
-    target["issueSecurityScheme"] = request?.issueSecurityScheme != EMPTY_STRING ? request?.issueSecurityScheme : null;
-    target["permissionScheme"] = request?.permissionScheme != EMPTY_STRING ? request?.permissionScheme : null;
-    target["notificationScheme"] = request?.notificationScheme != EMPTY_STRING ? request?.notificationScheme : null;
-    target["categoryId"] = request?.categoryId != EMPTY_STRING ? request?.categoryId : null;
-
+    target["key"] = validateStringValue(request?.key);
+    target["name"] = validateStringValue(request?.name);
+    target["projectTypeKey"] = validateStringValue(request?.projectTypeKey);
+    target["projectTemplateKey"] = validateStringValue(request?.projectTemplateKey);
+    target["description"] = validateStringValue(request?.description);
+    target["lead"] = validateStringValue(request?.lead);
+    target["url"] = validateStringValue(request?.url);
+    target["assigneeType"] = validateStringValue(request?.assigneeType);
+    target["avatarId"] = validateStringValue(request?.avatarId);
+    target["issueSecurityScheme"] = validateStringValue(request?.issueSecurityScheme);
+    target["permissionScheme"] = validateStringValue(request?.permissionScheme);
+    target["notificationScheme"] = validateStringValue(request?.notificationScheme);
+    target["categoryId"] = validateStringValue(request?.categoryId);
     return target;
 }
 
 function jsonToProjectSummary(json request) returns ProjectSummary {
-
     ProjectSummary target = {};
-
     target.resourcePath = request.self.toString() ;
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
     target.name = request.name.toString() ;
-    target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
+    target.description = validateJsonValue(request.description);
     target.projectTypeKey = request.projectTypeKey.toString() ;
-    target.category = request.projectCategory != null ? request.projectCategory.name.toString()  : EMPTY_STRING;
+    if (request.projectCategory != ()) {
+        target.category = validateJsonValue(request.projectCategory.name);
+    } else {
+        target.category = EMPTY_STRING;
+    }
 
     return target;
 }
 
 function jsonToProjectCategory(json request) returns ProjectCategory {
-
     ProjectCategory target = {};
-
-    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
-    target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
-    target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
-    target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
-
+    target.resourcePath = validateJsonValue(request.self);
+    target.name = validateJsonValue(request.name);
+    target.id = validateJsonValue(request.id);
+    target.description = validateJsonValue(request.description);
     return target;
 }
 
 function jsonToProjectComponent(json request) returns ProjectComponent {
-
     ProjectComponent target = {};
+    target.resourcePath = validateJsonValue(request.self);
+    target.id = validateJsonValue(request.id);
+    target.name = validateJsonValue(request.name);
+    target.description = validateJsonValue(request.description);
+    target.assigneeType = validateJsonValue(request.assigneeType);
+    target.realAssigneeType = validateJsonValue(request.realAssigneeType);
+    target.project = validateJsonValue(request.project);
+    target.projectId = validateJsonValue(request.projectId);
 
-    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
-    target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
-    target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
-    target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
-    target.assigneeType = request.assigneeType != null ? request.assigneeType.toString()  : EMPTY_STRING;
-    target.realAssigneeType = request.realAssigneeType != null ? request.realAssigneeType.toString()  : EMPTY_STRING;
-    target.project = request.project != null ? request.project.toString()  : EMPTY_STRING;
-    target.projectId = request.projectId != null ? request.projectId.toString()  : EMPTY_STRING;
+    if (request.lead != ()) {
+        target.leadName = validateJsonValue(request.lead.name);
+    } else {
+        target.leadName = EMPTY_STRING;
+    }
 
-    target.leadName = request.lead != null ?
-    request.lead.name != null ?
-    request.lead.name.toString()  : EMPTY_STRING : EMPTY_STRING;
+    if (request.assignee != ()) {
+        target.assigneeName = validateJsonValue(request.assignee.name);
+    } else {
+        target.assigneeName = EMPTY_STRING;
+    }
 
-    target.assigneeName = request.assignee != null ?
-    request.assignee.name != null ?
-    request.assignee.name.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.realAssigneeName = request.realAssignee != null ?
-    request.realAssignee.name != null ?
-    request.realAssignee.name.toString()  : EMPTY_STRING : EMPTY_STRING;
-
+    if (request.realAssignee != ()) {
+        target.realAssigneeName = validateJsonValue(request.realAssignee.name);
+    } else {
+        target.realAssigneeName = EMPTY_STRING;
+    }
     return target;
 }
 
@@ -100,67 +99,69 @@ function jsonToIssue(json request) returns Issue|error {
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
 
-    target.summary = request.fields != null ?
-    request.fields.summary != null ?
-    request.fields.summary.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.creatorName = request.fields != null ?
-    request.fields.creator != null ?
-    request.fields.creator.name != null ?
-    request.fields.creator.name.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.assigneeName = request.fields != null ?
-    request.fields.assignee != null ?
-    request.fields.assignee.name != null ?
-    request.fields.assignee.name.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.reporterName = request.fields != null ?
-    request.fields.reporter != null ?
-    request.fields.reporter.name != null ?
-    request.fields.reporter.name.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.priorityId = request.fields != null ?
-    request.fields.priority != null ?
-    request.fields.priority.id != null ?
-    request.fields.priority.id.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.resolutionId = request.fields != null ?
-    request.fields.resolution != null ?
-    request.fields.resolution.id != null ?
-    request.fields.resolution.id.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.statusId = request.fields != null ?
-    request.fields.status != null ?
-    request.fields.status.id != null ?
-    request.fields.status.id.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.timespent = request.fields != null ?
-    request.fields.timespent != null ?
-    request.fields.timespent.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.aggregatetimespent = request.fields != null ?
-    request.fields.aggregatetimespent != null ?
-    request.fields.aggregatetimespent.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.createdDate = request.fields != null ?
-    request.fields.created != null ?
-    request.fields.created.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.dueDate = request.fields != null ?
-    request.fields.duedate != null ?
-    request.fields.duedate.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.resolutionDate = request.fields != null ?
-    request.fields.resolutiondate != null ?
-    request.fields.resolutiondate.toString()  : EMPTY_STRING : EMPTY_STRING;
-
-    target.project = request.fields != null ?
-    request.fields.project != null ?
-    jsonToProjectSummary(check request.fields.project) : {}: {};
-
-    target.issueType= request.fields != null ?
-    request.fields.issuetype != null ?
-    jsonToIssueType(check request.fields.issuetype) : {}: {};
+    if (request.fields != ()) {
+        target.summary = validateJsonValue(request.fields.summary);
+        if (request.fields.creator != ()) {
+            target.creatorName = validateJsonValue(request.fields.creator.name);
+        } else {
+            target.creatorName = EMPTY_STRING;
+        }
+        if (request.fields.assignee != ()) {
+            target.assigneeName = validateJsonValue(request.fields.assignee.name);
+        } else {
+            target.assigneeName = EMPTY_STRING;
+        }
+        if (request.fields.reporter != ()) {
+            target.reporterName = validateJsonValue(request.fields.reporter.name);
+        } else {
+            target.reporterName = EMPTY_STRING;
+        }
+        if (request.fields.priority != ()) {
+            target.priorityId = validateJsonValue(request.fields.priority.id);
+        } else {
+            target.priorityId = EMPTY_STRING;
+        }
+        if (request.fields.resolution != ()) {
+            target.resolutionId = validateJsonValue(request.fields.resolution.id);
+        } else {
+            target.resolutionId = EMPTY_STRING;
+        }
+        if (request.fields.status != ()) {
+            target.statusId = validateJsonValue(request.fields.status.id);
+        } else {
+            target.statusId = EMPTY_STRING;
+        }
+        target.timespent = validateJsonValue(request.fields.timespent);
+        target.aggregatetimespent = validateJsonValue(request.fields.aggregatetimespent);
+        target.createdDate = validateJsonValue(request.fields.created);
+        target.dueDate = validateJsonValue(request.fields.duedate);
+        target.resolutionDate = validateJsonValue(request.fields.resolutiondate);
+        if (request.fields.project != ()) {
+            target.project = jsonToProjectSummary(check request.fields.project);
+        } else {
+            target.project = {};
+        }
+        if (request.fields.issuetype != ()) {
+            target.issueType = jsonToIssueType(check request.fields.issuetype);
+        } else {
+            target.issueType = {};
+        }
+    } else {
+        target.summary = EMPTY_STRING;
+        target.creatorName = EMPTY_STRING;
+        target.assigneeName = EMPTY_STRING;
+        target.reporterName = EMPTY_STRING;
+        target.priorityId = EMPTY_STRING;
+        target.resolutionId = EMPTY_STRING;
+        target.statusId = EMPTY_STRING;
+        target.timespent = EMPTY_STRING;
+        target.aggregatetimespent = EMPTY_STRING;
+        target.createdDate = EMPTY_STRING;
+        target.dueDate = EMPTY_STRING;
+        target.resolutionDate = EMPTY_STRING;
+        target.project = {};
+        target.issueType = {};
+    }
 
     int i = 0;
 
@@ -196,34 +197,38 @@ function jsonToIssueSummary(json request) returns IssueSummary|error {
     target.id = request.id.toString() ;
     target.key = request.key.toString() ;
 
-    target.priorityId = request.fields != null ?
-    request.fields.priority != null ?
-    request.fields.priority.id != null ?
-    request.fields.priority.id.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
+    if (request.fields != ()) {
+        if (request.fields.priority != ()) {
+            target.priorityId = validateJsonValue(request.fields.priority.id);
+        } else {
+            target.priorityId = EMPTY_STRING;
+        }
+        if (request.fields.status != ()) {
 
-    target.statusId = request.fields != null ?
-    request.fields.status != null ?
-    request.fields.status.id != null ?
-    request.fields.status.id.toString()  : EMPTY_STRING : EMPTY_STRING : EMPTY_STRING;
-
-    target.issueType = request.fields != null ?
-    request.fields.issuetype != null ?
-    jsonToIssueType(check request.fields.issuetype) : {} : {};
-
-return target;
+        } else {
+            target.statusId = validateJsonValue(request.fields.status.id);
+        }
+        if (request.fields.issuetype != ()) {
+            target.issueType = jsonToIssueType(check request.fields.issuetype);
+        } else {
+            target.issueType = {};
+        }
+    } else {
+        target.priorityId = EMPTY_STRING;
+        target.statusId = EMPTY_STRING;
+        target.issueType = {};
+    }
+    return target;
 }
 
 function jsonToIssueType(json request) returns IssueType {
-
     IssueType target = {};
-
-    target.resourcePath = request.self != null ? request.self.toString()  : EMPTY_STRING;
-    target.id = request.id != null ? request.id.toString()  : EMPTY_STRING;
-    target.name = request.name != null ? request.name.toString()  : EMPTY_STRING;
-    target.description = request.description != null ? request.description.toString()  : EMPTY_STRING;
-    target.iconUrl = request.iconUrl != null ? request.iconUrl.toString()  : EMPTY_STRING;
-    target.avatarId = request.avatarId != null ? request.avatarId.toString()  : EMPTY_STRING;
-
+    target.resourcePath = validateJsonValue(request.self);
+    target.id = validateJsonValue(request.id);
+    target.name = validateJsonValue(request.name);
+    target.description = validateJsonValue(request.description);
+    target.iconUrl = validateJsonValue(request.iconUrl);
+    target.avatarId = validateJsonValue(request.avatarId);
     return target;
 }
 
@@ -231,10 +236,10 @@ function issueRequestToJson(IssueRequest request) returns json {
 
     map<json> target = {fields:{}};
     map<json> fieldJson = <map<json>>target["fields"];
-    fieldJson["summary"] = request?.summary != EMPTY_STRING ? request?.summary : null;
-    fieldJson["issuetype"] = request?.issueTypeId != EMPTY_STRING ? {id:request?.issueTypeId} : null;
-    fieldJson["project"] = request?.projectId != EMPTY_STRING ? {id:request?.projectId} : null;
-    fieldJson["assignee"] = request?.assigneeName != EMPTY_STRING ? {name:request?.assigneeName} : null;
+    fieldJson["summary"] = validateStringValue(request?.summary);
+    fieldJson["issuetype"] = {id: validateStringValue(request?.issueTypeId)};
+    fieldJson["project"] = {id: validateStringValue(request?.projectId)};
+    fieldJson["assignee"] = {name: validateStringValue(request?.assigneeName)};
 
     return target;
 }
@@ -272,39 +277,30 @@ function convertProjectCategoryRequestToJson(ProjectCategoryRequest sourceGroupS
 
 function convertJsonToProjectCategory(json sourceGroupStruct) returns ProjectCategory|error {
     ProjectCategory targetProjectCategory = {};
-    targetProjectCategory.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
-    targetProjectCategory.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
-    targetProjectCategory.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
-    targetProjectCategory.description = sourceGroupStruct.description != null
-    ? sourceGroupStruct.description.toString() : "";
+    targetProjectCategory.resourcePath = validateJsonValue(sourceGroupStruct.self);
+    targetProjectCategory.id = validateJsonValue(sourceGroupStruct.id);
+    targetProjectCategory.name = validateJsonValue(sourceGroupStruct.name);
+    targetProjectCategory.description = validateJsonValue(sourceGroupStruct.description);
     return targetProjectCategory;
 }
 
 function convertJsonToProject(json sourceGroupStruct) returns Project|error {
     Project targetProject = {};
-    targetProject.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
-    targetProject.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
-    targetProject.key = sourceGroupStruct.key != null ? sourceGroupStruct.key.toString() : "";
-    targetProject.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
-    targetProject.description = sourceGroupStruct.description != null ? sourceGroupStruct.description.toString() : "";
-    targetProject.leadName = sourceGroupStruct.leadName != null ? sourceGroupStruct.leadName.toString() : "";
-    targetProject.projectTypeKey = sourceGroupStruct.projectTypeKey != null
-    ? sourceGroupStruct.projectTypeKey.toString() : "";
-    targetProject.avatarUrls.'48x48 = sourceGroupStruct.avatarUrls.'48x48 != null
-    ? sourceGroupStruct.avatarUrls.'48x48.toString() : "";
-    targetProject.avatarUrls.'32x32 = sourceGroupStruct.avatarUrls.'32x32 != null
-    ? sourceGroupStruct.avatarUrls.'32x32.toString() : "";
-    targetProject.avatarUrls.'24x24 = sourceGroupStruct.avatarUrls.'24x24 != null
-    ? sourceGroupStruct.avatarUrls.'24x24.toString() : "";
-    targetProject.avatarUrls.'16x16 = sourceGroupStruct.avatarUrls.'16x16 != null
-    ? sourceGroupStruct.avatarUrls.'16x16.toString() : "";
-    targetProject.projectCategory.resourcePath = sourceGroupStruct.projectCategory.self != null
-    ? sourceGroupStruct.projectCategory.self.toString() : "";
-    targetProject.projectCategory.id = sourceGroupStruct.projectCategory.id != null
-    ? sourceGroupStruct.projectCategory.id.toString() : "";
-    targetProject.projectCategory.name = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
-    targetProject.projectCategory.description = sourceGroupStruct.projectCategory.description != null
-    ? sourceGroupStruct.projectCategory.description.toString() : "";
+    targetProject.resourcePath = validateJsonValue(sourceGroupStruct.self);
+    targetProject.id = validateJsonValue(sourceGroupStruct.id);
+    targetProject.key = validateJsonValue(sourceGroupStruct.key);
+    targetProject.name = validateJsonValue(sourceGroupStruct.name);
+    targetProject.description = validateJsonValue(sourceGroupStruct.description);
+    targetProject.leadName = validateJsonValue(sourceGroupStruct.leadName);
+    targetProject.projectTypeKey = validateJsonValue(sourceGroupStruct.projectTypeKey);
+    targetProject.avatarUrls.'48x48 = validateJsonValue(sourceGroupStruct.avatarUrls.'48x48);
+    targetProject.avatarUrls.'32x32 = validateJsonValue(sourceGroupStruct.avatarUrls.'32x32);
+    targetProject.avatarUrls.'24x24 = validateJsonValue(sourceGroupStruct.avatarUrls.'24x24);
+    targetProject.avatarUrls.'16x16 = validateJsonValue(sourceGroupStruct.avatarUrls.'16x16);
+    targetProject.projectCategory.resourcePath = validateJsonValue(sourceGroupStruct.projectCategory.self);
+    targetProject.projectCategory.id = validateJsonValue(sourceGroupStruct.projectCategory.id);
+    targetProject.projectCategory.name = validateJsonValue(sourceGroupStruct.self);
+    targetProject.projectCategory.description = validateJsonValue(sourceGroupStruct.projectCategory.description);
     targetProject.issueTypes = convertToIssueTypes(<json[]>sourceGroupStruct.issueTypes);
     targetProject.components = convertToComponents(<json[]>sourceGroupStruct.components);
     targetProject.versions = convertToVersions(<json[]>sourceGroupStruct.versions);
@@ -313,24 +309,24 @@ function convertJsonToProject(json sourceGroupStruct) returns Project|error {
 
 function convertJsonToProjectStatus(json sourceGroupStruct) returns ProjectStatus|error {
     ProjectStatus targetProjectStatus = {};
-    targetProjectStatus.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
-    targetProjectStatus.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
-    targetProjectStatus.id = sourceGroupStruct.id != null ? sourceGroupStruct.id.toString() : "";
+    targetProjectStatus.resourcePath = validateJsonValue(sourceGroupStruct.self);
+    targetProjectStatus.name = validateJsonValue(sourceGroupStruct.name);
+    targetProjectStatus.id = validateJsonValue(sourceGroupStruct.id);
     targetProjectStatus.statuses = <json[]>sourceGroupStruct.statuses;
     return targetProjectStatus;
 }
 
 function convertJsonToUser(json sourceGroupStruct) returns User|error {
     User targetUser = {};
-    targetUser.resourcePath = sourceGroupStruct.self != null ? sourceGroupStruct.self.toString() : "";
-    targetUser.key = sourceGroupStruct.key != null ? sourceGroupStruct.key.toString() : "";
-    targetUser.name = sourceGroupStruct.name != null ? sourceGroupStruct.name.toString() : "";
-    targetUser.displayName = sourceGroupStruct.displayName != null ? sourceGroupStruct.displayName.toString() : "";
-    targetUser.emailAddress = sourceGroupStruct.emailAddress != null ? sourceGroupStruct.emailAddress.toString() : "";
-    targetUser.avatarUrls = sourceGroupStruct.avatarUrls != null ? sourceGroupStruct.avatarUrls.toString() : "";
-    targetUser.active = sourceGroupStruct.active != null ?  <boolean>sourceGroupStruct.active : false;
-    targetUser.timeZone = sourceGroupStruct.timeZone != null ? sourceGroupStruct.timeZone.toString() : "";
-    targetUser.locale = sourceGroupStruct.locale != null ? sourceGroupStruct.locale.toString() : "";
+    targetUser.resourcePath = validateJsonValue(sourceGroupStruct.self);
+    targetUser.key = validateJsonValue(sourceGroupStruct.key);
+    targetUser.name = validateJsonValue(sourceGroupStruct.name);
+    targetUser.displayName = validateJsonValue(sourceGroupStruct.displayName);
+    targetUser.emailAddress = validateJsonValue(sourceGroupStruct.emailAddress);
+    targetUser.avatarUrls = validateJsonValue(sourceGroupStruct.avatarUrls);
+    targetUser.active = validateBooleanValue(sourceGroupStruct.active);
+    targetUser.timeZone = validateJsonValue(sourceGroupStruct.timeZone);
+    targetUser.locale = validateJsonValue(sourceGroupStruct.locale);
     return targetUser;
 }
 
@@ -346,12 +342,12 @@ function convertToIssueTypes(json[] issueTypes) returns IssueType[] {
 
 function convertToIssueType(json issueType) returns IssueType {
     IssueType issueTypes = {};
-    issueTypes.resourcePath = issueType.self != null ? issueType.self.toString() : "";
-    issueTypes.id = issueType.id != null ? issueType.id.toString() : "";
-    issueTypes.name = issueType.name != null ? issueType.name.toString() : "";
-    issueTypes.description = issueType.description != null ? issueType.description.toString() : "";
-    issueTypes.iconUrl = issueType.iconUrl != null ? issueType.iconUrl.toString() : "";
-    issueTypes.avatarId = issueType.avatarId != null ? issueType.avatarId.toString() : "";
+    issueTypes.resourcePath = validateJsonValue(issueType.self);
+    issueTypes.id = validateJsonValue(issueType.id);
+    issueTypes.name = validateJsonValue(issueType.name);
+    issueTypes.description = validateJsonValue(issueType.description);
+    issueTypes.iconUrl = validateJsonValue(issueType.iconUrl);
+    issueTypes.avatarId = validateJsonValue(issueType.avatarId);
     return issueTypes;
 }
 
@@ -367,9 +363,9 @@ function convertToComponents(json[] components) returns ProjectComponentSummary[
 
 function convertToComponent(json components) returns ProjectComponentSummary {
     ProjectComponentSummary component = {};
-    component.id = components.id != null ? components.id.toString() : "";
-    component.name = components.name != null ? components.name.toString() : "";
-    component.description = components.description != null ? components.description.toString() : "";
+    component.id = validateJsonValue(components.id);
+    component.name = validateJsonValue(components.name);
+    component.description = validateJsonValue(components.description);
     return component;
 }
 
@@ -385,15 +381,15 @@ function convertToVersions(json[] versions) returns ProjectVersion[] {
 
 function convertToVersion(json value) returns ProjectVersion {
     ProjectVersion versions = {};
-    versions.resourcePath = value.self != null ? value.self.toString() : "";
-    versions.id = value.id != null ? value.id.toString() : "";
-    versions.name = value.name != null ? value.name.toString() : "";
-    versions.archived = value.archived != null ? <boolean>value.archived : false;
-    versions.released = value.released != null ? <boolean>value.released : false;
-    versions.releaseDate = value.releaseDate != null ? value.releaseDate.toString() : "";
-    versions.overdue = value.overdue != null ? <boolean>value.overdue : false;
-    versions.userReleaseDate = value.userReleaseDate != null ? value.userReleaseDate.toString() : "";
-    versions.projectId = value.projectId != null ? value.projectId.toString() : "";
+    versions.resourcePath = validateJsonValue(value.self);
+    versions.id = validateJsonValue(value.id);
+    versions.name = validateJsonValue(value.name);
+    versions.archived = validateBooleanValue(value.archived);
+    versions.released = validateBooleanValue(value.released);
+    versions.releaseDate = validateJsonValue(value.releaseDate);
+    versions.overdue = validateBooleanValue(value.overdue);
+    versions.userReleaseDate = validateJsonValue(value.userReleaseDate);
+    versions.projectId = validateJsonValue(value.projectId);
     return versions;
 }
 
@@ -418,9 +414,30 @@ function convertToActors(json[] actors) returns Actor[] {
 
 function convertToActor(json actor) returns Actor {
     Actor value = {};
-    value.id = actor.id != null ? actor.id.toString() : "";
-    value.name = actor.name != null ? actor.name.toString() : "";
-    value.displayName = actor.displayName != null ? actor.displayName.toString() : "";
-    value.'type = actor.'type != null ? actor.'type.toString() : "";
+    value.id = validateJsonValue(actor.id);
+    value.name = validateJsonValue(actor.name);
+    value.displayName = validateJsonValue(actor.displayName);
+    value.'type = validateJsonValue(actor.'type);
     return value;
+}
+
+function validateJsonValue(json|error value) returns string {
+    if (value != null) {
+        return value.toString();
+    }
+    return EMPTY_STRING;
+}
+
+function validateStringValue(string? value) returns json {
+    if (value != ()) {
+        return value;
+    }
+    return null;
+}
+
+function validateBooleanValue(json|error value) returns boolean {
+    if (value != null) {
+        return <boolean>value;
+    }
+    return false;
 }
